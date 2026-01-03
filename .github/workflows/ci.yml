@@ -1,0 +1,167 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, claude ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  api:
+    name: API Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: trust
+          POSTGRES_USER: trust
+          POSTGRES_DB: trust
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: 'api/package-lock.json'
+    
+    - name: Install API dependencies
+      run: |
+        cd api
+        npm ci
+    
+    - name: Run database migrations
+      run: |
+        POSTGRES_HOST=localhost POSTGRES_PORT=5432 POSTGRES_DB=trust POSTGRES_USER=trust POSTGRES_PASSWORD=trust \
+        psql -h localhost -U trust -d trust -f db/migrations/000_init.sql
+      env:
+        PGPASSWORD: trust
+    
+    - name: Run API linting
+      run: |
+        cd api
+        npm run lint
+    
+    - name: Run API type checking
+      run: |
+        cd api
+        npm run typecheck
+    
+    - name: Run API tests
+      run: |
+        cd api
+        npm run test
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+        POSTGRES_DB: trust
+        POSTGRES_USER: trust
+        POSTGRES_PASSWORD: trust
+
+  web:
+    name: Web Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+        cache-dependency-path: 'web/package-lock.json'
+    
+    - name: Install Web dependencies
+      run: |
+        cd web
+        npm ci
+    
+    - name: Run Web linting
+      run: |
+        cd web
+        npm run lint
+    
+    - name: Run Web type checking
+      run: |
+        cd web
+        npm run typecheck
+    
+    - name: Build Web application
+      run: |
+        cd web
+        npm run build
+
+  etl:
+    name: ETL Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: trust
+          POSTGRES_USER: trust
+          POSTGRES_DB: trust
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+        cache-dependency-path: 'etl/requirements.txt'
+    
+    - name: Install ETL dependencies
+      run: |
+        cd etl
+        pip install -r requirements.txt
+    
+    - name: Run database migrations
+      run: |
+        POSTGRES_HOST=localhost POSTGRES_PORT=5432 POSTGRES_DB=trust POSTGRES_USER=trust POSTGRES_PASSWORD=trust \
+        psql -h localhost -U trust -d trust -f db/migrations/000_init.sql
+      env:
+        PGPASSWORD: trust
+    
+    - name: Run ETL linting
+      run: |
+        cd etl
+        black --check .
+        ruff check .
+    
+    - name: Run ETL type checking
+      run: |
+        cd etl
+        mypy . --ignore-missing-imports
+    
+    - name: Run ETL tests
+      run: |
+        cd etl
+        pytest
+      env:
+        POSTGRES_HOST: localhost
+        POSTGRES_PORT: 5432
+        POSTGRES_DB: trust
+        POSTGRES_USER: trust
+        POSTGRES_PASSWORD: trust
