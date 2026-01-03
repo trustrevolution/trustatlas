@@ -19,20 +19,20 @@
 | **General Social Survey (GSS)** | USA, 1972-2024 | Bulk download | High | Longest-running US trust time series. Annual/biennial. Already in methodology as approved source. |
 | **ANES** | USA, 1958-2024 | Bulk download | High | American National Election Studies. Trust in government series. Election-year data. |
 
-### Regional Barometers (Conditional)
+### Regional Barometers ✅ Integrated
 
-These require methodology review before integration - historical inconsistencies documented.
+Methodology audit completed January 2025. ETL jobs handle variable name and scale differences across waves.
 
-| Source | Coverage | Access | Priority | Blocker |
-|--------|----------|--------|----------|---------|
-| **Afrobarometer** | 39 African countries, 1999-2023 | Bulk CSV | Medium | Wave-to-wave methodology changes need audit |
-| **Latinobarometer** | 18 Latin American countries, 1995-2023 | Bulk CSV | Medium | 25%→93% swings in some series - investigate cause |
-| **Asian Barometer** | 18 Asian countries, 2001-2022 | Bulk CSV | Medium | Wave 1-2 used inverted scales (10% vs 95%) |
-| **Arab Barometer** | 16 MENA countries, 2006-2023 | Bulk CSV | Medium | Needs methodology consistency review |
+| Source | Coverage | Access | Status | Notes |
+|--------|----------|--------|--------|-------|
+| **Afrobarometer** | 39 African countries, 2015-2023 | Bulk CSV | ✅ Loaded | Rounds 6-9, variable mappings in ETL job |
+| **Latinobarometer** | 18 Latin American countries, 1996-2024 | Bulk CSV | ✅ Loaded | Auto-detects binary/ternary/quaternary scales |
+| **Asian Barometer** | 15 Asian countries, 2001-2024 | Bulk CSV | ✅ Loaded | Waves 1-6, country detection robust |
+| **Arab Barometer** | 12 MENA countries, 2006-2023 | Bulk CSV | ✅ Loaded | Waves 1-8, handles multi-part wave 6 |
 
 ## Current Status
 
-**As of January 2025:** Priority sources loaded. 13,490 observations across 210 countries.
+**As of January 2025:** All priority sources loaded. 19,111 observations across 210 countries.
 
 | Source | Raw Data | ETL Job | Loaded | Observations | Countries | Years |
 |--------|----------|---------|--------|--------------|-----------|-------|
@@ -44,10 +44,10 @@ These require methodology review before integration - historical inconsistencies
 | EVS | `data/raw/evs/` | `etl/jobs/evs.py` | ✅ | 149 | 47 | 1981-2021 |
 | GSS | `data/raw/gss/` | `etl/jobs/gss.py` | ✅ | 63 | 1 (USA) | 1972-2024 |
 | ANES | `data/raw/anes/` | `etl/jobs/anes.py` | ✅ | 46 | 1 (USA) | 1958-2024 |
-| Afrobarometer | `data/raw/afrobarometer/` | `etl/jobs/afrobarometer.py` | ⏸️ | — | — | Needs methodology review |
-| Latinobarometer | `data/raw/latinobarometro/` | `etl/jobs/latinobarometro.py` | ⏸️ | — | — | Needs methodology review |
-| Asian Barometer | `data/raw/asianbarometer/` | `etl/jobs/asianbarometer.py` | ⏸️ | — | — | Needs methodology review |
-| Arab Barometer | `data/raw/arabbarometer/` | `etl/jobs/arabbarometer.py` | ⏸️ | — | — | Needs methodology review |
+| **Afrobarometer** | `data/raw/afrobarometer/` | `etl/jobs/afrobarometer.py` | ✅ | 231 | 39 | 2015-2023 |
+| **Latinobarometer** | `data/raw/latinobarometro/` | `etl/jobs/latinobarometro.py` | ✅ | 511 | 18 | 1996-2024 |
+| **Asian Barometer** | `data/raw/asianbarometer/` | `etl/jobs/asianbarometer.py` | ✅ | 156 | 15 | 2001-2024 |
+| **Arab Barometer** | `data/raw/arabbarometer/` | `etl/jobs/arabbarometer.py` | ✅ | 167 | 12 | 2006-2023 |
 
 ## Next Steps
 
