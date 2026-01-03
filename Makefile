@@ -1,4 +1,4 @@
-.PHONY: up down migrate seed api web etl-cpi etl-wgi etl-oecd etl-wvs etl-ess etl-reuters etl-eurobarometer etl-media etl-all etl-gov clean logs install test lint sweep etl-prod-evs etl-prod-reuters etl-prod-eurobarometer etl-prod-media aggregate-media aggregate-media-prod sync-from-prod sync-verify deploy-api deploy-web deploy deploy-api-prod deploy-web-prod deploy-prod
+.PHONY: up down migrate seed api web etl-cpi etl-wgi etl-oecd etl-wvs etl-ess etl-reuters etl-eurobarometer etl-media etl-all etl-gov clean logs install test lint sweep etl-prod-evs etl-prod-reuters etl-prod-eurobarometer etl-prod-media aggregate-pillars aggregate-pillars-prod aggregate-media aggregate-interpersonal aggregate-institutional sync-from-prod sync-verify deploy-api deploy-web deploy deploy-api-prod deploy-web-prod deploy-prod
 
 # Default year for ETL jobs
 YEAR ?= 2024
@@ -137,15 +137,25 @@ etl-prod-eurobarometer:
 etl-prod-media: etl-prod-reuters etl-prod-eurobarometer
 	@echo "Production media pillar ETL complete."
 
-# Media Pillar Aggregation
-aggregate-media:
-	@echo "Aggregating media pillar scores..."
-	python -m etl.pipelines.aggregate_media
+# Pillar Aggregation (interpersonal, institutional, media)
+aggregate-pillars:
+	@echo "Aggregating all pillar scores..."
+	python -m etl.pipelines.aggregate_pillars
 
-aggregate-media-prod:
-	@echo "Aggregating media pillar scores (PRODUCTION)..."
+aggregate-pillars-prod:
+	@echo "Aggregating all pillar scores (PRODUCTION)..."
 	POSTGRES_HOST=$(NEON_HOST) POSTGRES_DB=$(NEON_DB) POSTGRES_USER=$(NEON_USER) POSTGRES_PASSWORD=$(NEON_PASSWORD) \
-		python -m etl.pipelines.aggregate_media
+		python -m etl.pipelines.aggregate_pillars
+
+# Single pillar aggregation
+aggregate-media:
+	python -m etl.pipelines.aggregate_pillars --pillar media
+
+aggregate-interpersonal:
+	python -m etl.pipelines.aggregate_pillars --pillar interpersonal
+
+aggregate-institutional:
+	python -m etl.pipelines.aggregate_pillars --pillar institutional
 
 # Sync production data to local (safe - only affects local dev)
 # Includes all data tables: countries, observations, country_year, data_quality_flags, source_metadata
@@ -204,7 +214,7 @@ help:
 	@echo "    make etl-media        - Run media pillar (Reuters + Eurobarometer)"
 	@echo "    make etl-gov          - Run governance pillar (CPI + WGI)"
 	@echo "    make etl-all          - Run all ETL jobs"
-	@echo "    make aggregate-media  - Aggregate media pillar to country_year"
+	@echo "    make aggregate-pillars - Aggregate all pillars to country_year"
 	@echo ""
 	@echo "  Testing & Quality:"
 	@echo "    make test      - Run all tests"
@@ -217,7 +227,7 @@ help:
 	@echo "    make etl-prod-reuters      - Load Reuters DNR to production"
 	@echo "    make etl-prod-eurobarometer - Load Eurobarometer to production"
 	@echo "    make etl-prod-media        - Load all media sources to production"
-	@echo "    make aggregate-media-prod  - Aggregate media pillar (production)"
+	@echo "    make aggregate-pillars-prod - Aggregate all pillars (production)"
 	@echo "    make sync-from-prod        - Pull production data to local dev"
 	@echo "    make sync-verify           - Compare row counts local vs production"
 	@echo ""
