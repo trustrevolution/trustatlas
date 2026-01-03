@@ -1,0 +1,4 @@
+[lint]
+# Ignore E402 - module level import not at top of file
+# This is expected due to sys.path.insert pattern for local imports
+ignore = ["E402"]
