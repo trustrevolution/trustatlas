@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Three-dot pillar mark: blue (interpersonal), amber (institutional), emerald (governance) -->
+  <!-- Triangular arrangement representing the three independent trust pillars -->
+  <circle cx="16" cy="8" r="6" fill="#3b82f6"/>
+  <circle cx="9" cy="22" r="6" fill="#f59e0b"/>
+  <circle cx="23" cy="22" r="6" fill="#10b981"/>
+</svg>

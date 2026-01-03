@@ -1,0 +1,47 @@
+{
+  "name": "@trustatlas/web",
+  "version": "0.1.0",
+  "description": "Trust Atlas Web UI",
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slider": "^1.1.2",
+    "@radix-ui/react-switch": "^1.0.3",
+    "@types/topojson-client": "^3.1.5",
+    "clsx": "^2.1.1",
+    "echarts": "^6.0.0",
+    "echarts-countries-js": "^1.0.5",
+    "echarts-for-react": "^3.0.5",
+    "html2canvas": "^1.4.1",
+    "lucide-react": "^0.294.0",
+    "next": "^16.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^3.3.6",
+    "topojson-client": "^3.1.0",
+    "zustand": "^4.4.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
+    "@types/mapbox-gl": "^2.7.15",
+    "@types/node": "^20.9.0",
+    "@types/react": "^18.2.38",
+    "@types/react-dom": "^18.2.17",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "^16.1.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "postcss": "^8.4.31",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^8.51.0"
+  }
+}

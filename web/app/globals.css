@@ -1,0 +1,1094 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* ==========================================================================
+   Design Tokens (CSS Custom Properties)
+   ========================================================================== */
+
+:root {
+  /* Layout - mobile-first */
+  --header-height: 48px;
+  --space-page-x: 1rem;
+  --space-page-y: 2rem;
+
+  /* Brand */
+  --color-trust-revolution: #F04E23;
+
+  /* Pillars */
+  --color-pillar-interpersonal: #38bdf8;
+  --color-pillar-institutional: #f59e0b;
+  --color-pillar-governance: #10b981;
+  --color-pillar-media: #6366f1;
+
+  /* Regions */
+  --color-region-europe: #10b981;
+  --color-region-americas: #f59e0b;
+  --color-region-asia: #3b82f6;
+  --color-region-africa: #ef4444;
+  --color-region-oceania: #8b5cf6;
+  --color-region-mena: #06b6d4;
+
+  /* Map gradient (low → high trust) */
+  --color-trust-1: #ef4444;
+  --color-trust-2: #f97316;
+  --color-trust-3: #eab308;
+  --color-trust-4: #84cc16;
+  --color-trust-5: #22c55e;
+
+  /* Chart surfaces */
+  --color-chart-bg: rgba(15, 23, 42, 0.95);
+  --color-chart-border: rgba(71, 85, 105, 0.5);
+  --color-chart-grid: #334155;
+  --color-chart-axis: #475569;
+  --color-chart-label: #94a3b8;
+}
+
+/* Desktop overrides */
+@media (min-width: 640px) {
+  :root {
+    --header-height: 64px;
+    --space-page-x: 1.5rem;
+    --space-page-y: 4rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-slate-200;
+  }
+
+  body {
+    @apply bg-white text-slate-900;
+  }
+
+  /* Smooth scroll for anchor links, reserve scrollbar space to prevent layout shift */
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-amber-200 text-slate-900;
+  }
+}
+
+@layer components {
+  /* Hero section */
+  .hero-section {
+    @apply relative bg-slate-950 overflow-hidden;
+    padding-top: calc(var(--header-height) + 1.75rem);
+    padding-bottom: 1.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-section {
+      padding-top: calc(var(--header-height) + 3.5rem);
+      padding-bottom: 3.5rem;
+    }
+  }
+
+  .hero-content {
+    @apply relative z-10 max-w-4xl mx-auto px-4 text-center;
+  }
+
+  @media (min-width: 640px) {
+    .hero-content {
+      @apply px-6;
+    }
+  }
+
+  /* Hero headline - tighter relationship with subhead */
+  .hero-title {
+    @apply font-display text-white leading-[1.1] tracking-tight;
+    font-size: clamp(2.25rem, 8vw, 4.5rem);
+    margin-bottom: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-title {
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  /* Hero subhead - breathes before CTAs */
+  .hero-subtitle {
+    @apply text-slate-300;
+    font-size: clamp(1rem, 3vw, 1.5rem);
+    margin-bottom: 1.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-subtitle {
+      margin-bottom: 2.5rem;
+    }
+  }
+
+  /* Hero CTA group */
+  .hero-actions {
+    @apply flex flex-col items-center justify-center gap-3;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-actions {
+      @apply flex-row gap-4;
+      margin-bottom: 2rem;
+    }
+  }
+
+  /* Hero stats - tighter, more integrated */
+  .hero-stats-bar {
+    @apply border-t border-slate-800/50;
+    padding-top: 1.25rem;
+  }
+
+  .hero-stats-grid {
+    @apply flex items-center justify-center gap-6 text-xs text-slate-500;
+  }
+
+  @media (min-width: 640px) {
+    .hero-stats-grid {
+      @apply gap-10;
+    }
+  }
+
+  .hero-stat-value {
+    @apply block font-medium text-slate-400 tabular-nums;
+    font-size: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-stat-value {
+      font-size: 1.125rem;
+    }
+  }
+
+  .hero-stat-label {
+    @apply text-slate-600;
+    font-size: 0.6875rem;
+    letter-spacing: 0.025em;
+  }
+
+  /* Editorial section divider */
+  .section-divider {
+    @apply w-16 h-0.5 bg-amber-500 mx-auto my-8;
+  }
+
+  /* ==========================================================================
+     Story Section Standards (Homepage Data Stories)
+     Mobile-first vertical rhythm for narrative flow
+     ========================================================================== */
+
+  /* Story section - the main container for each data story */
+  .story-section {
+    @apply bg-white;
+    padding-top: 2rem;      /* 32px mobile */
+    padding-bottom: 2.5rem; /* 40px mobile */
+  }
+
+  @media (min-width: 640px) {
+    .story-section {
+      padding-top: 5rem;    /* 80px desktop */
+      padding-bottom: 7rem; /* 112px desktop */
+    }
+  }
+
+  .story-section-alt {
+    @apply bg-slate-50;
+  }
+
+  /* Story section inner container */
+  .story-container {
+    @apply max-w-6xl mx-auto px-4;
+  }
+
+  @media (min-width: 640px) {
+    .story-container {
+      @apply px-6;
+    }
+  }
+
+  /* Story header - section label, title, subtitle */
+  .story-header {
+    @apply max-w-3xl;
+    margin-bottom: 1.5rem; /* 24px mobile - tight before chart */
+  }
+
+  @media (min-width: 640px) {
+    .story-header {
+      margin-bottom: 3rem; /* 48px desktop */
+    }
+  }
+
+  .story-label {
+    @apply font-semibold text-xs uppercase tracking-wider;
+  }
+
+  @media (min-width: 640px) {
+    .story-label {
+      @apply text-sm;
+    }
+  }
+
+  .story-title {
+    @apply font-display text-slate-900 leading-tight;
+    font-size: 1.5rem;    /* 24px mobile */
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+    scroll-margin-top: calc(var(--header-height) + 2rem);
+  }
+
+  @media (min-width: 640px) {
+    .story-title {
+      font-size: 2.25rem; /* 36px tablet */
+      margin-top: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .story-title {
+      font-size: 3rem;    /* 48px desktop */
+    }
+  }
+
+  .story-subtitle {
+    @apply text-slate-600 leading-relaxed;
+    font-size: 1rem;      /* 16px mobile */
+  }
+
+  @media (min-width: 640px) {
+    .story-subtitle {
+      font-size: 1.25rem; /* 20px desktop */
+    }
+  }
+
+  /* Chart wrapper - handles edge-to-edge on mobile */
+  .story-chart {
+    margin-bottom: 1rem;  /* 16px mobile - tight connection to insight */
+    margin-left: -1rem;   /* Pull to edge on mobile */
+    margin-right: -1rem;
+  }
+
+  @media (min-width: 640px) {
+    .story-chart {
+      margin-bottom: 3rem; /* 48px desktop */
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  /* Insight callout - the "Key Insight" box after charts */
+  .story-insight {
+    @apply max-w-3xl;
+  }
+
+  /* Stat badge */
+  .stat-badge {
+    @apply inline-flex items-center px-3 py-1 text-sm font-medium
+           bg-slate-100 text-slate-700 rounded-full;
+  }
+
+  /* Insight callout box */
+  .insight-box {
+    @apply border-l-4 border-amber-500 bg-amber-50 p-4 sm:p-6 rounded-r-lg;
+  }
+
+  .insight-box-emerald {
+    @apply border-l-4 border-emerald-500 bg-emerald-50 p-4 sm:p-6 rounded-r-lg;
+  }
+
+  /* CTA button styles */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-slate-900 text-white font-semibold rounded-lg
+           hover:bg-slate-800 transition-colors duration-200;
+  }
+
+  .btn-primary-lg {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2.5 sm:px-6 sm:py-3
+           text-sm sm:text-base
+           bg-white text-slate-900 font-semibold rounded-lg
+           hover:bg-slate-100 transition-colors duration-200;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           bg-white text-slate-900 font-semibold rounded-lg
+           border-2 border-slate-900
+           hover:bg-slate-50 transition-colors duration-200;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           text-slate-600 font-medium
+           hover:text-slate-900 hover:bg-slate-100
+           rounded-lg transition-colors duration-200;
+  }
+
+  .btn-link {
+    @apply inline-flex items-center gap-2
+           text-slate-400 hover:text-white font-medium transition-colors;
+  }
+
+
+  /* Dark panels (for explore/data views) */
+  .panel-dark {
+    @apply bg-slate-800 rounded-lg p-4;
+  }
+
+  .panel-dark-lg {
+    @apply bg-slate-800 rounded-xl p-6;
+  }
+
+  /* Chart container - refined, understated */
+  .chart-panel {
+    @apply rounded-lg p-4;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(71, 85, 105, 0.3);
+  }
+
+  .panel-container {
+    @apply h-full bg-slate-900 border-l border-slate-700 p-6 overflow-y-auto;
+  }
+
+  /* Navigation links */
+  .nav-link {
+    @apply text-slate-300 hover:text-white transition-colors text-sm font-medium;
+  }
+
+  .nav-link-active {
+    @apply text-white text-sm font-medium;
+  }
+
+  /* Form inputs */
+  .search-input {
+    @apply w-full bg-slate-900 border border-slate-600 rounded-lg
+           pl-10 pr-10 py-2 text-white placeholder-slate-500
+           focus:outline-none focus:border-amber-500 transition-colors;
+  }
+
+  /* Legacy pillar buttons (text + icon) */
+  .pillar-btn {
+    @apply px-3 py-2 rounded-md text-sm font-medium transition-all
+           text-slate-400 hover:text-white hover:bg-slate-700
+           flex items-center gap-2;
+  }
+
+  .pillar-btn-active {
+    @apply px-3 py-2 rounded-md text-sm font-medium transition-all
+           bg-slate-600 text-white
+           flex items-center gap-2;
+  }
+
+  /* Pillar icon buttons - match search input height (py-2) */
+  .pillar-icon-btn {
+    @apply relative px-3 py-2 rounded-lg transition-all duration-200
+           text-slate-400 hover:text-slate-200 hover:bg-slate-700/50
+           flex items-center gap-2;
+  }
+
+  .pillar-icon-btn-active {
+    @apply text-white bg-slate-700;
+  }
+
+  /* Responsive labels - hidden on small screens, visible on lg+ */
+  .pillar-label {
+    @apply hidden lg:inline text-sm font-medium;
+  }
+
+  /* Color-coded bottom indicator for active pillar */
+  .pillar-icon-btn-active::after {
+    content: '';
+    @apply absolute bottom-1 left-1/2 -translate-x-1/2 h-0.5 rounded-full;
+    width: calc(100% - 16px);
+    max-width: 48px;
+  }
+
+  .pillar-icon-btn-active[data-pillar="interpersonal"]::after {
+    @apply bg-sky-400;
+  }
+
+  .pillar-icon-btn-active[data-pillar="institutional"]::after {
+    @apply bg-amber-400;
+  }
+
+  .pillar-icon-btn-active[data-pillar="media"]::after {
+    @apply bg-indigo-400;
+  }
+
+  .pillar-icon-btn-active[data-pillar="governance"]::after {
+    @apply bg-emerald-400;
+  }
+
+  /* Tooltip styling - only show when labels are hidden */
+  .pillar-tooltip {
+    @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+           px-3 py-2 rounded-lg
+           bg-slate-900 border border-slate-700
+           opacity-0 invisible pointer-events-none
+           transition-all duration-150
+           flex flex-col gap-0.5
+           whitespace-nowrap z-50
+           shadow-lg
+           lg:hidden;
+  }
+
+  .pillar-icon-btn:hover .pillar-tooltip,
+  .pillar-icon-btn:focus .pillar-tooltip {
+    @apply opacity-100 visible;
+  }
+
+  .pillar-tooltip-title {
+    @apply text-sm font-medium text-white;
+  }
+
+  .pillar-tooltip-desc {
+    @apply text-xs text-slate-400;
+  }
+
+  /* Tooltip arrow */
+  .pillar-tooltip::after {
+    content: '';
+    @apply absolute top-full left-1/2 -translate-x-1/2
+           border-4 border-transparent border-t-slate-900;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    @apply h-1.5 bg-slate-700 rounded-full overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply h-full rounded-full;
+  }
+
+  /* ==========================================================================
+     Page Layout Components
+     ========================================================================== */
+
+  /* Page header (dark hero-style) */
+  .page-header {
+    @apply pt-24 pb-12 sm:pt-32 sm:pb-16 bg-slate-950;
+  }
+
+  .page-header-content {
+    @apply max-w-4xl mx-auto px-4 sm:px-6;
+  }
+
+  .page-title {
+    @apply font-display text-3xl sm:text-4xl md:text-5xl text-white mb-4;
+  }
+
+  .page-subtitle {
+    @apply text-lg sm:text-xl text-slate-400;
+  }
+
+  .page-back-link {
+    @apply inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6 sm:mb-8;
+  }
+
+  /* Page content container */
+  .page-content {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-16;
+  }
+
+  /* ==========================================================================
+     Info Boxes (colored callouts)
+     ========================================================================== */
+
+  .info-box {
+    @apply rounded-xl p-4 sm:p-6 text-sm sm:text-base;
+  }
+
+  .info-box-amber {
+    @apply bg-amber-50 border border-amber-200;
+  }
+
+  /* Beta badge */
+  .badge-beta {
+    @apply inline-flex items-center justify-center
+           px-2 sm:px-2.5
+           text-[10px] sm:text-xs
+           font-mono uppercase tracking-widest
+           rounded bg-amber-500/20 text-amber-400
+           border border-amber-500/30
+           hover:bg-amber-500/30 transition-colors;
+    padding-top: 5px;
+    padding-bottom: 3px;
+    transform: translateY(2px);
+  }
+
+  .info-box-blue {
+    @apply bg-blue-50 border border-blue-200;
+  }
+
+  .info-box-emerald {
+    @apply bg-emerald-50 border border-emerald-200;
+  }
+
+  .info-box-slate {
+    @apply bg-slate-100 rounded-xl p-6;
+  }
+
+  /* ==========================================================================
+     Source Cards (for attribution page)
+     ========================================================================== */
+
+  .source-card {
+    @apply border border-slate-200 rounded-lg p-4 hover:border-slate-300 transition-colors;
+  }
+
+  .source-card-header {
+    @apply flex items-start justify-between gap-4 mb-2;
+  }
+
+  .source-card-title {
+    @apply font-medium text-slate-900;
+  }
+
+  .source-card-badges {
+    @apply flex flex-wrap gap-2 mb-3;
+  }
+
+  /* License/status badges */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+  }
+
+  .badge-slate {
+    @apply bg-slate-100 text-slate-700;
+  }
+
+  .badge-emerald {
+    @apply bg-emerald-100 text-emerald-700;
+  }
+
+  .badge-amber {
+    @apply bg-amber-100 text-amber-700;
+  }
+
+  .badge-license {
+    @apply px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-medium text-slate-400;
+  }
+
+  /* ==========================================================================
+     Section Headers
+     ========================================================================== */
+
+  .section-header {
+    @apply flex items-center gap-3 mb-4;
+  }
+
+  .section-header-icon {
+    @apply w-6 h-6;
+  }
+
+  .section-title {
+    @apply font-display text-2xl text-slate-900;
+  }
+
+  .section-subtitle {
+    @apply font-semibold text-lg text-slate-800 mb-4 pb-2 border-b border-slate-200;
+  }
+
+  /* ==========================================================================
+     Code/Mono blocks
+     ========================================================================== */
+
+  .code-block {
+    @apply bg-slate-900 rounded-lg p-4 text-sm font-mono text-slate-300;
+  }
+
+  .code-block-light {
+    @apply bg-white border border-slate-200 rounded-lg p-4 font-mono text-sm text-slate-700;
+  }
+
+  /* ==========================================================================
+     External link icon styling
+     ========================================================================== */
+
+  .external-link-icon {
+    @apply text-slate-400 hover:text-slate-600 flex-shrink-0;
+  }
+
+  /* ==========================================================================
+     Data Provenance Components
+     ========================================================================== */
+
+  /* Confidence tier dot indicators */
+  .confidence-dot {
+    @apply w-2 h-2 rounded-full inline-block flex-shrink-0;
+  }
+
+  .confidence-dot-sm {
+    @apply w-1.5 h-1.5;
+  }
+
+  .confidence-dot-lg {
+    @apply w-2.5 h-2.5;
+  }
+
+  .confidence-dot-a {
+    @apply bg-emerald-400;
+  }
+
+  .confidence-dot-b {
+    @apply bg-amber-400;
+  }
+
+  .confidence-dot-c {
+    @apply bg-slate-400;
+  }
+
+  /* Source link styling */
+  .source-link {
+    @apply inline-flex items-center gap-1 text-amber-700 hover:text-amber-800
+           hover:underline underline-offset-2 text-xs transition-colors;
+  }
+
+  .source-link-dark {
+    @apply text-amber-400 hover:text-amber-300;
+  }
+
+  .source-link-subtle {
+    @apply text-slate-400 hover:text-slate-300;
+  }
+
+  /* Chart source footer */
+  .chart-source-footer {
+    @apply flex flex-col sm:flex-row items-start sm:items-center justify-between
+           gap-2 px-4 py-3 text-[10px] sm:text-xs text-slate-400;
+  }
+
+  .chart-source-footer-compact {
+    @apply px-3 py-2;
+  }
+
+  /* Source badge variants */
+  .source-badge {
+    @apply inline-flex items-center rounded font-medium transition-colors;
+  }
+
+  .source-badge-sm {
+    @apply text-[10px] px-1.5 py-0.5 gap-1;
+  }
+
+  .source-badge-md {
+    @apply text-xs px-2 py-0.5 gap-1.5;
+  }
+
+  .source-badge-lg {
+    @apply text-sm px-2.5 py-1 gap-2;
+  }
+
+  .source-badge-filled {
+    @apply bg-slate-800 text-slate-300 hover:bg-slate-700;
+  }
+
+  .source-badge-outline {
+    @apply bg-transparent border border-slate-600 text-slate-400 hover:border-slate-500;
+  }
+
+  .source-badge-subtle {
+    @apply bg-slate-900 text-slate-500 hover:text-slate-400;
+  }
+
+  /* Source disclosure panel */
+  .source-disclosure {
+    @apply border-t border-slate-200 pt-4;
+  }
+
+  .source-disclosure-dark {
+    @apply border-slate-700;
+  }
+
+  /* Accessible data table */
+  .data-table-wrapper {
+    @apply overflow-x-auto;
+  }
+
+  .data-table {
+    @apply w-full text-sm;
+  }
+
+  .data-table th {
+    @apply text-left py-2 px-3 font-medium;
+  }
+
+  .data-table td {
+    @apply py-2 px-3;
+  }
+
+  .data-table-dark {
+    @apply text-slate-300;
+  }
+
+  .data-table-dark th,
+  .data-table-dark td {
+    @apply border-b border-slate-700;
+  }
+
+  /* ==========================================================================
+     ProvenanceChart Wrapper System
+     ========================================================================== */
+
+  /* Container variants */
+  .provenance-chart {
+    @apply relative bg-gradient-to-b from-slate-50 to-white
+           rounded-xl border border-slate-200/80 shadow-sm overflow-hidden;
+  }
+
+  .provenance-chart-compact {
+    @apply rounded-lg border-slate-200;
+  }
+
+  .provenance-chart-editorial {
+    @apply border-0 shadow-none bg-transparent rounded-none;
+  }
+
+  /* Chart header */
+  .chart-header {
+    @apply px-4 pt-4 pb-2;
+  }
+
+  .chart-title {
+    @apply font-display text-lg text-slate-900 flex items-center gap-2;
+  }
+
+  .chart-subtitle {
+    @apply text-sm text-slate-500 mt-1;
+  }
+
+  /* Chart container (holds ReactECharts) */
+  .chart-container {
+    @apply w-full;
+  }
+
+  /* Responsive height via CSS custom properties */
+  .chart-responsive-height {
+    height: var(--chart-height-mobile, 320px);
+  }
+
+  @media (min-width: 640px) {
+    .chart-responsive-height {
+      height: var(--chart-height-desktop, 400px);
+    }
+  }
+
+  /* Skip link for accessibility */
+  .chart-skip-link {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2
+           focus:z-50 focus:bg-white focus:px-3 focus:py-2 focus:rounded
+           focus:text-sm focus:font-medium focus:shadow-lg focus:ring-2 focus:ring-amber-500;
+  }
+
+  /* Deep link highlight pulse animation */
+  @keyframes chartHighlightPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+    50% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3); }
+  }
+
+  .chart-highlight-pulse {
+    animation: chartHighlightPulse 1s ease-in-out 2;
+  }
+
+  /* Chart export header (for PNG downloads) */
+  .chart-export-header {
+    @apply px-5 pt-6 pb-4 bg-white;
+  }
+
+  .chart-export-title {
+    @apply font-display text-slate-900 leading-tight;
+    font-size: 1.75rem;
+  }
+
+  .chart-export-subtitle {
+    @apply text-slate-600 leading-relaxed mt-3;
+    font-size: 1rem;
+  }
+
+  /* Source-series legend (for multi-source charts) */
+  .source-series-legend {
+    @apply flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-slate-500
+           px-4 py-2 border-t border-slate-100;
+  }
+
+  .source-series-legend-dark {
+    @apply border-slate-700 text-slate-400;
+  }
+
+  .source-series-group {
+    @apply flex items-center gap-1.5;
+  }
+
+  .source-series-source {
+    @apply font-medium;
+  }
+
+  .source-series-items {
+    @apply flex items-center gap-1;
+  }
+
+  .source-series-item {
+    @apply flex items-center gap-1;
+  }
+
+  .source-series-dot {
+    @apply w-2 h-2 rounded-full flex-shrink-0;
+  }
+
+  /* ==========================================================================
+     Chart Legend Components (above-chart legends/pills)
+     Mobile-first responsive sizing
+     ========================================================================== */
+
+  /* Chart legend row container */
+  .chart-legend-row {
+    @apply flex flex-wrap items-center gap-2 sm:gap-4 px-4 sm:px-0 text-xs sm:text-sm;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .chart-legend-row {
+      margin-bottom: 1rem;
+    }
+  }
+
+  /* Chart stat pill (country badge with decline value) */
+  .chart-stat-pill {
+    @apply flex items-center gap-1 sm:gap-2 px-1.5 py-0.5 sm:px-3 sm:py-1.5 rounded-full;
+  }
+
+  .chart-stat-pill-dot {
+    @apply w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full flex-shrink-0;
+  }
+
+  /* Legend item (pillar indicator with label) */
+  .chart-legend-item {
+    @apply flex items-center gap-1.5 sm:gap-2;
+  }
+
+  .chart-legend-dot {
+    @apply w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0;
+  }
+
+  /* Touch hint overlay for mobile first-use */
+  .touch-hint-overlay {
+    @apply absolute inset-0 flex items-center justify-center
+           bg-slate-900/60 backdrop-blur-sm z-20;
+  }
+
+  .touch-hint-card {
+    @apply bg-white rounded-lg p-5 text-center shadow-xl max-w-xs mx-4;
+  }
+
+  .touch-hint-title {
+    @apply text-sm font-medium text-slate-900 mb-1;
+  }
+
+  .touch-hint-text {
+    @apply text-xs text-slate-500 mb-4;
+  }
+
+  .touch-hint-dismiss {
+    @apply px-4 py-2 bg-slate-900 text-white text-sm font-medium
+           rounded-lg hover:bg-slate-800 transition-colors;
+  }
+}
+
+@layer components {
+  /* Hero animation sequence - staggered fade-in with font preload buffer
+     Uses visibility to completely hide until animation starts */
+  .hero-headline {
+    visibility: hidden;
+    opacity: 0;
+    animation: heroReveal 0.6s ease-out forwards;
+    animation-delay: 100ms;
+  }
+
+  .hero-subhead {
+    visibility: hidden;
+    opacity: 0;
+    animation: heroReveal 0.6s ease-out forwards;
+    animation-delay: 200ms;
+  }
+
+  .hero-cta {
+    visibility: hidden;
+    opacity: 0;
+    animation: heroReveal 0.6s ease-out forwards;
+    animation-delay: 300ms;
+  }
+
+  .hero-stats {
+    visibility: hidden;
+    opacity: 0;
+    animation: heroReveal 0.6s ease-out forwards;
+    animation-delay: 450ms;
+  }
+}
+
+@keyframes heroReveal {
+  0% {
+    visibility: visible;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer utilities {
+  /* Text gradient for emphasis */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600;
+  }
+
+  /* Noise texture overlay */
+  .noise-texture {
+    @apply absolute inset-0 opacity-[0.03] pointer-events-none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  /* Touch-friendly targets (44px minimum per WCAG) */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  .touch-target-sm {
+    @apply min-h-[36px] min-w-[36px];
+  }
+
+  /* Responsive text scale */
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl;
+  }
+
+  /* Responsive spacing */
+  .gap-responsive {
+    @apply gap-3 sm:gap-5 md:gap-6;
+  }
+
+  .p-responsive {
+    @apply p-4 sm:p-6 md:p-8;
+  }
+}
+
+/* =============================================================================
+   Chart Component Styles
+   ============================================================================= */
+
+/* Chart action button (download, share, fullscreen) */
+.chart-action-btn {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md transition-colors;
+  @apply text-slate-500 hover:text-slate-700 hover:bg-slate-100;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400;
+}
+
+.chart-action-btn-active {
+  @apply bg-slate-100 text-slate-700;
+}
+
+/* Chart tooltip */
+.chart-tooltip {
+  @apply absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50;
+  @apply px-2.5 py-1.5 text-[11px] leading-snug;
+  @apply bg-slate-900 text-slate-100 rounded-md shadow-lg;
+  @apply whitespace-nowrap pointer-events-none;
+  animation: fadeInZoom 150ms ease-out;
+}
+
+.chart-tooltip-arrow {
+  @apply absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-slate-900 rotate-45;
+}
+
+/* Chart dropdown menu */
+.chart-dropdown {
+  @apply absolute bottom-full right-0 mb-2 z-50;
+  @apply w-40 py-1.5 bg-white rounded-lg;
+  @apply shadow-lg border border-slate-200;
+  animation: fadeInSlide 150ms ease-out;
+}
+
+@keyframes fadeInZoom {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.chart-dropdown-item {
+  @apply flex items-center gap-3 w-full px-3 py-2 text-sm;
+  @apply text-slate-700 hover:bg-slate-50 transition-colors;
+}
+
+/* View tabs (Chart/Table toggle) */
+.view-tablist {
+  @apply inline-flex items-center rounded-lg border border-slate-200 bg-white p-0.5;
+}
+
+.view-tab {
+  @apply inline-flex items-center gap-1.5 px-3 py-2 sm:px-2.5 sm:py-1 text-xs rounded-md transition-colors;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-1;
+  @apply text-slate-500 hover:text-slate-700 hover:bg-slate-50;
+}
+
+.view-tab-active {
+  @apply bg-slate-100 text-slate-900 font-medium;
+}
+
+/* Chart footer */
+.chart-footer {
+  @apply px-4 py-2.5 border-t border-slate-100;
+}
+
+.chart-footer-row {
+  @apply flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between;
+}
+
+.chart-footer-source {
+  @apply flex items-center gap-2 text-[11px] text-slate-500 min-w-0;
+}
+
+.chart-footer-actions {
+  @apply flex items-center gap-0.5 shrink-0;
+}
+
+.chart-footer-info-link {
+  @apply inline-flex items-center justify-center shrink-0 rounded-full p-0.5;
+  @apply text-slate-400 hover:text-amber-600 hover:bg-slate-100 transition-colors;
+}
