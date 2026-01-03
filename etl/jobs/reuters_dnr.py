@@ -236,6 +236,7 @@ class ReutersDNRProcessor(BaseProcessor):
 
         for _, row in df_year.iterrows():
             # Use ISO3 directly if available, otherwise look up by country name
+            iso3: str | None
             if "ISO3" in df_year.columns:
                 iso3 = str(row["ISO3"])
             else:
@@ -406,21 +407,19 @@ class ReutersDNRProcessor(BaseProcessor):
         else:
             years = [int(c) for c in df.columns if c.isdigit()]
 
-        all_observations = []
-        total_stats = {
-            "years_processed": [],
-            "total_observations": 0,
-            "countries": set(),
-        }
+        all_observations: List[Observation] = []
+        years_processed: List[int] = []
+        total_observations = 0
+        countries_seen: set[str] = set()
 
         for year in years:
             print(f"\nProcessing Reuters DNR {year}...")
             observations = self.process(compiled_path, year)
             all_observations.extend(observations)
 
-            total_stats["years_processed"].append(year)
-            total_stats["total_observations"] += len(observations)
-            total_stats["countries"].update(obs.iso3 for obs in observations)
+            years_processed.append(year)
+            total_observations += len(observations)
+            countries_seen.update(obs.iso3 for obs in observations)
 
         # Ensure countries exist and load to database
         if all_observations:
@@ -428,12 +427,15 @@ class ReutersDNRProcessor(BaseProcessor):
             self.ensure_countries_exist(iso3_codes)
             self.load_to_database(all_observations)
 
-        total_stats["countries"] = len(total_stats["countries"])
         print(
-            f"\nTotal: {total_stats['total_observations']} observations across {len(total_stats['years_processed'])} years"
+            f"\nTotal: {total_observations} observations across {len(years_processed)} years"
         )
 
-        return total_stats
+        return {
+            "years_processed": years_processed,
+            "total_observations": total_observations,
+            "countries": len(countries_seen),
+        }
 
 
 @click.command()
