@@ -1,0 +1,17 @@
+# Root .vercelignore for CLI deploys
+# Excludes everything except web/ for trustatlas project
+
+api/
+etl/
+db/
+data/
+docs/
+infra/
+scripts/
+tiles/
+reports/
+.venv/
+.pytest_cache/
+.git/
+node_modules/
+*.mbtiles

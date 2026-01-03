@@ -1,0 +1,214 @@
+version: 0.6.0
+description: "Trust Atlas methodology — four independent pillars with pillar-specific confidence tiers"
+
+# Trust is multidimensional. We track four pillars independently:
+# - interpersonal: trust in other people
+# - institutional: trust in government/institutions
+# - governance: institutional quality metrics
+# - media: trust in news media
+# Each pillar has its own data sources, methodology constraints, and confidence tier
+
+pillars:
+  interpersonal:
+    description: "Trust in other people - 'most people can be trusted' binary question"
+    methodology: "WVS-family sources with identical question wording"
+    precedence: "WVS primary; EVS supplements where WVS has no data"
+    sources:
+      - name: WVS
+        full_name: World Values Survey
+        coverage: "108 countries, 1981-2023"
+        question: "Generally speaking, would you say that most people can be trusted?"
+        scale: binary
+        role: primary
+      - name: EVS
+        full_name: European Values Study
+        coverage: "47 countries, 1981-2021"
+        question: Same wording (harmonized via IVS)
+        scale: binary
+        role: supplementary (fills gaps where WVS has no data)
+      - name: GSS
+        full_name: General Social Survey
+        coverage: "USA, 1972-2024"
+        question: Same wording (Rosenberg 1956)
+        scale: binary
+      - name: ANES
+        full_name: American National Election Studies
+        coverage: "USA, 1958-2024"
+        question: Same wording
+        scale: binary
+      - name: CES
+        full_name: Canadian Election Study
+        coverage: "Canada, 2008-2021"
+        question: Same wording
+        scale: binary
+    excluded:
+      - name: ESS
+        reason: "0-10 scale produces systematically different scores"
+      - name: Regional Barometers
+        reason: "Varied scales (binary, 4-point) and question wording"
+      - name: OECD
+        reason: "Different institutional definitions"
+
+  institutional:
+    description: "Trust in government and public institutions"
+    methodology: "WVS-family only"
+    sources:
+      - name: WVS
+        full_name: World Values Survey
+        coverage: "108 countries, 1981-2023"
+      - name: GSS
+        full_name: General Social Survey
+        coverage: "USA, 1972-2024"
+      - name: ANES
+        full_name: American National Election Studies
+        coverage: "USA, 1958-2024"
+      - name: CES
+        full_name: Canadian Election Study
+        coverage: "Canada, 2008-2021"
+    excluded:
+      - name: EVS
+        reason: "Inconsistent variable coverage. Some waves use E069_11 (government), others only E069_13 (parties). CZE 1991 example: 47.7% gov trust (WVS) vs 23.8% party trust (EVS) - different constructs, cannot reconcile."
+      - name: ESS
+        reason: "Different question wording and 0-10 scale"
+      - name: Asian Barometer
+        reason: "Wave 1-2 used inverted scales (10% vs 95% in later waves)"
+      - name: Latinobarometer
+        reason: "Methodology changes produced 25%→93% swings"
+
+  media:
+    description: "Trust in news media"
+    methodology: "Weighted average of available sources"
+    sources:
+      - name: Reuters_DNR
+        full_name: Reuters Institute Digital News Report
+        coverage: "47 countries, 2015-2025"
+        question: "I think you can trust most news most of the time"
+        scale: percent agreeing
+        weight: 0.4
+        role: primary (global)
+        note: "Data starts 2015 when Reuters introduced the standardized trust question. Earlier reports (2012-2014) used different methodology and questions, making cross-country comparison impossible."
+      - name: Eurobarometer
+        full_name: Standard Eurobarometer
+        coverage: "32 EU/candidate countries, 2024"
+        question: "Trust in institutions: Media (QA6_1)"
+        scale: binary (tend to trust / tend not to trust)
+        weight: 0.4
+        role: primary (EU)
+        note: "Covers EU member states and candidate countries. Same trust battery as government/parliament questions."
+      - name: WVS
+        full_name: World Values Survey
+        coverage: "100+ countries, 1981-2023"
+        question: "Confidence in the press / Confidence in television (E069_07/08)"
+        scale: "4-point (great deal, quite a lot, not very much, none at all)"
+        weight: 0.2
+        role: supplementary
+        note: "Provides historical depth back to 1981. Measures 'confidence in' rather than 'trust in' media."
+
+  governance:
+    description: "Institutional quality - corruption perceptions and rule of law"
+    methodology: "Expert assessments, weighted average of available sources"
+    sources:
+      - name: CPI
+        full_name: Transparency International Corruption Perceptions Index
+        coverage: "180+ countries, 2012-2024"
+        scale: 0-100
+        weight: 0.2
+      - name: WGI
+        full_name: World Bank Worldwide Governance Indicators
+        coverage: "206 countries, 2008-2023"
+        scale: "-2.5 to +2.5, rescaled to 0-100"
+        weight: 0.2
+      - name: WJP
+        full_name: World Justice Project Rule of Law Index
+        coverage: "142 countries, 2012-2024"
+        scale: 0-100
+        weight: 0.2
+      - name: WJP-Corruption
+        full_name: World Justice Project Corruption Sub-index
+        coverage: "142 countries, 2012-2024"
+        scale: 0-100
+        weight: 0.2
+      - name: FreedomHouse
+        full_name: Freedom House Freedom in the World
+        coverage: "189 countries, 2013-2024"
+        scale: 0-100
+        weight: 0.1
+      - name: V-Dem
+        full_name: Varieties of Democracy
+        coverage: "176 countries, 2000-2024"
+        scale: 0-100
+        weight: 0.1
+    note: "Missing sources have their weight redistributed proportionally among available sources"
+
+# Normalization
+scales:
+  percent: "x"
+  0_10_to_percent: "x * 10"
+  wgi: "((x + 2.5) / 5) * 100"
+
+# Pillar-specific confidence tiers (v0.6.0)
+# Each pillar has its own confidence tier reflecting different data update rhythms
+confidence:
+  # Survey pillars (interpersonal, institutional) - 5-year WVS cycles
+  survey_pillars:
+    tiers:
+      A:
+        criteria: "WVS/EVS data ≤3 years old"
+        interval: "±5 points"
+      B:
+        criteria: "WVS/EVS data 3-7 years old"
+        interval: "±10 points"
+      C:
+        criteria: "No valid survey within 7 years"
+        interval: "±15 points"
+    grace_years: 3
+    max_age_years: 7
+
+  # Governance pillar - annual updates from CPI, WGI, etc.
+  governance_pillar:
+    tier: A  # Always tier A due to annual updates
+    interval: "±5 points"
+
+  # Media pillar - annual Reuters/Eurobarometer, supplemented by WVS
+  media_pillar:
+    tiers:
+      A:
+        criteria: "Reuters DNR or Eurobarometer ≤1 year old"
+        interval: "±5 points"
+      B:
+        criteria: "Reuters/Eurobarometer 1-2 years old OR WVS ≤3 years old"
+        interval: "±10 points"
+      C:
+        criteria: "No media data within 3 years"
+        interval: "±15 points"
+
+# Data quality thresholds
+quality:
+  outlier_threshold: 25  # Flag YoY changes > 25 points
+  minimum_sample_size: 300
+
+# Sources with restricted access
+# Note: Some have free derivatives available
+restricted:
+  - name: Gallup World Poll
+    status: "Core microdata requires subscription"
+    free_alternatives:
+      - name: Briq Global Preferences Survey (GPS)
+        coverage: "76 countries"
+        includes: "Trust measure (0-10 scale)"
+        url: "https://www.briq-institute.org/global-preferences/home"
+      - name: Lloyd's Register Foundation World Risk Poll
+        coverage: "142+ countries"
+        includes: "Safety/risk perceptions"
+        url: "https://wrp.lrfoundation.org.uk/"
+      - name: Wellcome Global Monitor
+        coverage: "140+ countries"
+        includes: "Science and health trust"
+        url: "https://wellcome.org/reports/wellcome-global-monitor"
+    university_access: "Available via Harvard, Yale, Penn, UVA, and other institutional subscriptions"
+  - name: Edelman Trust Barometer
+    status: "Public reports available; microdata redistribution unclear"
+    public_data:
+      - "Annual PDF reports (aggregate statistics)"
+      - "Interactive dashboard exports"
+    microdata: "Contact trustinstitute@edelman.com for academic access"
