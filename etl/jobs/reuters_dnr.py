@@ -173,11 +173,11 @@ class ReutersDNRProcessor(BaseProcessor):
         df.columns = [str(c).strip() for c in df.columns]
 
         # Detect format and process
-        if 'Year' in df.columns or 'year' in df.columns:
+        if "Year" in df.columns or "year" in df.columns:
             observations = self._process_long_format(df, year)
         elif str(year) in df.columns:
             observations = self._process_wide_format(df, year)
-        elif 'Trust' in df.columns or 'Trust_Percent' in df.columns:
+        elif "Trust" in df.columns or "Trust_Percent" in df.columns:
             observations = self._process_simple_format(df, year)
         else:
             # Try to find any year column
@@ -220,38 +220,42 @@ class ReutersDNRProcessor(BaseProcessor):
         col_map = {}
         for col in df.columns:
             col_lower = col.lower()
-            if 'country' in col_lower:
-                col_map[col] = 'Country'
-            elif col_lower == 'iso3':
-                col_map[col] = 'ISO3'
-            elif 'year' in col_lower:
-                col_map[col] = 'Year'
-            elif 'trust' in col_lower or 'percent' in col_lower:
-                col_map[col] = 'Trust'
+            if "country" in col_lower:
+                col_map[col] = "Country"
+            elif col_lower == "iso3":
+                col_map[col] = "ISO3"
+            elif "year" in col_lower:
+                col_map[col] = "Year"
+            elif "trust" in col_lower or "percent" in col_lower:
+                col_map[col] = "Trust"
 
         df = df.rename(columns=col_map)
 
         # Filter to requested year
-        df_year = df[df['Year'] == year]
+        df_year = df[df["Year"] == year]
 
         for _, row in df_year.iterrows():
             # Use ISO3 directly if available, otherwise look up by country name
-            if 'ISO3' in df_year.columns:
-                iso3 = str(row['ISO3'])
+            if "ISO3" in df_year.columns:
+                iso3 = str(row["ISO3"])
             else:
-                country_name = row['Country']
+                country_name = row["Country"]
                 iso3 = self._get_iso3(str(country_name))
 
             if not iso3:
-                self.stats["unmapped_countries"].append(str(row.get('Country', 'Unknown')))
+                self.stats["unmapped_countries"].append(
+                    str(row.get("Country", "Unknown"))
+                )
                 continue
 
-            trust_pct = row['Trust']
+            trust_pct = row["Trust"]
             if pd.isna(trust_pct):
                 continue
 
             # Convert to native Python int to avoid numpy type issues
-            observations.append(self._create_observation(iso3, int(year), float(trust_pct)))
+            observations.append(
+                self._create_observation(iso3, int(year), float(trust_pct))
+            )
 
         return observations
 
@@ -278,7 +282,7 @@ class ReutersDNRProcessor(BaseProcessor):
         # Find country column
         country_col = None
         for col in df.columns:
-            if 'country' in col.lower():
+            if "country" in col.lower():
                 country_col = col
                 break
 
@@ -320,9 +324,9 @@ class ReutersDNRProcessor(BaseProcessor):
 
         for col in df.columns:
             col_lower = col.lower()
-            if 'country' in col_lower:
+            if "country" in col_lower:
                 country_col = col
-            elif 'trust' in col_lower or 'percent' in col_lower:
+            elif "trust" in col_lower or "percent" in col_lower:
                 trust_col = col
 
         if not country_col:
@@ -346,7 +350,9 @@ class ReutersDNRProcessor(BaseProcessor):
 
         return observations
 
-    def _create_observation(self, iso3: str, year: int, trust_pct: float) -> Observation:
+    def _create_observation(
+        self, iso3: str, year: int, trust_pct: float
+    ) -> Observation:
         """
         Create a media trust observation.
 
@@ -394,8 +400,8 @@ class ReutersDNRProcessor(BaseProcessor):
         df = pd.read_csv(compiled_path)
 
         # Detect available years
-        if 'Year' in df.columns or 'year' in df.columns:
-            year_col = 'Year' if 'Year' in df.columns else 'year'
+        if "Year" in df.columns or "year" in df.columns:
+            year_col = "Year" if "Year" in df.columns else "year"
             years = sorted(df[year_col].unique())
         else:
             years = [int(c) for c in df.columns if c.isdigit()]
@@ -423,7 +429,9 @@ class ReutersDNRProcessor(BaseProcessor):
             self.load_to_database(all_observations)
 
         total_stats["countries"] = len(total_stats["countries"])
-        print(f"\nTotal: {total_stats['total_observations']} observations across {len(total_stats['years_processed'])} years")
+        print(
+            f"\nTotal: {total_stats['total_observations']} observations across {len(total_stats['years_processed'])} years"
+        )
 
         return total_stats
 
@@ -431,7 +439,9 @@ class ReutersDNRProcessor(BaseProcessor):
 @click.command()
 @click.option("--year", default=2024, help="Year to process (default: 2024)")
 @click.option("--all-years", is_flag=True, help="Process all years from compiled file")
-@click.option("--skip-download", is_flag=True, help="Skip download check (use existing data)")
+@click.option(
+    "--skip-download", is_flag=True, help="Skip download check (use existing data)"
+)
 def main(year: int, all_years: bool, skip_download: bool):
     """
     Run Reuters DNR ETL process.
@@ -446,7 +456,9 @@ def main(year: int, all_years: bool, skip_download: bool):
     try:
         if all_years:
             stats = processor.run_all_years(skip_download)
-            print(f"\nReuters DNR ETL completed for {len(stats['years_processed'])} years")
+            print(
+                f"\nReuters DNR ETL completed for {len(stats['years_processed'])} years"
+            )
             print(f"  Years: {stats['years_processed']}")
             print(f"  Countries: {stats['countries']}")
             print(f"  Observations: {stats['total_observations']}")
@@ -454,7 +466,9 @@ def main(year: int, all_years: bool, skip_download: bool):
             stats = processor.run(year, skip_download)
 
             if stats.get("unmapped_countries"):
-                print(f"\nWarning: Could not map {len(stats['unmapped_countries'])} countries:")
+                print(
+                    f"\nWarning: Could not map {len(stats['unmapped_countries'])} countries:"
+                )
                 for country in stats["unmapped_countries"][:10]:
                     print(f"  - {country}")
 

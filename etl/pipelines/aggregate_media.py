@@ -128,13 +128,15 @@ def aggregate_media_observations(conn, dry_run: bool = False) -> Dict:
 
     with conn.cursor() as cur:
         # Get all media observations grouped by country-year
-        cur.execute("""
+        cur.execute(
+            """
             SELECT iso3, year, source, score_0_100
             FROM observations
             WHERE trust_type = 'media'
               AND score_0_100 IS NOT NULL
             ORDER BY iso3, year, source
-        """)
+        """
+        )
 
         # Group by (iso3, year)
         country_years: Dict[Tuple[str, int], Dict[str, List[float]]] = defaultdict(
@@ -159,9 +161,7 @@ def aggregate_media_observations(conn, dry_run: bool = False) -> Dict:
             }
 
             # Calculate weighted average with redistribution
-            available_weight = sum(
-                MEDIA_WEIGHTS.get(src, 0) for src in source_scores
-            )
+            available_weight = sum(MEDIA_WEIGHTS.get(src, 0) for src in source_scores)
 
             if available_weight == 0:
                 continue

@@ -97,7 +97,7 @@ def extract_trust_data_2024(pdf_path: Path) -> list[dict]:
 
         # Parse country-percentage pairs
         # Format in text: "Finland 69" or "UK 36 +3pp"
-        lines = text.split('\n')
+        lines = text.split("\n")
         current_region = None
 
         for line in lines:
@@ -122,17 +122,19 @@ def extract_trust_data_2024(pdf_path: Path) -> list[dict]:
             # Match country + percentage patterns
             # e.g., "Finland 69", "UK 36 +3pp", "Netherlands 54 -3pp"
             for country, iso3 in COUNTRY_ISO3.items():
-                pattern = rf'\b{re.escape(country)}\s+(\d{{1,2}})'
+                pattern = rf"\b{re.escape(country)}\s+(\d{{1,2}})"
                 match = re.search(pattern, line)
                 if match:
                     trust_pct = int(match.group(1))
-                    results.append({
-                        'year': year,
-                        'country': country,
-                        'iso3': iso3,
-                        'trust_pct': trust_pct,
-                        'region': current_region or 'Unknown'
-                    })
+                    results.append(
+                        {
+                            "year": year,
+                            "country": country,
+                            "iso3": iso3,
+                            "trust_pct": trust_pct,
+                            "region": current_region or "Unknown",
+                        }
+                    )
 
     return results
 
@@ -602,8 +604,10 @@ def write_csv(data: list[dict], output_path: Path):
     """Write extracted data to CSV."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with open(output_path, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=['year', 'country', 'iso3', 'trust_pct', 'region'])
+    with open(output_path, "w", newline="") as f:
+        writer = csv.DictWriter(
+            f, fieldnames=["year", "country", "iso3", "trust_pct", "region"]
+        )
         writer.writeheader()
         writer.writerows(data)
 
@@ -622,13 +626,15 @@ def main():
     for year, country_data in sorted(yearly_data.items()):
         print(f"Loading {year} data...")
         for country, iso3, trust_pct, region in country_data:
-            all_data.append({
-                'year': year,
-                'country': country,
-                'iso3': iso3,
-                'trust_pct': trust_pct,
-                'region': region
-            })
+            all_data.append(
+                {
+                    "year": year,
+                    "country": country,
+                    "iso3": iso3,
+                    "trust_pct": trust_pct,
+                    "region": region,
+                }
+            )
         print(f"  -> {len(country_data)} countries")
 
     # Write output
