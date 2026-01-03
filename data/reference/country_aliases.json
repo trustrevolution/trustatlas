@@ -1,0 +1,144 @@
+{
+  "description": "Maps country name variations to ISO3 codes for ETL processing",
+  "aliases": {
+    "United States of America": "USA",
+    "United States": "USA",
+    "US": "USA",
+    "U.S.": "USA",
+    "U.S.A.": "USA",
+
+    "United Kingdom of Great Britain and Northern Ireland": "GBR",
+    "United Kingdom": "GBR",
+    "UK": "GBR",
+    "U.K.": "GBR",
+    "Great Britain": "GBR",
+
+    "Russian Federation": "RUS",
+    "Russia": "RUS",
+
+    "Korea, Republic of": "KOR",
+    "Republic of Korea": "KOR",
+    "South Korea": "KOR",
+    "Korea (South)": "KOR",
+    "Korea, South": "KOR",
+
+    "Korea, Dem. People's Rep.": "PRK",
+    "North Korea": "PRK",
+    "Korea (North)": "PRK",
+
+    "China, People's Republic of": "CHN",
+    "People's Republic of China": "CHN",
+    "China": "CHN",
+
+    "Taiwan, China": "TWN",
+    "Taiwan": "TWN",
+    "Taiwan, Province of China": "TWN",
+    "Chinese Taipei": "TWN",
+
+    "Hong Kong SAR, China": "HKG",
+    "Hong Kong SAR": "HKG",
+    "Hong Kong": "HKG",
+
+    "Viet Nam": "VNM",
+    "Vietnam": "VNM",
+
+    "Iran, Islamic Republic of": "IRN",
+    "Iran, Islamic Rep.": "IRN",
+    "Iran": "IRN",
+
+    "Venezuela, RB": "VEN",
+    "Venezuela, Bolivarian Republic of": "VEN",
+    "Venezuela": "VEN",
+
+    "Egypt, Arab Rep.": "EGY",
+    "Egypt, Arab Republic of": "EGY",
+    "Egypt": "EGY",
+
+    "Czech Republic": "CZE",
+    "Czechia": "CZE",
+
+    "Slovak Republic": "SVK",
+    "Slovakia": "SVK",
+
+    "Congo, Dem. Rep.": "COD",
+    "Congo, Democratic Republic of the": "COD",
+    "Democratic Republic of the Congo": "COD",
+    "DR Congo": "COD",
+    "DRC": "COD",
+
+    "Congo, Rep.": "COG",
+    "Congo, Republic of the": "COG",
+    "Republic of the Congo": "COG",
+    "Congo": "COG",
+
+    "Cote d'Ivoire": "CIV",
+    "Côte d'Ivoire": "CIV",
+    "Ivory Coast": "CIV",
+
+    "Lao PDR": "LAO",
+    "Lao People's Democratic Republic": "LAO",
+    "Laos": "LAO",
+
+    "Kyrgyz Republic": "KGZ",
+    "Kyrgyzstan": "KGZ",
+
+    "North Macedonia": "MKD",
+    "Macedonia": "MKD",
+    "FYR Macedonia": "MKD",
+    "Macedonia, FYR": "MKD",
+
+    "Turkiye": "TUR",
+    "Turkey": "TUR",
+    "Türkiye": "TUR",
+
+    "Brunei Darussalam": "BRN",
+    "Brunei": "BRN",
+
+    "Syrian Arab Republic": "SYR",
+    "Syria": "SYR",
+
+    "Timor-Leste": "TLS",
+    "East Timor": "TLS",
+
+    "Eswatini": "SWZ",
+    "Swaziland": "SWZ",
+
+    "Cabo Verde": "CPV",
+    "Cape Verde": "CPV",
+
+    "Bolivia, Plurinational State of": "BOL",
+    "Bolivia": "BOL",
+
+    "Tanzania, United Republic of": "TZA",
+    "Tanzania": "TZA",
+
+    "Moldova, Republic of": "MDA",
+    "Moldova": "MDA",
+
+    "Gambia, The": "GMB",
+    "The Gambia": "GMB",
+    "Gambia": "GMB",
+
+    "Bahamas, The": "BHS",
+    "The Bahamas": "BHS",
+    "Bahamas": "BHS",
+
+    "West Bank and Gaza": "PSE",
+    "Palestine": "PSE",
+    "Palestinian Territories": "PSE",
+    "State of Palestine": "PSE",
+
+    "Myanmar": "MMR",
+    "Burma": "MMR",
+
+    "Netherlands": "NLD",
+    "The Netherlands": "NLD",
+    "Holland": "NLD",
+
+    "Philippines": "PHL",
+    "The Philippines": "PHL",
+
+    "Yemen, Rep.": "YEM",
+    "Yemen": "YEM"
+  }
+}

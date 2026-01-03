@@ -1,0 +1,4 @@
+[tools]
+neonctl = "latest"
+python = "latest"
+r = "4.5.2"
