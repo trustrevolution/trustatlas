@@ -23,16 +23,23 @@ const PILLAR_ICONS = {
 
 const PILLAR_ORDER: Pillar[] = ['interpersonal', 'institutional', 'media', 'governance']
 
+interface PillarData {
+  score: number
+  confidence_tier: string
+  ci_lower: number | null
+  ci_upper: number | null
+}
+
 interface CountryDetail {
   iso3: string
   name: string
   region: string
   series: Array<{
     year: number
-    interpersonal: number | null
-    institutional: number | null
-    governance: number | null
-    media: number | null
+    interpersonal: PillarData | null
+    institutional: PillarData | null
+    governance: PillarData | null
+    media: PillarData | null
     confidence_tier: string
     ci_lower: number | null
     ci_upper: number | null
@@ -159,16 +166,17 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
 
   // Build pillar summary - what data is available for each pillar
   const pillarSummary = PILLAR_ORDER.map(pillarId => {
-    const series = countryData.series.filter(d => d[pillarId] != null)
+    const series = countryData.series.filter(d => d[pillarId]?.score != null)
     const latest = series[0]
     const oldest = series[series.length - 1]
-    const value = latest?.[pillarId] ?? null
+    const pillarData = latest?.[pillarId]
+    const value = pillarData?.score ?? null
     const hasData = value != null
 
     // Calculate trend if we have multiple data points
     let trend = null
     if (series.length >= 2 && value != null) {
-      const oldValue = oldest?.[pillarId]
+      const oldValue = oldest?.[pillarId]?.score
       if (oldValue != null) {
         const diff = value - oldValue
         if (Math.abs(diff) >= 3) {
@@ -186,6 +194,7 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
       value,
       hasData,
       trend,
+      confidenceTier: pillarData?.confidence_tier ?? null,
       yearRange: hasData ? `${oldest?.year}–${latest?.year}` : null,
       sources: countryData.sources_used[pillarId] || [],
     }
@@ -193,7 +202,7 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
 
   // Get detailed data for selected pillar
   const selectedPillarData = pillarSummary.find(p => p.pillarId === selectedPillar)!
-  const pillarSeries = countryData.series.filter(d => d[selectedPillar] != null)
+  const pillarSeries = countryData.series.filter(d => d[selectedPillar]?.score != null)
   const pillarSources = countryData.sources_used[selectedPillar] || []
 
   // Chart options for time series - show only selected pillar
@@ -233,7 +242,7 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
       {
         name: pillarConfig.label,
         type: 'line',
-        data: [...pillarSeries].reverse().map(d => d[selectedPillar]),
+        data: [...pillarSeries].reverse().map(d => d[selectedPillar]?.score),
         smooth: false,
         symbol: 'circle',
         symbolSize: 5,
@@ -337,10 +346,10 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
         {selectedPillarData.hasData ? (
           <>
             {/* Confidence badge */}
-            {latestDataPoint?.confidence_tier && (
+            {selectedPillarData.confidenceTier && (
               <div className="flex items-center gap-2">
                 <ConfidenceBadge
-                  tier={latestDataPoint.confidence_tier}
+                  tier={selectedPillarData.confidenceTier}
                   showLabel
                   showTooltip
                   size="sm"

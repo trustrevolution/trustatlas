@@ -119,12 +119,10 @@ def aggregate_media_observations(conn, dry_run: bool = False) -> Dict:
     Returns:
         Statistics dict
     """
-    stats = {
-        "countries_processed": 0,
-        "country_years_updated": 0,
-        "tier_distribution": {"A": 0, "B": 0, "C": 0},
-        "source_coverage": defaultdict(int),
-    }
+    tier_distribution: Dict[str, int] = {"A": 0, "B": 0, "C": 0}
+    source_coverage: Dict[str, int] = defaultdict(int)
+    countries_processed = 0
+    country_years_updated = 0
 
     with conn.cursor() as cur:
         # Get all media observations grouped by country-year
@@ -189,12 +187,19 @@ def aggregate_media_observations(conn, dry_run: bool = False) -> Dict:
             )
 
             # Update stats
-            stats["tier_distribution"][tier] += 1
+            tier_distribution[tier] += 1
             for src in source_list:
-                stats["source_coverage"][src] += 1
+                source_coverage[src] += 1
 
-        stats["countries_processed"] = len(countries)
-        stats["country_years_updated"] = len(results)
+        countries_processed = len(countries)
+        country_years_updated = len(results)
+
+        stats = {
+            "countries_processed": countries_processed,
+            "country_years_updated": country_years_updated,
+            "tier_distribution": tier_distribution,
+            "source_coverage": dict(source_coverage),
+        }
 
         if dry_run:
             print(f"\nDRY RUN - Would update {len(results)} country-year records")
