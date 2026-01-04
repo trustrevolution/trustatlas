@@ -18,7 +18,7 @@ export interface PillarConfig {
   label: string
   shortLabel: string
   description: string
-  icon: 'Users' | 'Building2' | 'Scale' | 'Newspaper'
+  icon: 'Users' | 'Building2' | 'Newspaper'
   // Legacy colors - used in charts only, NOT for identity on explore page
   // On explore page, pillar identity is conveyed through icons/labels, not color
   colorHex: string
@@ -28,35 +28,25 @@ export interface PillarConfig {
 }
 
 export const PILLARS: Record<Pillar, PillarConfig> = {
-  interpersonal: {
-    label: 'Interpersonal Trust',
-    shortLabel: 'Interpersonal',
+  social: {
+    label: 'Social Trust',
+    shortLabel: 'Social',
     description: 'Trust in other people',
     icon: 'Users',
     colorHex: '#38bdf8',
-    colorVar: 'var(--color-pillar-interpersonal)',
+    colorVar: 'var(--color-pillar-social)',
     tailwindText: 'text-sky-400',
     tailwindBg: 'from-sky-500 to-sky-400',
   },
-  institutional: {
+  institutions: {
     label: 'Institutional Trust',
-    shortLabel: 'Institutional',
+    shortLabel: 'Institutions',
     description: 'Trust in government',
     icon: 'Building2',
     colorHex: '#f59e0b',
-    colorVar: 'var(--color-pillar-institutional)',
+    colorVar: 'var(--color-pillar-institutions)',
     tailwindText: 'text-amber-400',
     tailwindBg: 'from-amber-500 to-amber-400',
-  },
-  governance: {
-    label: 'Governance Quality',
-    shortLabel: 'Governance',
-    description: 'Corruption & rule of law',
-    icon: 'Scale',
-    colorHex: '#10b981',
-    colorVar: 'var(--color-pillar-governance)',
-    tailwindText: 'text-emerald-400',
-    tailwindBg: 'from-emerald-500 to-emerald-400',
   },
   media: {
     label: 'Media Trust',

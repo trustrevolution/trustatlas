@@ -62,7 +62,7 @@ function RuleLawTrends() {
   const { data: rawData, loading, error } = useFetchChartData(
     () => {
       const allCountries = [...IMPROVERS.map(c => c.iso3), ...DECLINERS.map(c => c.iso3)]
-      return api.getMultiCountryTrends(allCountries, { pillar: 'governance', source: 'WJP' })
+      return api.getMultiCountryTrends(allCountries, { pillar: 'institutions', source: 'WJP' })
     }
   )
 
@@ -72,27 +72,27 @@ function RuleLawTrends() {
 
     const improverResults = IMPROVERS.map((c) => {
       const countryData = rawData.countries[c.iso3]
-      const governance = countryData?.governance || []
+      const governance = countryData?.institutions?.governance || []
       return {
         iso3: c.iso3,
         name: c.name,
         color: c.color,
         data: governance
-          .filter((d) => d.year >= 2015)
-          .map((d) => ({ year: d.year, score: d.score })),
+          .filter((d: { year: number; score: number }) => d.year >= 2015)
+          .map((d: { year: number; score: number }) => ({ year: d.year, score: d.score })),
         isImprover: true,
       }
     })
 
     const declinerResults = DECLINERS.map((c) => {
       const countryData = rawData.countries[c.iso3]
-      const governance = countryData?.governance || []
+      const governance = countryData?.institutions?.governance || []
       return {
         iso3: c.iso3,
         name: c.name,
         data: governance
-          .filter((d) => d.year >= 2015)
-          .map((d) => ({ year: d.year, score: d.score })),
+          .filter((d: { year: number; score: number }) => d.year >= 2015)
+          .map((d: { year: number; score: number }) => ({ year: d.year, score: d.score })),
         isImprover: false,
       }
     })

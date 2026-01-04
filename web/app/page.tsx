@@ -225,84 +225,100 @@ export default function HomePage() {
       {/* Methodology Section */}
       <section className="pt-10 pb-12 sm:pt-20 sm:pb-28 bg-slate-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-6 sm:mb-16">
+          <div className="text-center mb-6 sm:mb-12">
             <span className="text-amber-700 font-semibold text-xs sm:text-sm uppercase tracking-wider">
               Our Approach
             </span>
             <h2 className="font-display text-2xl sm:text-4xl md:text-5xl text-slate-900 mt-2 sm:mt-3 mb-3 sm:mb-6">
-              Four Dimensions of Trust
+              Three Pillars of Trust
             </h2>
             <p className="text-sm sm:text-xl text-slate-600 max-w-2xl mx-auto">
-              Each pillar measured independently. Open data only—no paywalls,
-              no black boxes.
+              Open data only—no paywalls, no black boxes.
             </p>
           </div>
 
-          {/* Four pillars */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-12">
-            {/* Interpersonal */}
-            <div className="bg-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
-                <span className="text-xl sm:text-2xl">🤝</span>
+          {/* Three primary pillars */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+            {/* Social Trust */}
+            <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-sky-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl sm:text-3xl">🤝</span>
               </div>
-              <h3 className="font-display text-sm sm:text-xl text-slate-900 mb-1 sm:mb-2">
-                Interpersonal Trust
+              <h3 className="font-display text-lg sm:text-2xl text-slate-900 mb-2">
+                Social Trust
               </h3>
-              <p className="text-slate-600 text-[10px] sm:text-xs leading-relaxed">
-                &ldquo;Can most people be trusted?&rdquo;
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-3">
+                Do people trust each other? The foundation of social cohesion.
               </p>
-              <p className="text-slate-400 text-[9px] sm:text-[10px] mt-1 sm:mt-2">
-                WVS, EVS, GSS + barometers
+              <p className="text-slate-400 text-xs sm:text-sm">
+                WVS, EVS, GSS + regional barometers
               </p>
             </div>
 
-            {/* Institutional */}
-            <div className="bg-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
-                <span className="text-xl sm:text-2xl">🏛️</span>
+            {/* Institutional Trust */}
+            <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-amber-50 to-transparent opacity-50" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl sm:text-3xl">🏛️</span>
               </div>
-              <h3 className="font-display text-sm sm:text-xl text-slate-900 mb-1 sm:mb-2">
+              <h3 className="font-display text-lg sm:text-2xl text-slate-900 mb-2">
                 Institutional Trust
               </h3>
-              <p className="text-slate-600 text-[10px] sm:text-xs leading-relaxed">
-                Confidence in government &amp; institutions
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-3">
+                Do people trust government? And does that trust match reality?
               </p>
-              <p className="text-slate-400 text-[9px] sm:text-[10px] mt-1 sm:mt-2">
-                WVS, ANES, CES + barometers
+              <div className="bg-amber-50 rounded-lg p-3 border border-amber-100 mt-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-semibold text-amber-800 uppercase tracking-wide">Trust-Quality Gap</span>
+                </div>
+                <p className="text-xs text-amber-700 leading-relaxed">
+                  The divergence between what citizens believe and how institutions perform is where the story lives.
+                </p>
+              </div>
+              <p className="text-slate-400 text-xs sm:text-sm mt-3">
+                WVS + CPI, WGI, WJP, V-Dem
               </p>
             </div>
 
-            {/* Media */}
-            <div className="bg-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
-                <span className="text-xl sm:text-2xl">📰</span>
+            {/* Media Trust */}
+            <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl sm:text-3xl">📰</span>
               </div>
-              <h3 className="font-display text-sm sm:text-xl text-slate-900 mb-1 sm:mb-2">
+              <h3 className="font-display text-lg sm:text-2xl text-slate-900 mb-2">
                 Media Trust
               </h3>
-              <p className="text-slate-600 text-[10px] sm:text-xs leading-relaxed">
-                Trust in news media
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-3">
+                Do people trust the news? Critical for informed democracy.
               </p>
-              <p className="text-slate-400 text-[9px] sm:text-[10px] mt-1 sm:mt-2">
-                Reuters DNR, Eurobarometer
+              <p className="text-slate-400 text-xs sm:text-sm">
+                Reuters DNR, Eurobarometer, WVS
               </p>
             </div>
+          </div>
 
-            {/* Governance */}
-            <div className="bg-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
-              <div className="w-10 h-10 sm:w-14 sm:h-14 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-4">
-                <span className="text-xl sm:text-2xl">⚖️</span>
+          {/* Supplementary indicators */}
+          <div className="bg-slate-100 rounded-xl sm:rounded-2xl p-5 sm:p-8 mb-6">
+            <h3 className="font-display text-base sm:text-lg text-slate-700 mb-4 text-center">
+              Supplementary Indicators
+            </h3>
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+              <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200">
+                <span className="text-sm">🔬</span>
+                <span className="text-xs sm:text-sm text-slate-600">Science Trust</span>
               </div>
-              <h3 className="font-display text-sm sm:text-xl text-slate-900 mb-1 sm:mb-2">
-                Governance Quality
-              </h3>
-              <p className="text-slate-600 text-[10px] sm:text-xs leading-relaxed">
-                Corruption &amp; rule of law measures
-              </p>
-              <p className="text-slate-400 text-[9px] sm:text-[10px] mt-1 sm:mt-2">
-                CPI, WGI, WJP, V-Dem
-              </p>
+              <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200">
+                <span className="text-sm">🏦</span>
+                <span className="text-xs sm:text-sm text-slate-600">Financial Trust</span>
+              </div>
+              <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200">
+                <span className="text-sm">🤖</span>
+                <span className="text-xs sm:text-sm text-slate-600">AI/Tech Trust</span>
+              </div>
             </div>
+            <p className="text-center text-slate-500 text-xs mt-4">
+              Additional indicators tracked separately from core pillars
+            </p>
           </div>
 
           <p className="text-center text-slate-500 text-xs sm:text-sm">

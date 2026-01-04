@@ -77,7 +77,7 @@ function CovidTrustImpact() {
   const { data: rawData, loading, error } = useFetchChartData(
     () => api.getMultiCountryTrends(
       COUNTRIES.map(c => c.iso3),
-      { pillar: 'institutional' }
+      { pillar: 'institutions' }
     )
   )
 
@@ -86,14 +86,14 @@ function CovidTrustImpact() {
     if (!rawData) return []
     return COUNTRIES.map((c) => {
       const countryData = rawData.countries[c.iso3]
-      const institutional = countryData?.institutional || []
+      const institutional = countryData?.institutions?.institutional || []
       return {
         iso3: c.iso3,
         name: c.name,
         color: c.color,
         data: institutional
-          .filter((d) => d.year >= 2016 && d.year <= 2023)
-          .map((d) => ({ year: d.year, score: d.score })),
+          .filter((d: { year: number; score: number }) => d.year >= 2016 && d.year <= 2023)
+          .map((d: { year: number; score: number }) => ({ year: d.year, score: d.score })),
       }
     })
   }, [rawData])
