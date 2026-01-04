@@ -285,6 +285,11 @@ class WVSProcessor(BaseProcessor):
             if media_obs:
                 observations.append(media_obs)
 
+            # Financial trust (E069_12): 1-4 scale, negative=missing
+            financial_obs = self._calc_financial_ts(group_df, iso3, survey_year)
+            if financial_obs:
+                observations.append(financial_obs)
+
         print(f"Processed {len(observations)} WVS observations from time series")
         return observations
 
@@ -413,6 +418,42 @@ class WVSProcessor(BaseProcessor):
             score_0_100=round(avg_score, 1),
             sample_n=total_n,
             method_notes=f"WVS Time Series E069_07/08 avg ({len(var_scores)} vars), n~{total_n}",
+            source_url="https://www.worldvaluessurvey.org",
+        )
+
+    def _calc_financial_ts(
+        self, df: pd.DataFrame, iso3: str, year: int
+    ) -> Optional[Observation]:
+        """Calculate financial trust from E069_12 (time series format).
+
+        E069_12: Confidence in Banks
+
+        Scale: 1=A great deal, 2=Quite a lot, 3=Not very much, 4=None at all
+        We calculate % with "a great deal" or "quite a lot" of confidence.
+        """
+        if "E069_12" not in df.columns:
+            return None
+
+        # Filter valid responses (1-4), negative values are missing
+        valid = df["E069_12"].dropna()
+        valid = valid[valid.isin([1, 2, 3, 4])]
+
+        if len(valid) < self.MIN_SAMPLE_SIZE:
+            return None
+
+        # Calculate % confident (codes 1 or 2 = "great deal" or "quite a lot")
+        confident_pct = float(((valid == 1) | (valid == 2)).mean() * 100)
+
+        return Observation(
+            iso3=iso3,
+            year=year,
+            source="WVS",
+            trust_type="financial",
+            raw_value=round(confident_pct, 1),
+            raw_unit="Percent confident",
+            score_0_100=round(confident_pct, 1),
+            sample_n=len(valid),
+            method_notes=f"WVS Time Series E069_12 (banks), n={len(valid)}",
             source_url="https://www.worldvaluessurvey.org",
         )
 

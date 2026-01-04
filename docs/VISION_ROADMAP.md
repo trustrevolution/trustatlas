@@ -310,17 +310,48 @@ We identify patterns, not prescribe solutions. Context matters.
 
 ---
 
+## Known Data Gaps
+
+### Financial Trust (Banks)
+
+| Issue | Detail |
+|-------|--------|
+| **G7 freshness** | USA, Germany, France have 2017-2018 data (WVS Wave 7 timing) |
+| **Eurobarometer** | Standard QA6 battery excludes banks—only covers government, parliament, media |
+| **No annual source** | No open annual survey for bank trust globally |
+
+**Mitigation:**
+- Current: WVS E069_12 covers 104 countries (1990-2023)
+- Future: EQLS 2026 will provide EU27 bank trust
+- Evaluated: ECB Consumer Expectations Survey — excluded (0-10 scale, central bank focus ≠ commercial banks)
+
+### Interpersonal Trust (Recent)
+
+| Issue | Detail |
+|-------|--------|
+| **WVS Wave 8** | Not yet released—Wave 7 ended 2022 |
+| **Regional barometers** | Fill gaps but with methodological differences |
+
+---
+
 ## Open Questions
 
 1. **Science Trust Pillar**: Promote from supplementary to core pillar? Wellcome has global coverage but triennial updates.
 
-2. **Financial Trust**: Expand Institutional to include sub-pillars (political, financial, judicial)? Or keep narrow?
+2. **Financial Trust Structure**: Keep as supplementary indicator, or expand Institutional to include sub-pillars (political, financial, judicial)?
 
 3. **Gap Computation**: Use raw difference, z-scores, or regression residuals? Each has tradeoffs.
 
 4. **Builder Layer**: Build ourselves or partner with existing platforms?
 
 5. **Podcast Integration**: How to connect Trust Revolution conversations to specific data insights?
+
+6. **ECB Trust Data**: *(Evaluated)* ECB Consumer Expectations Survey provides monthly Eurozone data (11 countries, since April 2020). However:
+   - 0-10 scale incompatible with binary methodology
+   - Measures central bank trust, not commercial bank trust
+   - Limited to Eurozone (doesn't solve G7 freshness gap)
+
+   **Decision**: Document as reference data, exclude from financial trust supplementary. See DATA_SOURCES.md for details.
 
 ---
 

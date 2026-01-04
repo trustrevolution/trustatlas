@@ -212,6 +212,32 @@ class LiTSProcessor(BaseProcessor):
                     )
                 )
 
+            # Financial trust (q403j: Banks/financial system)
+            financial_col = "q403j"
+            if financial_col in df.columns:
+                fin_values = to_numeric(country_df[financial_col])
+                valid_fin = fin_values.dropna()
+                valid_fin = valid_fin[(valid_fin >= 1) & (valid_fin <= 5)]
+
+                if len(valid_fin) >= 50:  # Minimum sample size
+                    mean_fin = float(valid_fin.mean())
+                    score_100 = float(scale_1_5_to_100(mean_fin))
+
+                    observations.append(
+                        Observation(
+                            iso3=iso3,
+                            year=data_year,
+                            source=self.SOURCE_NAME,
+                            trust_type="financial",
+                            raw_value=round(mean_fin, 2),
+                            raw_unit="mean 1-5 scale",
+                            score_0_100=round(score_100, 1),
+                            sample_n=int(len(valid_fin)),
+                            method_notes="LiTS IV (2022-23), Q403j: Banks/financial system",
+                            source_url="https://www.ebrd.com/what-we-do/economic-research-and-data/data/lits.html",
+                        )
+                    )
+
         return observations
 
 
