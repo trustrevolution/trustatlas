@@ -66,7 +66,7 @@ function TrustCollapse() {
   const { data: rawData, loading, error } = useFetchChartData(
     () => api.getMultiCountryTrends(
       COUNTRIES.map((c) => c.iso3),
-      { pillar: 'interpersonal' }
+      { pillar: 'social' }
     )
   )
 
@@ -75,10 +75,10 @@ function TrustCollapse() {
     if (!rawData) return []
     return COUNTRIES.map((c) => {
       const countryData = rawData.countries[c.iso3]
-      const interpersonal = countryData?.interpersonal || []
+      const interpersonal = countryData?.social || []
       const filtered = interpersonal
-        .filter((d) => d.year >= 2000 && d.year <= 2020)
-        .map((d) => ({ year: d.year, score: d.score }))
+        .filter((d: { year: number; score: number }) => d.year >= 2000 && d.year <= 2020)
+        .map((d: { year: number; score: number }) => ({ year: d.year, score: d.score }))
 
       return {
         iso3: c.iso3,

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import ReactEChartsCore from 'echarts-for-react/lib/core'
 import { echarts } from '@/lib/echarts'
-import { X, TrendingUp, TrendingDown, Users, Building2, Scale, Newspaper } from 'lucide-react'
+import { X, TrendingUp, TrendingDown, Users, Building2, Newspaper, Info } from 'lucide-react'
 import type { Pillar } from '@/app/explore/page'
 import { PILLARS, CHART_COLORS, CHART_GRID } from '@/lib/design-tokens'
 import { escapeHtml } from '@/lib/utils'
@@ -13,15 +13,54 @@ import {
   SourceDisclosure,
 } from '@/components/data-provenance'
 
+// Trust-Quality Gap classification system
+interface GapClassification {
+  label: string
+  description: string
+  colorClass: string
+  bgClass: string
+  borderClass: string
+}
+
+function classifyTrustQualityGap(gap: number): GapClassification {
+  const absGap = Math.abs(gap)
+  const direction = gap < 0 ? 'below' : 'above'
+
+  if (absGap <= 10) {
+    return {
+      label: 'Aligned',
+      description: 'Trust matches governance indicators',
+      colorClass: 'text-slate-400',
+      bgClass: 'bg-slate-500/10',
+      borderClass: 'border-slate-500/30',
+    }
+  } else if (absGap <= 25) {
+    return {
+      label: `${absGap} pts ${direction}`,
+      description: `Trust is ${absGap} points ${direction} governance indicators`,
+      colorClass: gap < 0 ? 'text-amber-400' : 'text-cyan-400',
+      bgClass: gap < 0 ? 'bg-amber-500/10' : 'bg-cyan-500/10',
+      borderClass: gap < 0 ? 'border-amber-500/30' : 'border-cyan-500/30',
+    }
+  } else {
+    return {
+      label: `${absGap} pts ${direction}`,
+      description: `Trust is ${absGap} points ${direction} governance indicators`,
+      colorClass: gap < 0 ? 'text-rose-400' : 'text-blue-400',
+      bgClass: gap < 0 ? 'bg-rose-500/10' : 'bg-blue-500/10',
+      borderClass: gap < 0 ? 'border-rose-500/30' : 'border-blue-500/30',
+    }
+  }
+}
+
 // Icon mapping for pillars
 const PILLAR_ICONS = {
-  interpersonal: Users,
-  institutional: Building2,
-  governance: Scale,
+  social: Users,
+  institutions: Building2,
   media: Newspaper,
 } as const
 
-const PILLAR_ORDER: Pillar[] = ['interpersonal', 'institutional', 'media', 'governance']
+const PILLAR_ORDER: Pillar[] = ['social', 'institutions', 'media']
 
 interface PillarData {
   score: number
@@ -30,16 +69,26 @@ interface PillarData {
   ci_upper: number | null
 }
 
+interface InstitutionsPillarData {
+  institutional_trust: PillarData | null
+  governance_quality: PillarData | null
+  trust_quality_gap: number | null
+}
+
 interface CountryDetail {
   iso3: string
   name: string
   region: string
   series: Array<{
     year: number
-    interpersonal: PillarData | null
-    institutional: PillarData | null
-    governance: PillarData | null
+    // New pillar structure
+    social: PillarData | null
+    institutions: InstitutionsPillarData
     media: PillarData | null
+    // Legacy fields for backward compatibility
+    interpersonal?: PillarData | null
+    institutional?: PillarData | null
+    governance?: PillarData | null
     confidence_tier: string
     ci_lower: number | null
     ci_upper: number | null
@@ -161,22 +210,42 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
     )
   }
 
-  // Get latest data point (first in series, which is sorted descending by year)
-  const latestDataPoint = countryData.series[0]
+  // Helper to get pillar score from series item
+  const getPillarScore = (item: typeof countryData.series[0], pillarId: Pillar): number | null => {
+    if (pillarId === 'social') {
+      return item.social?.score ?? item.interpersonal?.score ?? null
+    } else if (pillarId === 'institutions') {
+      // For institutions, show the trust score (perception)
+      return item.institutions?.institutional_trust?.score ?? item.institutional?.score ?? null
+    } else {
+      return item.media?.score ?? null
+    }
+  }
+
+  // Helper to get pillar data object
+  const getPillarData = (item: typeof countryData.series[0], pillarId: Pillar): PillarData | null => {
+    if (pillarId === 'social') {
+      return item.social ?? item.interpersonal ?? null
+    } else if (pillarId === 'institutions') {
+      return item.institutions?.institutional_trust ?? item.institutional ?? null
+    } else {
+      return item.media ?? null
+    }
+  }
 
   // Build pillar summary - what data is available for each pillar
   const pillarSummary = PILLAR_ORDER.map(pillarId => {
-    const series = countryData.series.filter(d => d[pillarId]?.score != null)
+    const series = countryData.series.filter(d => getPillarScore(d, pillarId) != null)
     const latest = series[0]
     const oldest = series[series.length - 1]
-    const pillarData = latest?.[pillarId]
-    const value = pillarData?.score ?? null
+    const value = latest ? getPillarScore(latest, pillarId) : null
+    const pillarData = latest ? getPillarData(latest, pillarId) : null
     const hasData = value != null
 
     // Calculate trend if we have multiple data points
     let trend = null
     if (series.length >= 2 && value != null) {
-      const oldValue = oldest?.[pillarId]?.score
+      const oldValue = oldest ? getPillarScore(oldest, pillarId) : null
       if (oldValue != null) {
         const diff = value - oldValue
         if (Math.abs(diff) >= 3) {
@@ -187,6 +256,21 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
       }
     }
 
+    // Get trust quality gap for institutions pillar
+    const trustQualityGap = pillarId === 'institutions' && latest?.institutions
+      ? latest.institutions.trust_quality_gap
+      : null
+
+    // Map pillarId to sources key (handle legacy API)
+    const sourcesKey = pillarId === 'social' ? 'interpersonal'
+      : pillarId === 'institutions' ? 'institutional'
+      : pillarId
+
+    // Get gap classification for institutions pillar
+    const gapClassification = pillarId === 'institutions' && trustQualityGap !== null
+      ? classifyTrustQualityGap(trustQualityGap)
+      : null
+
     return {
       pillarId,
       config: PILLARS[pillarId],
@@ -196,14 +280,25 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
       trend,
       confidenceTier: pillarData?.confidence_tier ?? null,
       yearRange: hasData ? `${oldest?.year}–${latest?.year}` : null,
-      sources: countryData.sources_used[pillarId] || [],
+      sources: countryData.sources_used[sourcesKey] || countryData.sources_used[pillarId] || [],
+      // Institutions-specific data
+      trustQualityGap,
+      gapClassification,
+      governanceQuality: pillarId === 'institutions' && latest?.institutions
+        ? latest.institutions.governance_quality?.score ?? latest.governance?.score ?? null
+        : null,
     }
   })
 
   // Get detailed data for selected pillar
   const selectedPillarData = pillarSummary.find(p => p.pillarId === selectedPillar)!
-  const pillarSeries = countryData.series.filter(d => d[selectedPillar]?.score != null)
-  const pillarSources = countryData.sources_used[selectedPillar] || []
+  const pillarSeries = countryData.series.filter(d => getPillarScore(d, selectedPillar) != null)
+
+  // Map pillarId to sources key (handle legacy API)
+  const sourcesKey = selectedPillar === 'social' ? 'interpersonal'
+    : selectedPillar === 'institutions' ? 'institutional'
+    : selectedPillar
+  const pillarSources = countryData.sources_used[sourcesKey] || countryData.sources_used[selectedPillar] || []
 
   // Chart options for time series - show only selected pillar
   const chartOption = pillarSeries.length > 1 ? {
@@ -242,7 +337,7 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
       {
         name: pillarConfig.label,
         type: 'line',
-        data: [...pillarSeries].reverse().map(d => d[selectedPillar]?.score),
+        data: [...pillarSeries].reverse().map(d => getPillarScore(d, selectedPillar)),
         smooth: false,
         symbol: 'circle',
         symbolSize: 5,
@@ -290,8 +385,10 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
         <div className="space-y-2">
           <h3 className="text-slate-500 text-xs uppercase tracking-wider">Trust Profile</h3>
           <div className="grid gap-2">
-            {pillarSummary.map(({ pillarId, config, Icon, value, hasData, trend }) => {
+            {pillarSummary.map(({ pillarId, config, Icon, value, hasData, trend, governanceQuality }) => {
               const isSelected = pillarId === selectedPillar
+              const showDualBars = pillarId === 'institutions' && isSelected && governanceQuality !== null
+
               return (
                 <button
                   key={pillarId}
@@ -318,24 +415,68 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
                         <div className="text-xs text-slate-500">{config.description}</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      {hasData ? (
-                        <>
-                          <div className={`text-xl font-display ${isSelected ? 'text-white' : 'text-slate-200'}`}>
-                            {value!.toFixed(0)}%
-                          </div>
-                          {trend && (
-                            <div className={`flex items-center justify-end gap-1 text-xs ${trend.color}`}>
-                              <trend.icon className="w-3 h-3" />
-                              <span>{trend.text}</span>
+                    {!showDualBars && (
+                      <div className="text-right">
+                        {hasData ? (
+                          <>
+                            <div className={`text-xl font-display ${isSelected ? 'text-white' : 'text-slate-200'}`}>
+                              {value!.toFixed(0)}%
                             </div>
-                          )}
-                        </>
-                      ) : (
-                        <div className="text-sm text-slate-500">No data</div>
-                      )}
-                    </div>
+                            {trend && (
+                              <div className={`flex items-center justify-end gap-1 text-xs ${trend.color}`}>
+                                <trend.icon className="w-3 h-3" />
+                                <span>{trend.text}</span>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <div className="text-sm text-slate-500">No data</div>
+                        )}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Dual bars for Institutions when selected */}
+                  {showDualBars && value !== null && (
+                    <div className="mt-3 space-y-2">
+                      <div>
+                        <div className="flex justify-between text-xs text-slate-400 mb-1">
+                          <span
+                            className="cursor-help inline-flex items-center gap-1"
+                            title="Survey responses about trust in government"
+                          >
+                            What people say
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </span>
+                          <span className="text-white font-medium">{value.toFixed(0)}%</span>
+                        </div>
+                        <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-amber-500 rounded-full transition-all"
+                            style={{ width: `${value}%` }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex justify-between text-xs text-slate-400 mb-1">
+                          <span
+                            className="cursor-help inline-flex items-center gap-1"
+                            title="Corruption, rule of law, and effectiveness ratings from international organizations"
+                          >
+                            How it's rated
+                            <Info className="w-3 h-3 text-slate-500" />
+                          </span>
+                          <span>{Math.round(governanceQuality)}%</span>
+                        </div>
+                        <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-emerald-500 rounded-full transition-all"
+                            style={{ width: `${governanceQuality}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </button>
               )
             })}
@@ -345,7 +486,7 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
         {/* Selected pillar detail */}
         {selectedPillarData.hasData ? (
           <>
-            {/* Confidence badge */}
+            {/* Confidence + year range */}
             {selectedPillarData.confidenceTier && (
               <div className="flex items-center gap-2">
                 <ConfidenceBadge

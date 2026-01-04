@@ -59,29 +59,30 @@ export default function MethodologyPage() {
         <section className="mb-16">
           <h2 className="section-title mb-4">Overview</h2>
           <p className="text-slate-600 leading-relaxed mb-4">
-            Trust Atlas measures trust across four independent dimensions. Each pillar is displayed
-            separately—we do <strong>not</strong> combine them into a single composite score.
+            Trust Atlas measures trust across three primary dimensions, with the
+            <strong> Trust-Quality Gap</strong>—the divergence between what citizens believe
+            about institutions and how those institutions actually perform—as a key derived insight.
             All data sources are freely accessible—no paywalls, no proprietary datasets.
           </p>
-          <div className="info-box info-box-slate text-sm text-slate-600">
-            <strong>Why no composite index?</strong> Survey data is sparse (WVS every ~5 years) while
-            governance data is annual. Combining them creates artificial volatility. Individual pillars
-            tell clearer stories.
+          <div className="info-box info-box-amber text-sm text-slate-600">
+            <strong>The Trust-Quality Gap</strong> is where the story lives. When citizens trust
+            institutions that are corrupt, or distrust institutions that perform well—that&apos;s
+            the signal worth investigating.
           </div>
         </section>
 
-        {/* Four Pillars */}
+        {/* Three Pillars */}
         <section className="mb-16">
-          <h2 className="section-title mb-8">The Four Pillars</h2>
+          <h2 className="section-title mb-8">The Three Pillars</h2>
 
-          {/* Interpersonal */}
+          {/* Social Trust */}
           <div className="insight-box mb-10" style={{ borderColor: 'var(--color-pillar-interpersonal)' }}>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">🤝</span>
-              <h3 className="font-display text-xl text-slate-900">Interpersonal Trust</h3>
+              <h3 className="font-display text-xl text-slate-900">Social Trust</h3>
             </div>
             <p className="text-slate-600 mb-4">
-              Do people trust each other? Based on the classic survey question:
+              Do people trust each other? The foundation of social cohesion. Based on the classic survey question:
               &ldquo;Generally speaking, would you say that most people can be trusted, or that you need to be very careful in dealing with people?&rdquo;
             </p>
             <div className="text-sm text-slate-500 mb-3">
@@ -100,24 +101,46 @@ export default function MethodologyPage() {
             </div>
           </div>
 
-          {/* Institutional */}
+          {/* Institutional Trust */}
           <div className="insight-box mb-10" style={{ borderColor: 'var(--color-pillar-institutional)' }}>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">🏛️</span>
               <h3 className="font-display text-xl text-slate-900">Institutional Trust</h3>
             </div>
             <p className="text-slate-600 mb-4">
-              Do people trust their government and institutions? Measures confidence in
-              national government, parliament, courts, and other public institutions.
+              Do people trust their government and institutions? This pillar combines two complementary measures:
+              <strong> citizen perception</strong> (survey-based institutional trust) and
+              <strong> institutional performance</strong> (expert-assessed governance quality).
             </p>
-            <div className="text-sm text-slate-500 mb-3">
-              <strong>Sources:</strong> WVS, ANES, CES + regional barometers
+
+            {/* Trust-Quality Gap callout */}
+            <div className="bg-amber-50 rounded-lg p-4 border border-amber-200 mb-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg">⚡</span>
+                <span className="font-semibold text-amber-900">Trust-Quality Gap</span>
+              </div>
+              <p className="text-sm text-amber-800 leading-relaxed">
+                The gap between institutional trust and governance quality reveals critical patterns:
+                <strong> naive trust</strong> (citizens trust corrupt institutions) or
+                <strong> cynical distrust</strong> (citizens distrust well-performing institutions).
+                This derived metric is often more informative than either measure alone.
+              </p>
             </div>
-            <div className="info-box info-box-amber text-sm">
-              <strong className="text-amber-800">Source hierarchy:</strong>
-              <span className="text-amber-700"> WVS takes precedence globally; ANES and CES provide deep USA/Canada coverage.
-              Regional barometers fill gaps where WVS hasn&apos;t surveyed. EVS is excluded for institutional trust
-              due to inconsistent variable coverage across waves. ESS and OECD use different scales.</span>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="info-box info-box-amber text-sm">
+                <strong className="text-amber-800">Citizen Perception</strong>
+                <p className="text-amber-700 mt-1">
+                  Survey-based confidence in government, parliament, courts. Sources: WVS, ANES, CES + regional barometers.
+                </p>
+              </div>
+              <div className="info-box info-box-emerald text-sm">
+                <strong className="text-emerald-800">Institutional Performance</strong>
+                <p className="text-emerald-700 mt-1">
+                  Expert assessments of corruption, rule of law, government effectiveness.
+                  Sources: CPI, WGI, WJP, Freedom House, V-Dem.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -143,61 +166,73 @@ export default function MethodologyPage() {
             </div>
           </div>
 
-          {/* Governance */}
-          <div className="insight-box-emerald mb-10">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-2xl">⚖️</span>
-              <h3 className="font-display text-xl text-slate-900">Governance Quality</h3>
+        </section>
+
+        {/* Supplementary Indicators */}
+        <section className="mb-16">
+          <h2 className="section-title mb-4">Supplementary Indicators</h2>
+          <p className="text-slate-600 leading-relaxed mb-6">
+            Beyond the three core pillars, we track additional trust dimensions as supplementary
+            indicators. These are not included in pillar calculations but provide valuable context.
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="info-box info-box-slate">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">🔬</span>
+                <strong className="text-slate-800">Science Trust</strong>
+              </div>
+              <p className="text-sm text-slate-600">
+                Trust in scientists and scientific institutions. Sources: Wellcome Global Monitor, WVS.
+              </p>
             </div>
-            <p className="text-slate-600 mb-4">
-              How trustworthy are institutions objectively? Expert assessments of corruption,
-              rule of law, and government effectiveness serve as a proxy for institutional integrity.
-            </p>
-            <div className="text-sm text-slate-500">
-              <strong>Sources:</strong> Transparency International CPI, World Bank WGI, WJP Rule of Law Index, Freedom House, V-Dem
+            <div className="info-box info-box-slate">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">🏦</span>
+                <strong className="text-slate-800">Financial Trust</strong>
+              </div>
+              <p className="text-sm text-slate-600">
+                Confidence in banks and financial institutions. Sources: WVS E069_12, LiTS.
+              </p>
             </div>
-            <div className="info-box info-box-slate mt-4 text-sm">
-              <strong>Weighted average:</strong> CPI (20%) + WGI (20%) + WJP (20%) + WJP-Corruption (20%) + Freedom House (10%) + V-Dem (10%)
-              <div className="text-xs text-slate-500 mt-1">Missing sources have weights redistributed proportionally</div>
+            <div className="info-box info-box-slate">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-xl">🤖</span>
+                <strong className="text-slate-800">AI/Tech Trust</strong>
+              </div>
+              <p className="text-sm text-slate-600">
+                Emerging area. Trust in technology companies and AI systems. Sources: Under development.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* Why Independent Pillars */}
+        {/* Why This Architecture */}
         <section className="mb-16">
-          <h2 className="section-title mb-4">Why Independent Pillars?</h2>
+          <h2 className="section-title mb-4">Why This Architecture?</h2>
           <p className="text-slate-600 leading-relaxed mb-6">
-            Many trust indices combine multiple measures into a single composite score. We deliberately
-            chose not to. Here&apos;s why:
+            Many trust indices combine multiple measures into a single composite score. We chose a
+            different approach—three independent pillars with the Trust-Quality Gap as a derived insight.
           </p>
           <div className="space-y-4 mb-6">
+            <div className="info-box info-box-amber">
+              <div className="font-semibold text-slate-900 mb-2">
+                The Gap Is The Story
+              </div>
+              <p className="text-sm text-slate-600">
+                When citizens trust corrupt institutions (naive trust) or distrust well-performing
+                ones (cynical distrust), that divergence reveals something important about a society.
+                Combining institutional trust and governance quality into a single number would obscure
+                this critical insight.
+              </p>
+            </div>
             <div className="info-box info-box-blue">
               <div className="font-semibold text-slate-900 mb-2">
                 Different Data Rhythms
               </div>
               <p className="text-sm text-slate-600">
                 Survey data (WVS, GSS) is collected every 5-7 years. Governance data (CPI, WGI) is annual.
-                Combining them creates artificial volatility—a country&apos;s &ldquo;trust score&rdquo; would
-                swing wildly based on which data source updated most recently.
-              </p>
-            </div>
-            <div className="info-box info-box-emerald">
-              <div className="font-semibold text-slate-900 mb-2">
-                Different Constructs
-              </div>
-              <p className="text-sm text-slate-600">
-                &ldquo;Do you trust your neighbor?&rdquo; and &ldquo;Is the government corrupt?&rdquo;
-                measure fundamentally different things. Research shows a{' '}
-                <a
-                  href="https://link.springer.com/chapter/10.1007/978-3-030-66018-5_2"
-                  className="text-amber-600 hover:underline"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  &ldquo;trust paradox&rdquo;
-                </a>
-                —some societies show high interpersonal trust despite low governance scores.
-                Averaging them obscures this insight.
+                Keeping them as separate inputs to the Institutional Trust pillar lets us track the gap
+                over time without artificial volatility.
               </p>
             </div>
             <div className="info-box info-box-slate">
@@ -205,9 +240,9 @@ export default function MethodologyPage() {
                 Clearer Stories
               </div>
               <p className="text-sm text-slate-600">
-                A country with high interpersonal trust but low institutional trust tells a different
-                story than one with the opposite pattern. Separate pillars let researchers and
-                journalists see these nuances instead of burying them in a single number.
+                A country with high social trust but low institutional trust tells a different
+                story than one with the opposite pattern. Three pillars plus gap analysis gives
+                researchers and journalists the tools to see these nuances.
               </p>
             </div>
           </div>
@@ -295,40 +330,53 @@ export default function MethodologyPage() {
             to ensure scores are comparable across countries and time.
           </p>
 
-          {/* Survey pillars */}
+          {/* Social Trust */}
           <div className="info-box info-box-blue mb-4">
-            <div className="font-medium text-blue-800 mb-2">Interpersonal &amp; Institutional Trust</div>
+            <div className="font-medium text-blue-800 mb-2">Social Trust</div>
             <p className="text-sm text-blue-700 mb-3">
               WVS-family surveys only—identical question wording and response scales:
             </p>
             <ul className="text-sm text-blue-700 list-disc list-inside space-y-1">
               <li>World Values Survey (WVS) — 108 countries, 1981-2023</li>
-              <li>European Values Study (EVS) — 47 countries, 1981-2021 <span className="text-blue-500">(interpersonal only)</span></li>
+              <li>European Values Study (EVS) — 47 countries, 1981-2021</li>
               <li>General Social Survey (GSS) — USA, 1972-2024</li>
               <li>American National Election Studies (ANES) — USA, 1958-2024</li>
               <li>Canadian Election Study (CES) — Canada, 2008-2021</li>
             </ul>
           </div>
 
+          {/* Institutional Trust */}
+          <div className="info-box info-box-amber mb-4">
+            <div className="font-medium text-amber-800 mb-2">Institutional Trust (Citizen Perception + Governance Quality)</div>
+            <div className="grid md:grid-cols-2 gap-4 mt-3">
+              <div>
+                <p className="text-xs font-semibold text-amber-700 mb-2">CITIZEN PERCEPTION</p>
+                <ul className="text-sm text-amber-700 list-disc list-inside space-y-1">
+                  <li>World Values Survey (WVS) — 108 countries</li>
+                  <li>ANES — USA, 1958-2024</li>
+                  <li>CES — Canada, 2008-2021</li>
+                  <li>Regional barometers</li>
+                </ul>
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-amber-700 mb-2">GOVERNANCE QUALITY</p>
+                <ul className="text-sm text-amber-700 list-disc list-inside space-y-1">
+                  <li>Transparency International CPI — 180+ countries</li>
+                  <li>World Bank WGI — 206 countries</li>
+                  <li>WJP Rule of Law Index — 142 countries</li>
+                  <li>Freedom House, V-Dem</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
           {/* Media */}
-          <div className="info-box mb-4" style={{ backgroundColor: 'rgb(238 242 255)', borderColor: 'rgb(199 210 254)' }}>
+          <div className="info-box mb-6" style={{ backgroundColor: 'rgb(238 242 255)', borderColor: 'rgb(199 210 254)' }}>
             <div className="font-medium text-indigo-800 mb-2">Media Trust</div>
             <ul className="text-sm text-indigo-700 list-disc list-inside space-y-1">
               <li>Reuters Digital News Report — 47 countries, 2015-2025</li>
               <li>Standard Eurobarometer — 32 EU countries, 2024</li>
               <li>World Values Survey (press confidence) — 100+ countries, 1981-2023</li>
-            </ul>
-          </div>
-
-          {/* Governance */}
-          <div className="info-box info-box-emerald mb-6">
-            <div className="font-medium text-emerald-800 mb-2">Governance Quality</div>
-            <ul className="text-sm text-emerald-700 list-disc list-inside space-y-1">
-              <li>Transparency International CPI — 180+ countries, 2012-2024</li>
-              <li>World Bank WGI — 206 countries, 2008-2023</li>
-              <li>World Justice Project Rule of Law Index — 142 countries, 2012-2024</li>
-              <li>Freedom House — 189 countries, 2013-2024</li>
-              <li>V-Dem — 176 countries, 2000-2024</li>
             </ul>
           </div>
 
@@ -435,10 +483,10 @@ export default function MethodologyPage() {
         {/* Version */}
         <section className="border-t border-slate-200 pt-8">
           <p className="text-sm text-slate-500">
-            Methodology version 0.7.0 — Last updated January 2026
+            Methodology version 0.8.0 — Last updated January 2026
           </p>
           <p className="text-xs text-slate-400 mt-2">
-            v0.7.0: Integrated regional barometers (Afrobarometer, Latinobarometer, Asian Barometer, Arab Barometer) as supplementary sources. 19,000+ observations across 210 countries.
+            v0.8.0: Simplified to three pillars (Social, Institutional, Media) with Trust-Quality Gap as derived insight. Added supplementary indicators tier (Science, Financial, AI/Tech).
           </p>
         </section>
       </main>

@@ -6,6 +6,7 @@ import type { Pillar } from '@/app/explore/page'
 import { PILLARS, CHART_COLORS, TRUST_GRADIENT, MAP_CONFIG } from '@/lib/design-tokens'
 import { escapeHtml } from '@/lib/utils'
 
+// Standard pillar data (social, media)
 interface CountryData {
   iso3: string
   name: string
@@ -15,6 +16,27 @@ interface CountryData {
   source: string
   ci_lower?: number | null
   ci_upper?: number | null
+}
+
+// Institutions pillar data (includes gap)
+interface InstitutionsCountryData {
+  iso3: string
+  name: string
+  region: string
+  institutional_trust: number | null
+  institutional_year: number | null
+  institutional_source: string | null
+  governance_quality: number | null
+  governance_year: number | null
+  governance_sources: string | null
+  trust_quality_gap: number | null
+}
+
+type MapCountryData = CountryData | InstitutionsCountryData
+
+// Type guard to check if data is institutions format
+function isInstitutionsData(data: MapCountryData): data is InstitutionsCountryData {
+  return 'institutional_trust' in data
 }
 
 interface TrustMapProps {
@@ -94,7 +116,7 @@ const iso3ToName: Record<string, string> = {
 export default function TrustMap({ onCountrySelect, selectedCountry, pillar }: TrustMapProps) {
   const chartRef = useRef<HTMLDivElement>(null)
   const chartInstance = useRef<echarts.ECharts | null>(null)
-  const [data, setData] = useState<CountryData[]>([])
+  const [data, setData] = useState<MapCountryData[]>([])
   const [mapLoaded, setMapLoaded] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -166,16 +188,34 @@ export default function TrustMap({ onCountrySelect, selectedCountry, pillar }: T
     }
 
     // Transform data for ECharts - try name mapping first, then ISO3 fallback
-    const mapData = data.map(country => ({
-      name: nameToEchartsName[country.name] || iso3ToName[country.iso3] || country.name,
-      value: country.score,
-      iso3: country.iso3,
-      year: country.year,
-      source: country.source,
-      region: country.region,
-      ci_lower: country.ci_lower,
-      ci_upper: country.ci_upper
-    }))
+    const mapData = data.map(country => {
+      if (isInstitutionsData(country)) {
+        // Institutions pillar - use institutional_trust as the primary value
+        return {
+          name: nameToEchartsName[country.name] || iso3ToName[country.iso3] || country.name,
+          value: country.institutional_trust,
+          iso3: country.iso3,
+          year: country.institutional_year,
+          source: country.institutional_source,
+          region: country.region,
+          // Institutions-specific
+          governance_quality: country.governance_quality,
+          trust_quality_gap: country.trust_quality_gap,
+        }
+      } else {
+        // Standard pillars (social, media)
+        return {
+          name: nameToEchartsName[country.name] || iso3ToName[country.iso3] || country.name,
+          value: country.score,
+          iso3: country.iso3,
+          year: country.year,
+          source: country.source,
+          region: country.region,
+          ci_lower: country.ci_lower,
+          ci_upper: country.ci_upper,
+        }
+      }
+    })
 
     const option: EChartsOption = {
       backgroundColor: 'transparent',
@@ -183,23 +223,48 @@ export default function TrustMap({ onCountrySelect, selectedCountry, pillar }: T
         trigger: 'item',
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: (params: any) => {
-          if (!params.data || params.data.value === undefined) {
+          if (!params.data || params.data.value === undefined || params.data.value === null) {
             return `<div class="font-sans">
               <div class="font-semibold">${escapeHtml(params.name)}</div>
               <div class="text-slate-400 text-sm">No data for ${escapeHtml(PILLARS[pillar].label)}</div>
             </div>`
           }
           const currentYear = new Date().getFullYear()
-          const dataAge = currentYear - params.data.year
-          const freshnessText = dataAge === 0 ? 'This year' :
+          const dataAge = params.data.year ? currentYear - params.data.year : null
+          const freshnessText = dataAge === null ? 'Unknown' :
+            dataAge === 0 ? 'This year' :
             dataAge === 1 ? 'Last year' :
             `${dataAge} years ago`
+
+          // Institutions pillar has special display with gap
+          if (pillar === 'institutions' && params.data.trust_quality_gap !== undefined) {
+            const gap = params.data.trust_quality_gap
+            const gapText = gap !== null
+              ? `<div class="text-xs mt-2 pt-2 border-t border-slate-600">
+                  <div class="flex justify-between items-center">
+                    <span class="text-slate-400">Governance Quality:</span>
+                    <span>${params.data.governance_quality !== null ? params.data.governance_quality.toFixed(1) + '%' : 'N/A'}</span>
+                  </div>
+                  <div class="flex justify-between items-center mt-1">
+                    <span class="text-slate-400">Trust-Quality Gap:</span>
+                    <span class="${gap > 0 ? 'text-amber-400' : gap < 0 ? 'text-cyan-400' : ''}">${gap > 0 ? '+' : ''}${gap.toFixed(1)}</span>
+                  </div>
+                </div>`
+              : ''
+            return `<div class="font-sans">
+              <div class="font-semibold text-base">${escapeHtml(params.name)}</div>
+              <div class="text-slate-400 text-xs mt-1">Institutional Trust</div>
+              <div class="text-2xl font-bold text-amber-500">${escapeHtml(params.data.value.toFixed(1))}%</div>
+              ${gapText}
+              <div class="text-slate-500 text-xs mt-2">${params.data.year ? `${escapeHtml(String(params.data.year))} (${escapeHtml(freshnessText)})` : ''}</div>
+            </div>`
+          }
 
           return `<div class="font-sans">
             <div class="font-semibold text-base">${escapeHtml(params.name)}</div>
             <div class="text-2xl font-bold text-amber-500">${escapeHtml(params.data.value.toFixed(1))}%</div>
-            <div class="text-slate-400 text-xs mt-1">Last measured: ${escapeHtml(params.data.year)} <span class="opacity-60">(${escapeHtml(freshnessText)})</span></div>
-            <div class="text-slate-500 text-xs">${escapeHtml(params.data.source)}</div>
+            <div class="text-slate-400 text-xs mt-1">Last measured: ${escapeHtml(String(params.data.year))} <span class="opacity-60">(${escapeHtml(freshnessText)})</span></div>
+            <div class="text-slate-500 text-xs">${escapeHtml(params.data.source || '')}</div>
           </div>`
         },
         backgroundColor: CHART_COLORS.tooltip.backgroundColor,

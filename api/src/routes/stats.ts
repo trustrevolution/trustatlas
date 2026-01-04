@@ -4,7 +4,8 @@ import db from '../lib/db'
 export default async function statsRoute(fastify: FastifyInstance) {
   // GET /stats - Get aggregate statistics for homepage
   fastify.get('/stats', async (_request, _reply) => {
-    // Count all countries, observations, and sources for all four pillars
+    // Count observations for the 3 primary pillars only
+    // Supplementary indicators (freedom, financial, partisan) are excluded
     const result = await db.query(`
       SELECT
         (SELECT COUNT(DISTINCT iso3) FROM observations

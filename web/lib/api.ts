@@ -133,7 +133,7 @@ export const api = {
     return fetchApi<{ countries: GlobalTrustCountry[] }>('/trends/global')
   },
 
-  async getRegionStats(pillar?: 'interpersonal' | 'institutional' | 'governance' | 'media'): Promise<{ regions: RegionStats[] }> {
+  async getRegionStats(pillar?: 'social' | 'institutions' | 'media'): Promise<{ regions: RegionStats[] }> {
     const params = pillar ? `?pillar=${pillar}` : ''
     return fetchApi<{ regions: RegionStats[] }>(`/trends/regions${params}`)
   },
@@ -145,7 +145,7 @@ export const api = {
   // Generic multi-country trends - works for any data story
   async getMultiCountryTrends(
     iso3Codes: string[],
-    options?: { pillar?: 'governance' | 'interpersonal' | 'institutional' | 'media'; source?: string }
+    options?: { pillar?: 'social' | 'institutions' | 'media'; source?: string }
   ): Promise<MultiCountryData> {
     const params = new URLSearchParams()
     params.set('iso3', iso3Codes.join(','))
@@ -156,13 +156,16 @@ export const api = {
 }
 
 // Generic multi-country response type
+// Matches new 3-pillar structure from API
 export interface MultiCountryData {
   countries: Record<string, {
     name: string
     region: string
-    governance?: TrendPoint[]
-    interpersonal?: TrendPoint[]
-    institutional?: TrendPoint[]
+    social?: TrendPoint[]
+    institutions?: {
+      institutional?: TrendPoint[]
+      governance?: TrendPoint[]
+    }
     media?: TrendPoint[]
   }>
 }

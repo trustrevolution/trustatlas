@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Search, X, Users, Building2, Scale, Newspaper } from 'lucide-react'
+import { Search, X, Users, Building2, Newspaper } from 'lucide-react'
 import type { Pillar } from '@/app/explore/page'
 import { api, type Country } from '@/lib/api'
 import { PILLARS } from '@/lib/design-tokens'
@@ -14,13 +14,12 @@ interface FilterBarProps {
 
 // Icon mapping for pillars
 const PILLAR_ICONS = {
-  interpersonal: Users,
-  institutional: Building2,
+  social: Users,
+  institutions: Building2,
   media: Newspaper,
-  governance: Scale,
 } as const
 
-const PILLAR_ORDER: Pillar[] = ['interpersonal', 'institutional', 'media', 'governance']
+const PILLAR_ORDER: Pillar[] = ['social', 'institutions', 'media']
 
 export default function FilterBar({ onCountrySelect, selectedPillar, onPillarChange }: FilterBarProps) {
   const [searchQuery, setSearchQuery] = useState('')

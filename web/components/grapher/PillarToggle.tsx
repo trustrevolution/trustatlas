@@ -11,9 +11,9 @@ interface PillarToggleProps {
 }
 
 const PILLAR_OPTIONS: { id: Pillar; label: string }[] = [
-  { id: 'interpersonal', label: 'Interpersonal' },
-  { id: 'institutional', label: 'Institutional' },
-  { id: 'governance', label: 'Governance' },
+  { id: 'social', label: 'Social' },
+  { id: 'institutions', label: 'Institutions' },
+  { id: 'media', label: 'Media' },
 ]
 
 export function PillarToggle({ value, onChange, className }: PillarToggleProps) {

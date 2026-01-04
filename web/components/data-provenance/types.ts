@@ -155,7 +155,7 @@ export interface DataTableRow {
 /**
  * Size variants for badges and indicators.
  */
-export type BadgeSize = 'sm' | 'md' | 'lg'
+export type BadgeSize = 'xs' | 'sm' | 'md' | 'lg'
 
 /**
  * Visual style variants.

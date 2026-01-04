@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from 'next/navigation'
 import { useCallback, useMemo } from 'react'
 
-export type Pillar = 'interpersonal' | 'institutional' | 'governance'
+export type Pillar = 'social' | 'institutions' | 'media'
 
 export interface GrapherState {
   countries: string[]
@@ -44,9 +44,9 @@ export function useGrapherState(): UseGrapherStateReturn {
 
     return {
       countries: countriesParam ? countriesParam.split(',').filter(Boolean) : [],
-      pillar: (['interpersonal', 'institutional', 'governance'].includes(pillarParam || '')
+      pillar: (['social', 'institutions', 'media'].includes(pillarParam || '')
         ? pillarParam
-        : 'interpersonal') as Pillar,
+        : 'social') as Pillar,
       from: fromParam ? Number(fromParam) : undefined,
       to: toParam ? Number(toParam) : undefined,
       title: titleParam || undefined,

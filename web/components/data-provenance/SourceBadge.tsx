@@ -36,6 +36,7 @@ export interface SourceBadgeProps extends DataProvenanceBaseProps {
 }
 
 const sizeStyles: Record<BadgeSize, string> = {
+  xs: 'text-[9px] px-1 py-0.5 gap-0.5',
   sm: 'text-[10px] px-1.5 py-0.5 gap-1',
   md: 'text-xs px-2 py-0.5 gap-1.5',
   lg: 'text-sm px-2.5 py-1 gap-2',
@@ -48,6 +49,7 @@ const variantStyles: Record<BadgeVariant, string> = {
 }
 
 const iconSizes: Record<BadgeSize, string> = {
+  xs: 'w-2 h-2',
   sm: 'w-2.5 h-2.5',
   md: 'w-3 h-3',
   lg: 'w-3.5 h-3.5',
