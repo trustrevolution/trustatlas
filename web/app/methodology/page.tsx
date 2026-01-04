@@ -85,20 +85,18 @@ export default function MethodologyPage() {
               &ldquo;Generally speaking, would you say that most people can be trusted, or that you need to be very careful in dealing with people?&rdquo;
             </p>
             <div className="text-sm text-slate-500 mb-3">
-              <strong>Sources:</strong> WVS, EVS, GSS, ANES, CES
+              <strong>Sources:</strong> WVS, EVS, GSS, ANES, CES + regional barometers
             </div>
             <div className="info-box info-box-blue text-sm">
-              <strong className="text-blue-800">WVS-family methodology:</strong>
-              <span className="text-blue-700"> We use only surveys that share identical or highly comparable
-              question wording and response scales. The World Values Survey, European Values Study, General Social Survey,
-              American National Election Studies, and Canadian Election Study all use the same binary
+              <strong className="text-blue-800">Source hierarchy:</strong>
+              <span className="text-blue-700"> WVS-family sources (WVS, EVS, GSS, ANES, CES) take precedence using the same binary
               &ldquo;trust/careful&rdquo; question established by{' '}
               <a href="https://doi.org/10.2307/2095329" className="underline" target="_blank" rel="noopener noreferrer">
                 Rosenberg (1956)
               </a>.
-              EVS supplements WVS for European countries where WVS has no data.
-              Other surveys (ESS, regional barometers) use different scales that produce systematically
-              different scores, so we exclude them to ensure methodological consistency.</span>
+              Regional barometers (Afrobarometer, Latinobarometer, Asian Barometer, Arab Barometer) fill coverage gaps
+              in Africa, Latin America, Asia, and MENA where WVS data is sparse. ETL normalizes variable names and scales.
+              ESS is excluded (0-10 scale incompatible with binary).</span>
             </div>
           </div>
 
@@ -113,15 +111,13 @@ export default function MethodologyPage() {
               national government, parliament, courts, and other public institutions.
             </p>
             <div className="text-sm text-slate-500 mb-3">
-              <strong>Sources:</strong> WVS, GSS, ANES, CES
+              <strong>Sources:</strong> WVS, ANES, CES + regional barometers
             </div>
             <div className="info-box info-box-amber text-sm">
-              <strong className="text-amber-800">Same methodology rationale:</strong>
-              <span className="text-amber-700"> Like interpersonal trust, we limit institutional trust to
-              WVS-family surveys. Regional barometers, ESS, OECD, and others use different question wording,
-              response scales, and institution definitions that produce incompatible scores. For example,
-              Asian Barometer Wave 1-2 used inverted scales producing 10% scores vs. 95% in later waves.
-              Mixing methodologies creates artificial volatility in time series.</span>
+              <strong className="text-amber-800">Source hierarchy:</strong>
+              <span className="text-amber-700"> WVS takes precedence globally; ANES and CES provide deep USA/Canada coverage.
+              Regional barometers fill gaps where WVS hasn&apos;t surveyed. EVS is excluded for institutional trust
+              due to inconsistent variable coverage across waves. ESS and OECD use different scales.</span>
             </div>
           </div>
 
@@ -347,15 +343,15 @@ export default function MethodologyPage() {
           <div className="info-box info-box-slate mb-4">
             <div className="font-medium text-slate-700 mb-2">Regional Surveys</div>
             <p className="text-sm text-slate-500 mb-2">
-              Different scales/questions than WVS, but valuable for regional deep-dives:
+              Barometers are now integrated as supplementary sources (v0.7.0):
             </p>
             <ul className="text-sm text-slate-600 list-disc list-inside space-y-1">
-              <li>Afrobarometer — 34 African countries</li>
-              <li>Arab Barometer — 16 MENA countries</li>
-              <li>Asian Barometer — 18 Asian countries</li>
-              <li>Latinobarómetro — 18 Latin American countries</li>
-              <li>LAPOP AmericasBarometer — 34 countries</li>
-              <li>European Social Survey (ESS) — 30+ European countries</li>
+              <li>Afrobarometer — 39 African countries <span className="text-emerald-600">✓ Integrated</span></li>
+              <li>Arab Barometer — 12 MENA countries <span className="text-emerald-600">✓ Integrated</span></li>
+              <li>Asian Barometer — 15 Asian countries <span className="text-emerald-600">✓ Integrated</span></li>
+              <li>Latinobarómetro — 18 Latin American countries <span className="text-emerald-600">✓ Integrated</span></li>
+              <li>LAPOP AmericasBarometer — 34 countries <span className="text-slate-400">(planned)</span></li>
+              <li>European Social Survey (ESS) — 30+ countries <span className="text-slate-400">(excluded: 0-10 scale)</span></li>
             </ul>
           </div>
 
@@ -439,10 +435,10 @@ export default function MethodologyPage() {
         {/* Version */}
         <section className="border-t border-slate-200 pt-8">
           <p className="text-sm text-slate-500">
-            Methodology version 0.6.0 — Last updated January 2026
+            Methodology version 0.7.0 — Last updated January 2026
           </p>
           <p className="text-xs text-slate-400 mt-2">
-            v0.6.0: Added media trust pillar (Reuters DNR, Eurobarometer, WVS). Pillar-specific confidence tiers.
+            v0.7.0: Integrated regional barometers (Afrobarometer, Latinobarometer, Asian Barometer, Arab Barometer) as supplementary sources. 19,000+ observations across 210 countries.
           </p>
         </section>
       </main>

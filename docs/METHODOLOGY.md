@@ -2,7 +2,7 @@
 
 This document describes the methodology for Trust Atlas, including pillar definitions, data sources, normalization procedures, and confidence scoring.
 
-**Current Version:** 0.6.0
+**Current Version:** 0.7.0
 
 ## Overview
 
@@ -23,8 +23,8 @@ Trust Atlas tracks four independent pillars of trust. Each pillar is displayed s
 │   │ WVS-family:     │  │ WVS-family:     │  │ • CPI (20%)     │  │ • Reuters (40%) │  │
 │   │ • WVS           │  │ • WVS           │  │ • WGI (20%)     │  │ • Eurobar (40%) │  │
 │   │ • EVS           │  │ • ANES (USA)    │  │ • WJP (20%)     │  │ • WVS (20%)     │  │
-│   │ • GSS (USA)     │  │ • CES (Canada)  │  │ • FH/V-Dem (20%)│  │                 │  │
-│   │ • ANES/CES      │  │                 │  │                 │  │                 │  │
+│   │ • GSS/ANES/CES  │  │ • CES (Canada)  │  │ • FH/V-Dem (20%)│  │                 │  │
+│   │ + Barometers    │  │ + Barometers    │  │                 │  │                 │  │
 │   └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
 │                                                                                        │
 │   Each pillar scored 0-100. No composite score computed.                              │
@@ -50,7 +50,7 @@ The pillar-independent approach lets users see each dimension clearly.
 
 **Core Question:** "Generally speaking, would you say that most people can be trusted, or that you need to be very careful in dealing with people?"
 
-**Sources (WVS/EVS-family only):**
+**Sources:**
 | Source | Variable | Countries | Years | Role |
 |--------|----------|-----------|-------|------|
 | World Values Survey (WVS) | A165 | 108 | 1981-2023 | Primary |
@@ -58,14 +58,18 @@ The pillar-independent approach lets users see each dimension clearly.
 | General Social Survey (GSS) | trust | 1 (USA) | 1972-2024 | Primary (USA) |
 | American National Election Studies (ANES) | trust | 1 (USA) | 1958-2024 | Supplementary (USA) |
 | Canadian Election Study (CES) | pes21_trust | 1 (Canada) | 2008-2021 | Primary (Canada) |
+| Afrobarometer | Q84 | 39 | 2015-2023 | Fills gaps (Africa) |
+| Latinobarometer | P11ST.A | 18 | 1996-2024 | Fills gaps (Latin America) |
+| Asian Barometer | Q22 | 15 | 2001-2024 | Fills gaps (Asia) |
+| Arab Barometer | Q201 | 12 | 2006-2023 | Fills gaps (MENA) |
 
-These sources share identical question wording and binary response scale, ensuring methodological consistency. WVS and EVS use the same variable coding (A165).
+WVS-family sources share identical question wording and binary response scale. Regional barometers use compatible binary trust questions; ETL jobs normalize variable names and scales across waves.
 
-**Source Precedence:** When both WVS and EVS have data for the same country/year, WVS takes precedence. EVS supplements coverage for European country/years not covered by WVS.
+**Source Precedence:** WVS takes precedence when both WVS and another source have data for the same country/year. Source priority: WVS > EVS > GSS/ANES/CES > Barometers.
 
 **Excluded Sources:**
 - European Social Survey (ESS) - uses 0-10 scale, not comparable
-- Regional barometers - varying methodologies across waves
+- OECD Trust Indicators - different scale and institutional definitions
 
 ### 2. Institutional Trust
 
@@ -73,17 +77,22 @@ These sources share identical question wording and binary response scale, ensuri
 
 **Core Question:** Trust in parliament, government, legal system, and other state institutions.
 
-**Sources (WVS-family only):**
-| Source | Variable | Countries |
-|--------|----------|-----------|
-| World Values Survey (WVS) | E069_11 | Global |
-| American National Election Studies (ANES) | trust_gov | USA |
-| Canadian Election Study (CES) | cps21_fed_gov_sat | Canada |
+**Sources:**
+| Source | Variable | Countries | Role |
+|--------|----------|-----------|------|
+| World Values Survey (WVS) | E069_11 | Global | Primary |
+| American National Election Studies (ANES) | trust_gov | USA | Primary (USA) |
+| Canadian Election Study (CES) | cps21_fed_gov_sat | Canada | Primary (Canada) |
+| Afrobarometer | Q43A-H | 39 | Fills gaps (Africa) |
+| Latinobarometer | P13ST series | 18 | Fills gaps (Latin America) |
+| Asian Barometer | Q7-Q12 | 15 | Fills gaps (Asia) |
+| Arab Barometer | Q201A series | 12 | Fills gaps (MENA) |
+
+**Source Precedence:** WVS > ANES/CES > Barometers.
 
 **Excluded Sources:**
 - **European Values Study (EVS)** - Inconsistent variable coverage across country/years. Some EVS waves use E069_11 (parliament/government), others only have E069_13 (political parties). This creates measurement mismatches—e.g., CZE 1991 shows 47.7% government trust (WVS) vs 23.8% party trust (EVS). These measure different constructs and cannot be reconciled.
 - ESS, OECD Trust Indicators - different scales
-- Regional barometers - methodology changes across waves
 
 ### 3. Governance Quality
 
@@ -216,7 +225,8 @@ Flagged observations are stored in `data_quality_flags` table for review.
 | 0.3.0 | Pillar-independent. WVS-family only for survey pillars. No composite score. |
 | 0.4.0 | Added EVS (same methodology as WVS). OWID benchmark validation. |
 | 0.5.0 | Expanded governance sources: WJP, Freedom House, V-Dem now included with weighted averaging. WGI multi-year (2008-2023). |
-| 0.6.0 | **Current.** Added media trust pillar (Reuters DNR, Eurobarometer, WVS). Pillar-specific confidence tiers. |
+| 0.6.0 | Added media trust pillar (Reuters DNR, Eurobarometer, WVS). Pillar-specific confidence tiers. |
+| 0.7.0 | **Current.** Integrated regional barometers (Afrobarometer, Latinobarometer, Asian Barometer, Arab Barometer) as supplementary sources for interpersonal and institutional pillars. 19,000+ observations across 210 countries. |
 
 ## Interpretation Guide
 

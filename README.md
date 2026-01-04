@@ -128,25 +128,27 @@ See [docs/API_REFERENCE.md](docs/API_REFERENCE.md) for full documentation.
 
 ## Data Sources
 
-**Current coverage:** 23 sources, 12,000+ observations across 210 countries (1958-2025)
+**Current coverage:** 23 sources, 19,000+ observations across 210 countries (1958-2025)
 
 > **Roadmap:** See [docs/data-sources/](docs/data-sources/) for expansion plans. Next priority: Briq GPS (free Gallup-derived trust data).
 
-### Survey Sources (WVS-family only)
+### Survey Sources
 
-**Interpersonal trust:** WVS, EVS, GSS, ANES, CES
-**Institutional trust:** WVS, ANES, CES (EVS excluded due to variable inconsistency)
-**Media trust:** WVS (E069_07/08 press confidence)
+**Interpersonal & Institutional trust:** WVS-family sources take precedence; regional barometers fill gaps.
 
-| Source | Countries | Years |
-|--------|-----------|-------|
-| World Values Survey (WVS) | 108 | 1981-2023 |
-| European Values Study (EVS) | 47 | 1981-2021 |
-| General Social Survey (GSS) | USA | 1972-2024 |
-| American National Election Studies (ANES) | USA | 1958-2024 |
-| Canadian Election Study (CES) | Canada | 2008-2021 |
+| Source | Countries | Years | Role |
+|--------|-----------|-------|------|
+| World Values Survey (WVS) | 108 | 1981-2023 | Primary global |
+| European Values Study (EVS) | 47 | 1981-2021 | Supplements WVS in Europe |
+| General Social Survey (GSS) | USA | 1972-2024 | Primary (USA) |
+| American National Election Studies (ANES) | USA | 1958-2024 | Primary (USA) |
+| Canadian Election Study (CES) | Canada | 2008-2021 | Primary (Canada) |
+| Afrobarometer | 39 | 2015-2023 | Fills gaps (Africa) |
+| Latinobarometer | 18 | 1996-2024 | Fills gaps (Latin America) |
+| Asian Barometer | 15 | 2001-2024 | Fills gaps (Asia) |
+| Arab Barometer | 12 | 2006-2023 | Fills gaps (MENA) |
 
-These sources share identical question wording (A165 for interpersonal), ensuring methodological consistency.
+WVS-family sources share identical question wording (A165 for interpersonal). Regional barometers use compatible binary questions; ETL normalizes variable names and scales across waves.
 
 ### Media Trust Sources
 
@@ -172,27 +174,23 @@ Weighted average of available sources:
 | V-Dem | 10% | 176 | 2000-2024 |
 
 ### Reference Data (Not in Pillars)
-These sources are in the database but excluded from pillar calculations due to methodology differences:
+These sources are in the database but excluded from pillar calculations due to incompatible scales:
 
 | Source | Reason for Exclusion |
 |--------|---------------------|
 | European Social Survey (ESS) | Different scale (0-10 vs binary) |
-| Afrobarometer | Different scale/wording than WVS |
-| Latinobarometro | Methodology changes caused swings |
-| Asian Barometer | Inverted scales in early waves |
-| Arab Barometer | Different scale/wording than WVS |
-| Eurobarometer | Non-commercial license |
 | OECD Trust Survey | Different institutional definitions |
+| EU-SILC | Different scale (0-10) |
 
 See [docs/data-sources/](docs/data-sources/) for integration status and expansion roadmap.
 
 ## Methodology
 
-**Current version:** 0.5.0
+**Current version:** 0.7.0
 
 Each pillar is tracked independently. No composite score is computed.
 
-- **Survey pillars:** WVS-family sources with identical question wording
+- **Survey pillars:** WVS-family sources take precedence; regional barometers fill gaps
 - **Governance pillar:** Weighted average (see table above); missing sources have weight redistributed
 - **WGI scaling:** `((raw + 2.5) / 5) × 100` (converts -2.5 to +2.5 → 0-100)
 
