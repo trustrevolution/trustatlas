@@ -267,15 +267,7 @@ export default function HomePage() {
               <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-3">
                 Do people trust government? And does that trust match reality?
               </p>
-              <div className="bg-amber-50 rounded-lg p-3 border border-amber-100 mt-4">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-semibold text-amber-800 uppercase tracking-wide">Trust-Quality Gap</span>
-                </div>
-                <p className="text-xs text-amber-700 leading-relaxed">
-                  The divergence between what citizens believe and how institutions perform is where the story lives.
-                </p>
-              </div>
-              <p className="text-slate-400 text-xs sm:text-sm mt-3">
+              <p className="text-slate-400 text-xs sm:text-sm">
                 WVS + CPI, WGI, WJP, V-Dem
               </p>
             </div>
@@ -303,17 +295,22 @@ export default function HomePage() {
               Supplementary Indicators
             </h3>
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-              <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200">
+              {/* Science - Coming soon */}
+              <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200 opacity-60">
                 <span className="text-sm">🔬</span>
                 <span className="text-xs sm:text-sm text-slate-600">Science Trust</span>
+                <span className="text-[10px] text-slate-400 font-medium">Soon</span>
               </div>
+              {/* Financial - Has data */}
               <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200">
                 <span className="text-sm">🏦</span>
                 <span className="text-xs sm:text-sm text-slate-600">Financial Trust</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200">
+              {/* Tech - Coming soon */}
+              <div className="flex items-center gap-2 px-3 py-2 bg-white rounded-full border border-slate-200 opacity-60">
                 <span className="text-sm">🤖</span>
-                <span className="text-xs sm:text-sm text-slate-600">AI/Tech Trust</span>
+                <span className="text-xs sm:text-sm text-slate-600">Tech Trust</span>
+                <span className="text-[10px] text-slate-400 font-medium">Soon</span>
               </div>
             </div>
             <p className="text-center text-slate-500 text-xs mt-4">

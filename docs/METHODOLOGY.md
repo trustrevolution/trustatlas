@@ -6,30 +6,29 @@ This document describes the methodology for Trust Atlas, including pillar defini
 
 ## Overview
 
-Trust Atlas tracks four independent pillars of trust. Each pillar is displayed separately—no composite index is computed.
+Trust Atlas tracks three pillars of trust. Each pillar is displayed separately—no composite index is computed. Governance indices provide a "reality check" benchmark within Institutional Trust.
 
 ```
-┌───────────────────────────────────────────────────────────────────────────────────────┐
-│                                    TRUST ATLAS                                         │
-│                              Four Independent Pillars                                  │
-├───────────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                        │
-│   ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  │
-│   │  INTERPERSONAL  │  │  INSTITUTIONAL  │  │   GOVERNANCE    │  │      MEDIA      │  │
-│   │                 │  │                 │  │                 │  │                 │  │
-│   │ "Most people    │  │ Trust in govt   │  │ Quality proxy   │  │ Trust in news   │  │
-│   │  can be trusted"│  │ & institutions  │  │                 │  │                 │  │
-│   │                 │  │                 │  │                 │  │                 │  │
-│   │ WVS-family:     │  │ WVS-family:     │  │ • CPI (20%)     │  │ • Reuters (40%) │  │
-│   │ • WVS           │  │ • WVS           │  │ • WGI (20%)     │  │ • Eurobar (40%) │  │
-│   │ • EVS           │  │ • ANES (USA)    │  │ • WJP (20%)     │  │ • WVS (20%)     │  │
-│   │ • GSS/ANES/CES  │  │ • CES (Canada)  │  │ • FH/V-Dem (20%)│  │                 │  │
-│   │ + Barometers    │  │ + Barometers    │  │                 │  │                 │  │
-│   └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘  │
-│                                                                                        │
-│   Each pillar scored 0-100. No composite score computed.                              │
-│                                                                                        │
-└───────────────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              TRUST ATLAS                                     │
+│                           Three Pillars                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│   ┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐ │
+│   │    SOCIAL TRUST     │  │ INSTITUTIONAL TRUST │  │    MEDIA TRUST      │ │
+│   │                     │  │                     │  │                     │ │
+│   │ "Most people can    │  │ Trust in govt       │  │ Trust in news       │ │
+│   │  be trusted"        │  │                     │  │                     │ │
+│   │                     │  │ Survey: WVS, ANES   │  │ • Reuters (40%)     │ │
+│   │ WVS-family:         │  │                     │  │ • Eurobar (40%)     │ │
+│   │ • WVS, EVS          │  │ Benchmarked against:│  │ • WVS (20%)         │ │
+│   │ • GSS/ANES/CES      │  │ CPI, WGI, WJP,      │  │                     │ │
+│   │ + Barometers        │  │ FH, V-Dem           │  │                     │ │
+│   └─────────────────────┘  └─────────────────────┘  └─────────────────────┘ │
+│                                                                              │
+│   Each pillar scored 0-100. No composite score computed.                    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Why No Composite Index?
@@ -42,9 +41,9 @@ Previous methodology (v0.2.0) computed a weighted composite score. This was depr
 
 The pillar-independent approach lets users see each dimension clearly.
 
-## The Four Pillars
+## The Three Pillars
 
-### 1. Interpersonal Trust
+### 1. Social Trust (Interpersonal)
 
 **Definition:** The degree to which individuals trust other people in their society.
 
@@ -94,11 +93,9 @@ WVS-family sources share identical question wording and binary response scale. R
 - **European Values Study (EVS)** - Inconsistent variable coverage across country/years. Some EVS waves use E069_11 (parliament/government), others only have E069_13 (political parties). This creates measurement mismatches—e.g., CZE 1991 shows 47.7% government trust (WVS) vs 23.8% party trust (EVS). These measure different constructs and cannot be reconciled.
 - ESS, OECD Trust Indicators - different scales
 
-### 3. Governance Quality
+### Governance Benchmarking (within Institutional Trust)
 
-**Definition:** A proxy measure of institutional integrity based on expert assessments of corruption, rule of law, and government effectiveness.
-
-**Note:** This pillar measures institutional quality, not trust. It serves as a supplementary indicator.
+Governance indices provide a "reality check" benchmark within Institutional Trust, enabling comparison between what citizens believe ("What people say") and how institutions are rated by international organizations ("How it's rated").
 
 **Sources:**
 | Source | Weight | Countries | Years | Scale |
@@ -113,7 +110,7 @@ WVS-family sources share identical question wording and binary response scale. R
 **Calculation:**
 Weighted average of available sources. Missing sources have their weight redistributed proportionally among available sources.
 
-### 4. Media Trust
+### 3. Media Trust
 
 **Definition:** The degree to which people trust news media in their country.
 
@@ -168,7 +165,7 @@ Following best practices from WGI and V-Dem, Trust Atlas uses **pillar-specific 
 | **B** | WVS/EVS data 3-7 years old | ±10 points |
 | **C** | No valid survey within 7 years | ±15 points |
 
-### Governance Pillar
+### Governance Benchmarking (within Institutions)
 
 Always **Tier A** (±5 points) because CPI and WGI are updated annually.
 

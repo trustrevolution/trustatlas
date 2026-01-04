@@ -6,14 +6,13 @@ An open data initiative measuring trust across societies using only programmatic
 
 ## Overview
 
-Trust Atlas tracks four independent pillars of trust:
+Trust Atlas tracks three pillars of trust:
 
-1. **Interpersonal Trust** - Survey data on whether "most people can be trusted"
-2. **Institutional Trust** - Confidence in national government and institutions
+1. **Social Trust** - Survey data on whether "most people can be trusted"
+2. **Institutional Trust** - Confidence in government, benchmarked against governance indices (CPI, WGI, WJP)
 3. **Media Trust** - Trust in news media (Reuters DNR, Eurobarometer, WVS)
-4. **Governance Quality** - Institutional quality measures (CPI, WGI, WJP, Freedom House, V-Dem)
 
-Each pillar is displayed independently (no composite index). All inputs are normalized to a 0-100 scale with data provenance and confidence flags.
+Each pillar is displayed independently (no composite index). Governance indices provide a "reality check" benchmark within Institutional Trust, enabling comparison between what citizens believe and how institutions are rated. All inputs normalized to 0-100 scale with data provenance and confidence flags.
 
 ## Quick Start
 
@@ -160,9 +159,9 @@ Weighted average of available sources:
 | Eurobarometer | 40% | 27 (EU) | 2000-2024 |
 | WVS (E069_07/08) | 20% | 108 | 1981-2022 |
 
-### Governance Sources
+### Governance Sources (Institutional Benchmarking)
 
-Weighted average of available sources:
+Used to benchmark Institutional Trust against objective measures. Weighted average:
 
 | Source | Weight | Countries | Years |
 |--------|--------|-----------|-------|
@@ -191,7 +190,7 @@ See [docs/data-sources/](docs/data-sources/) for integration status and expansio
 Each pillar is tracked independently. No composite score is computed.
 
 - **Survey pillars:** WVS-family sources take precedence; regional barometers fill gaps
-- **Governance pillar:** Weighted average (see table above); missing sources have weight redistributed
+- **Governance benchmarking:** Weighted average of CPI, WGI, WJP, Freedom House, V-Dem; shown as comparison within Institutional Trust
 - **WGI scaling:** `((raw + 2.5) / 5) × 100` (converts -2.5 to +2.5 → 0-100)
 
 ### Confidence Tiers

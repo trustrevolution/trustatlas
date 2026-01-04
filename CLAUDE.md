@@ -4,16 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**Trust Atlas** is an open data initiative that measures trust across four independent dimensions using only programmatically accessible data sources. An open-source project from [Trust Revolution](https://trustrevolution.co).
+**Trust Atlas** is an open data initiative that measures trust across three pillars using only programmatically accessible data sources. An open-source project from [Trust Revolution](https://trustrevolution.co).
 
-### The Four Pillars
+### The Three Pillars
 
-1. **Interpersonal Trust** - Survey data on whether "most people can be trusted"
-2. **Institutional Trust** - Confidence in national government and institutions
+1. **Social Trust** - Survey data on whether "most people can be trusted"
+2. **Institutional Trust** - Confidence in government, benchmarked against governance indices (CPI, WGI, WJP)
 3. **Media Trust** - Trust in news media (Reuters DNR, Eurobarometer, WVS)
-4. **Governance Quality** - Institutional quality measures (CPI, WGI, WJP, Freedom House, V-Dem)
 
-Each pillar is displayed independently—we do **not** combine them into a composite index. Survey data (WVS every ~5 years) and governance data (annual) have different rhythms that create artificial volatility when combined. Individual pillars tell clearer stories.
+Each pillar is displayed independently—we do **not** combine them into a composite index. Governance indices provide a "reality check" benchmark within Institutional Trust, enabling comparison between what citizens believe and how institutions are rated.
 
 All inputs are normalized to 0-100 scale with data provenance and confidence flags.
 
@@ -99,8 +98,8 @@ WVS-family sources take precedence: WVS, ANES, CES. Regional barometers fill gap
 **Media Trust:**
 Weighted average: Reuters DNR (40%), Eurobarometer (40%), WVS (20%). Missing sources have weight redistributed.
 
-**Governance Pillar:**
-Weighted average of available sources:
+**Governance Benchmarking (within Institutions):**
+Weighted average of available sources, shown as "How it's rated" alongside survey trust:
 - CPI, WGI, WJP, WJP-Corruption: 20% each
 - Freedom House, V-Dem: 10% each
 
