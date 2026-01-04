@@ -252,7 +252,7 @@ export default function HomePage() {
                 &ldquo;Can most people be trusted?&rdquo;
               </p>
               <p className="text-slate-400 text-[9px] sm:text-[10px] mt-1 sm:mt-2">
-                WVS, EVS, GSS, ANES, CES
+                WVS, EVS, GSS + barometers
               </p>
             </div>
 
@@ -268,7 +268,7 @@ export default function HomePage() {
                 Confidence in government &amp; institutions
               </p>
               <p className="text-slate-400 text-[9px] sm:text-[10px] mt-1 sm:mt-2">
-                WVS, GSS, ANES, CES
+                WVS, ANES, CES + barometers
               </p>
             </div>
 

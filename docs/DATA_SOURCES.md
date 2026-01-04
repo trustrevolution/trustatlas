@@ -2,7 +2,7 @@
 
 This document describes all data sources used in Trust Atlas, including access methods, licensing, coverage, and data quality considerations.
 
-> **Important:** As of methodology v0.5.0, only WVS-family sources (WVS, EVS, GSS, ANES, CES) are used for interpersonal trust and WVS-family sources (WVS, ANES, CES) for institutional trust. ESS and regional barometers are ingested but excluded from pillar calculations due to methodology differences. EVS is included for interpersonal (same A165 question as WVS) but excluded from institutional (inconsistent variable coverage).
+> **Important:** As of methodology v0.7.0, WVS-family sources (WVS, EVS, GSS, ANES, CES) take precedence for survey pillars. Regional barometers (Afrobarometer, Latinobarometer, Asian Barometer, Arab Barometer) are now integrated as supplementary sources, filling coverage gaps where WVS-family data doesn't exist. ESS remains excluded (0-10 scale incompatible). EVS is included for interpersonal but excluded from institutional (inconsistent variable coverage).
 
 ## Source Selection Criteria
 
@@ -406,7 +406,7 @@ ANES has tracked political attitudes in the USA since 1948.
 
 ### 12. Regional Barometers
 
-> **Note:** All regional barometers are ingested but **excluded from pillar calculations** as of v0.3.0 due to varying methodologies across waves.
+> **Note:** As of v0.7.0, regional barometers are **integrated as supplementary sources** for interpersonal and institutional trust. They fill coverage gaps where WVS-family sources don't exist. WVS takes precedence when both sources have data.
 
 #### Afrobarometer
 
@@ -446,9 +446,9 @@ ANES has tracked political attitudes in the USA since 1948.
 
 **Processing Notes:**
 - Regional barometers extend survey coverage beyond WVS
-- Similar trust questions, though wording and scales vary
+- Similar trust questions; ETL jobs normalize variable names and scales across waves
 - Requires manual download and registration
-- **Excluded from pillar calculations** due to methodology inconsistencies
+- **Integrated as supplementary sources** (v0.7.0) with source priority: WVS > EVS > GSS/ANES > Barometers
 
 ---
 
@@ -470,15 +470,16 @@ Despite excellent global coverage and methodology, the proprietary license makes
 
 ## Pillar Source Summary
 
-As of methodology v0.5.0:
+As of methodology v0.7.0:
 
-| Pillar | Active Sources | Excluded Sources |
-|--------|----------------|------------------|
-| Interpersonal | WVS, EVS, GSS, ANES, CES | ESS, Barometers |
-| Institutional | WVS, ANES, CES | EVS, ESS, OECD, Barometers |
-| Governance | CPI (20%), WGI (20%), WJP (20%), WJP-Corruption (20%), Freedom House (10%), V-Dem (10%) | — |
+| Pillar | Primary Sources | Supplementary Sources | Excluded |
+|--------|-----------------|----------------------|----------|
+| Interpersonal | WVS, EVS, GSS, ANES, CES | Afrobarometer, Latinobarometer, Asian Barometer, Arab Barometer | ESS (0-10 scale) |
+| Institutional | WVS, ANES, CES | Afrobarometer, Latinobarometer, Asian Barometer, Arab Barometer | EVS, ESS, OECD |
+| Media | Reuters DNR (40%), Eurobarometer (40%), WVS (20%) | — | — |
+| Governance | CPI (20%), WGI (20%), WJP (20%), WJP-Corruption (20%), Freedom House (10%), V-Dem (10%) | — | — |
 
-Excluded sources are still ingested and available in the `observations` table but are not used in pillar score calculations.
+Primary sources take precedence; supplementary sources fill gaps where primary data doesn't exist.
 
 ### Edelman Trust Barometer
 

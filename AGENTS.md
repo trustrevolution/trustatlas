@@ -1,14 +1,14 @@
 # AGENTS.md — Trust Atlas (Open Data)
 
 > Owner: Trust Atlas — An open-source project from Trust Revolution
-> Status: Draft v0.2
+> Status: Draft v0.7
 > Scope: Agent workflows for data ingestion, normalization, and API/UI support of Trust Atlas, built from programmatically accessible sources.
 
 ---
 
 ## 1) Mission & Constraints
 
-**Mission:** Produce credible, transparent, and updateable trust measurements across three independent pillars (Interpersonal, Institutional, Governance) using *only* open or programmatically accessible data sources.
+**Mission:** Produce credible, transparent, and updateable trust measurements across four independent pillars (Interpersonal, Institutional, Media, Governance) using *only* open or programmatically accessible data sources.
 
 **Key Design Decision:** We do **not** combine pillars into a composite index. Survey data (~5 year cycles) and governance data (annual) have different rhythms. Combining them creates artificial volatility. Individual pillars tell clearer stories.
 
@@ -22,40 +22,44 @@
 
 > Agents must only use sources with documented public access (API or bulk download) and record access method per source.
 
-### WVS-Family Sources (Used for Survey Pillars)
+### WVS-Family Sources (Primary for Survey Pillars)
 
-**Interpersonal & Institutional Trust:**
+**Interpersonal & Institutional Trust — Primary Sources:**
 - **World Values Survey (WVS):** 108 countries, 1981-2023. Bulk CSV/SPSS by wave (free registration).
+- **European Values Study (EVS):** 47 countries, 1981-2021. Same A165 question as WVS (interpersonal only).
 - **General Social Survey (GSS):** USA only, 1972-2024. Public NORC data.
 - **American National Election Studies (ANES):** USA only, 1958-2024. Public domain.
 - **Canadian Election Study (CES):** Canada only, 2008-2021. Open access.
 
-These four sources share identical or highly comparable question wording and response scales (the Rosenberg binary trust question). All other survey sources are excluded from the survey pillars due to methodological incompatibility.
+**Supplementary Sources (Fill Coverage Gaps):**
+- **Afrobarometer:** 39 countries, 2015-2023. Fills gaps in Africa.
+- **Latinobarometer:** 18 countries, 1996-2024. Fills gaps in Latin America.
+- **Asian Barometer:** 15 countries, 2001-2024. Fills gaps in Asia.
+- **Arab Barometer:** 12 countries, 2006-2023. Fills gaps in MENA.
 
-### Excluded Survey Sources (Methodology Incompatibility)
+**Source Priority:** WVS > EVS > GSS/ANES/CES > Regional Barometers. WVS takes precedence when multiple sources exist for the same country-year. ETL normalizes variable names and scales across barometer waves.
 
-The following sources are loaded but excluded from pillar calculations (`exclude_from_pillars=TRUE`):
-- **European Social Survey (ESS):** 39 countries, 2002-2023. 0-10 scale, different questions.
-- **Regional Barometers:** Varied scales, different question wording.
-  - Afrobarometer: 43 countries, 2015-2023.
-  - Arab Barometer: 17 countries, 2007-2023.
-  - Asian Barometer: 17 countries, 2002-2023.
-  - Latinobarómetro: 18 countries, 2006-2024.
-  - LAPOP AmericasBarometer: 8+ countries, 2006-2023.
+### Excluded Survey Sources (Scale Incompatibility)
+
+The following sources are loaded but excluded from survey pillar calculations:
+- **European Social Survey (ESS):** 39 countries, 2002-2023. 0-10 scale incompatible with binary.
 - **OECD Trust Survey:** 32 OECD countries, 2021-2023. Different institutional definitions.
-- **EBRD Life in Transition Survey (LiTS):** 35 countries, 2023. Methodology varies.
-- **Eurobarometer:** 36 EU countries, 2024. Different scales.
-- **Caucasus Barometer (CRRC):** Armenia, Georgia, 2024.
 - **EU-SILC (Eurostat):** 37 European countries, 2013-2024. 0-10 scale.
+- **LAPOP AmericasBarometer:** 8+ countries, 2006-2023. (Planned for integration)
 
 **Governance Indices (Used for Governance Pillar):**
-- **Transparency International CPI:** 187 countries, 2008-2024. Annual CSV.
-- **World Bank WGI:** 207 countries, 2008-2023. API + bulk CSV.
-
-**Freedom Indices (Excluded - Different Methodology):**
-- **Freedom House:** 189 countries, 2013-2024. Freedom in the World. Measures political freedom, not corruption/institutional quality.
-- **V-Dem:** 176 countries, 2000-2024. Varieties of Democracy indices. Measures democratic governance, not institutional trustworthiness.
+Weighted average: CPI (20%), WGI (20%), WJP (20%), WJP-Corruption (20%), Freedom House (10%), V-Dem (10%).
+- **Transparency International CPI:** 180+ countries, 2012-2024. Annual CSV.
+- **World Bank WGI:** 206 countries, 2008-2023. API + bulk CSV.
 - **World Justice Project (WJP):** 142 countries, 2012-2024. Rule of Law Index.
+- **Freedom House:** 189 countries, 2013-2024. Freedom in the World scores.
+- **V-Dem:** 176 countries, 2000-2024. Varieties of Democracy indices.
+
+**Media Trust Sources (Used for Media Pillar):**
+Weighted average: Reuters DNR (40%), Eurobarometer (40%), WVS (20%).
+- **Reuters Digital News Report:** 47 countries, 2015-2025. Annual online survey.
+- **Eurobarometer:** 32 EU countries, 2024. Trust in institutions: Media.
+- **World Values Survey:** 100+ countries, 1981-2023. Press confidence (E069_07/08).
 
 ### Prohibited/Conditional
 - **Gallup World Poll:** proprietary; do not store/use unless explicit license is obtained.
@@ -65,11 +69,12 @@ The following sources are loaded but excluded from pillar calculations (`exclude
 
 ## 3) Conceptual Model
 
-Trust Atlas measures trust across three **independent** pillars (not combined into a composite):
+Trust Atlas measures trust across four **independent** pillars (not combined into a composite):
 
-1. **Interpersonal Trust** — % agreeing *"Most people can be trusted."* (WVS-family only: WVS, GSS, ANES, CES)
-2. **Institutional Trust** — % expressing confidence in national government (WVS-family only)
-3. **Governance Quality** — institutional quality/corruption measures (TI CPI, WGI Rule of Law & Government Effectiveness)
+1. **Interpersonal Trust** — % agreeing *"Most people can be trusted."* (WVS-family + barometers)
+2. **Institutional Trust** — % expressing confidence in national government (WVS-family + barometers)
+3. **Media Trust** — % trusting news media (Reuters DNR, Eurobarometer, WVS)
+4. **Governance Quality** — institutional quality/corruption measures (CPI, WGI, WJP, Freedom House, V-Dem)
 
 All inputs are normalized to a 0–100 scale. Each pillar is computed per country-year with data provenance and confidence flags.
 
@@ -84,7 +89,7 @@ All inputs are normalized to a 0–100 scale. Each pillar is computed per countr
 - **TI CPI** (0–100, where higher = *less* corruption): use directly as a *positive* governance signal.
 - **WGI** (−2.5…+2.5): rescale via `((raw + 2.5) / 5) * 100` for each selected dimension; if using both Rule of Law and Government Effectiveness, average them.
 
-**Governance Proxy (GOV):** If both CPI and WGI available: `GOV = 0.5 * CPI + 0.5 * WGI_avg`.
+**Governance Pillar (GOV):** Weighted average of available sources: CPI (20%), WGI (20%), WJP (20%), WJP-Corruption (20%), Freedom House (10%), V-Dem (10%). Missing sources have weight redistributed.
 
 ---
 
@@ -93,6 +98,7 @@ All inputs are normalized to a 0–100 scale. Each pillar is computed per countr
 Each pillar is displayed independently:
 - `INTER` = Interpersonal Trust (0–100)
 - `INST` = Institutional Trust (0–100)
+- `MEDIA` = Media Trust (0–100)
 - `GOV` = Governance Quality (0–100)
 
 **Why no composite?**
@@ -126,11 +132,11 @@ Store `confidence_score` (0–1) computed from recency and completeness; display
 - `iso3` (pk), `iso2`, `name`, `region`, `income_group`, `geom` (PostGIS)
 
 **observations**
-- `id` (pk), `iso3`, `year`, `source`, `trust_type` (`interpersonal|institutional|governance|partisan|freedom|cpi|wgi|oecd|derived`),
+- `id` (pk), `iso3`, `year`, `source`, `trust_type` (`interpersonal|institutional|media|governance|cpi|wgi|derived`),
 - `raw_value`, `raw_unit`, `score_0_100`, `sample_n`, `method_notes`, `source_url`, `ingested_at`
 
 **country_year** (materialized view)
-- `iso3`, `year`, `interpersonal`, `institutional`, `governance`, `confidence_score`, `confidence_tier`, `sources_used` (jsonb), `version`
+- `iso3`, `year`, `interpersonal`, `institutional`, `media`, `governance`, `confidence_score`, `confidence_tier`, `sources_used` (jsonb), `version`
 
 **source_metadata**
 - `source`, `description`, `cadence`, `coverage`, `license`, `access_mode`, `weighting_notes`
@@ -295,7 +301,8 @@ Each displayed independently. No composite score.
 - **Trust Atlas**: The project name (formerly Global Trust Index)
 - **INTER**: Interpersonal trust pillar (0–100)
 - **INST**: Institutional trust pillar (0–100)
-- **GOV**: Governance quality pillar (CPI + WGI, 0–100)
+- **MEDIA**: Media trust pillar (0–100)
+- **GOV**: Governance quality pillar (0–100)
 - **Confidence Tier**: A/B/C data completeness/recency quality band
 
 ---

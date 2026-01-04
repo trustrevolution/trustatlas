@@ -77,7 +77,7 @@ Copy `.env.example` to `.env` for local development. Uses Docker Compose for ser
 - Freedom House - annual CSV
 - General Social Survey (GSS) - bulk downloads (USA only)
 - OECD Trust Indicators - API via OECD.Stat (reference only)
-- Regional Barometers (Afro/Arab/Latino/Asian) - bulk downloads (reference only)
+- Regional Barometers (Afro/Arab/Latino/Asian) - bulk downloads (supplementary for survey pillars)
 - Transparency International CPI - annual CSV
 - V-Dem - annual bulk download
 - World Bank WGI - API + bulk CSV
@@ -88,13 +88,16 @@ Copy `.env.example` to `.env` for local development. Uses Docker Compose for ser
 - Gallup World Poll (proprietary)
 - Edelman Trust Barometer (restricted redistribution)
 
-### Pillar Methodology (v0.5.0)
+### Pillar Methodology (v0.7.0)
 
 **Interpersonal Trust:**
-Limited to WVS-family sources with identical A165 question wording: WVS, EVS, GSS, ANES, CES. WVS takes precedence; EVS supplements gaps. ESS and regional barometers excluded (different scales).
+WVS-family sources take precedence: WVS, EVS, GSS, ANES, CES. Regional barometers (Afro/Arab/Asian/Latino) fill gaps where WVS-family data doesn't exist. ESS excluded (0-10 scale incompatible).
 
 **Institutional Trust:**
-Limited to WVS-family sources: WVS, ANES, CES. EVS excluded (inconsistent variable coverage across waves).
+WVS-family sources take precedence: WVS, ANES, CES. Regional barometers fill gaps. EVS excluded (inconsistent variable coverage across waves).
+
+**Media Trust:**
+Weighted average: Reuters DNR (40%), Eurobarometer (40%), WVS (20%). Missing sources have weight redistributed.
 
 **Governance Pillar:**
 Weighted average of available sources:
