@@ -19,11 +19,11 @@ const TrustMap = dynamic(() => import('@/components/TrustMap'), {
 const FilterBar = dynamic(() => import('@/components/FilterBar'), { ssr: false })
 const ExplorePanel = dynamic(() => import('@/components/ExplorePanel'), { ssr: false })
 
-export type Pillar = 'interpersonal' | 'institutional' | 'governance' | 'media'
+export type Pillar = 'social' | 'institutions' | 'media'
 
 export default function ExplorePage() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
-  const [selectedPillar, setSelectedPillar] = useState<Pillar>('interpersonal')
+  const [selectedPillar, setSelectedPillar] = useState<Pillar>('social')
   const [isDesktop, setIsDesktop] = useState(false)
 
   // Detect desktop on mount - avoids loading heavy components on mobile

@@ -54,7 +54,7 @@ function TrustTrajectories() {
   const { data: rawData, loading, error } = useFetchChartData(
     () => api.getMultiCountryTrends(
       COUNTRIES.map(c => c.iso3),
-      { pillar: 'institutional' }
+      { pillar: 'institutions' }
     )
   )
 
@@ -63,12 +63,12 @@ function TrustTrajectories() {
     if (!rawData) return []
     return COUNTRIES.map((c) => {
       const countryData = rawData.countries[c.iso3]
-      const institutional = countryData?.institutional || []
+      const institutional = countryData?.institutions?.institutional || []
       return {
         iso3: c.iso3,
         name: c.name,
         color: c.color,
-        data: institutional.map((d) => ({ year: d.year, score: d.score })),
+        data: institutional.map((d: { year: number; score: number }) => ({ year: d.year, score: d.score })),
       }
     })
   }, [rawData])

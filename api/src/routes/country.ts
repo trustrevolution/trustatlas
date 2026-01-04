@@ -63,37 +63,70 @@ const countryRoute: FastifyPluginAsync = async (fastify) => {
         ORDER BY year DESC
       `, queryParams)
 
-      const series = seriesResult.rows.map(row => ({
-        year: parseInt(row.year),
-        interpersonal: row.interpersonal ? {
-          score: parseFloat(row.interpersonal),
-          confidence_tier: row.interpersonal_confidence_tier || row.confidence_tier,
-          ci_lower: row.interpersonal_ci_lower ? parseFloat(row.interpersonal_ci_lower) : (row.ci_lower ? parseFloat(row.ci_lower) : null),
-          ci_upper: row.interpersonal_ci_upper ? parseFloat(row.interpersonal_ci_upper) : (row.ci_upper ? parseFloat(row.ci_upper) : null)
-        } : null,
-        institutional: row.institutional ? {
-          score: parseFloat(row.institutional),
-          confidence_tier: row.institutional_confidence_tier || row.confidence_tier,
-          ci_lower: row.institutional_ci_lower ? parseFloat(row.institutional_ci_lower) : (row.ci_lower ? parseFloat(row.ci_lower) : null),
-          ci_upper: row.institutional_ci_upper ? parseFloat(row.institutional_ci_upper) : (row.ci_upper ? parseFloat(row.ci_upper) : null)
-        } : null,
-        governance: row.governance ? {
-          score: parseFloat(row.governance),
-          confidence_tier: row.governance_confidence_tier || 'A',
-          ci_lower: row.governance_ci_lower ? parseFloat(row.governance_ci_lower) : null,
-          ci_upper: row.governance_ci_upper ? parseFloat(row.governance_ci_upper) : null
-        } : null,
-        media: row.media ? {
-          score: parseFloat(row.media),
-          confidence_tier: row.media_confidence_tier,
-          ci_lower: row.media_ci_lower ? parseFloat(row.media_ci_lower) : null,
-          ci_upper: row.media_ci_upper ? parseFloat(row.media_ci_upper) : null
-        } : null,
-        // Keep legacy fields for backward compatibility
-        confidence_tier: row.confidence_tier,
-        ci_lower: row.ci_lower ? parseFloat(row.ci_lower) : null,
-        ci_upper: row.ci_upper ? parseFloat(row.ci_upper) : null
-      }))
+      // Map to new 3-pillar structure with trust_quality_gap
+      const series = seriesResult.rows.map(row => {
+        const institutionalScore = row.institutional ? parseFloat(row.institutional) : null
+        const governanceScore = row.governance ? parseFloat(row.governance) : null
+
+        // Calculate trust_quality_gap when both values exist
+        const trustQualityGap = (institutionalScore !== null && governanceScore !== null)
+          ? Math.round((institutionalScore - governanceScore) * 10) / 10
+          : null
+
+        return {
+          year: parseInt(row.year),
+          // New pillar structure
+          social: row.interpersonal ? {
+            score: parseFloat(row.interpersonal),
+            confidence_tier: row.interpersonal_confidence_tier || row.confidence_tier,
+            ci_lower: row.interpersonal_ci_lower ? parseFloat(row.interpersonal_ci_lower) : (row.ci_lower ? parseFloat(row.ci_lower) : null),
+            ci_upper: row.interpersonal_ci_upper ? parseFloat(row.interpersonal_ci_upper) : (row.ci_upper ? parseFloat(row.ci_upper) : null)
+          } : null,
+          institutions: {
+            institutional_trust: institutionalScore !== null ? {
+              score: institutionalScore,
+              confidence_tier: row.institutional_confidence_tier || row.confidence_tier,
+              ci_lower: row.institutional_ci_lower ? parseFloat(row.institutional_ci_lower) : (row.ci_lower ? parseFloat(row.ci_lower) : null),
+              ci_upper: row.institutional_ci_upper ? parseFloat(row.institutional_ci_upper) : (row.ci_upper ? parseFloat(row.ci_upper) : null)
+            } : null,
+            governance_quality: governanceScore !== null ? {
+              score: governanceScore,
+              confidence_tier: row.governance_confidence_tier || 'A',
+              ci_lower: row.governance_ci_lower ? parseFloat(row.governance_ci_lower) : null,
+              ci_upper: row.governance_ci_upper ? parseFloat(row.governance_ci_upper) : null
+            } : null,
+            trust_quality_gap: trustQualityGap
+          },
+          media: row.media ? {
+            score: parseFloat(row.media),
+            confidence_tier: row.media_confidence_tier,
+            ci_lower: row.media_ci_lower ? parseFloat(row.media_ci_lower) : null,
+            ci_upper: row.media_ci_upper ? parseFloat(row.media_ci_upper) : null
+          } : null,
+          // Legacy fields for backward compatibility
+          interpersonal: row.interpersonal ? {
+            score: parseFloat(row.interpersonal),
+            confidence_tier: row.interpersonal_confidence_tier || row.confidence_tier,
+            ci_lower: row.interpersonal_ci_lower ? parseFloat(row.interpersonal_ci_lower) : (row.ci_lower ? parseFloat(row.ci_lower) : null),
+            ci_upper: row.interpersonal_ci_upper ? parseFloat(row.interpersonal_ci_upper) : (row.ci_upper ? parseFloat(row.ci_upper) : null)
+          } : null,
+          institutional: row.institutional ? {
+            score: parseFloat(row.institutional),
+            confidence_tier: row.institutional_confidence_tier || row.confidence_tier,
+            ci_lower: row.institutional_ci_lower ? parseFloat(row.institutional_ci_lower) : (row.ci_lower ? parseFloat(row.ci_lower) : null),
+            ci_upper: row.institutional_ci_upper ? parseFloat(row.institutional_ci_upper) : (row.ci_upper ? parseFloat(row.ci_upper) : null)
+          } : null,
+          governance: row.governance ? {
+            score: parseFloat(row.governance),
+            confidence_tier: row.governance_confidence_tier || 'A',
+            ci_lower: row.governance_ci_lower ? parseFloat(row.governance_ci_lower) : null,
+            ci_upper: row.governance_ci_upper ? parseFloat(row.governance_ci_upper) : null
+          } : null,
+          confidence_tier: row.confidence_tier,
+          ci_lower: row.ci_lower ? parseFloat(row.ci_lower) : null,
+          ci_upper: row.ci_upper ? parseFloat(row.ci_upper) : null
+        }
+      })
 
       // Aggregate sources_used across all years
       const allSources = seriesResult.rows

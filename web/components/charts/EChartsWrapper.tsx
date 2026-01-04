@@ -23,6 +23,7 @@ export const EChartsWrapper = forwardRef<EChartsWrapperRef, EChartsWrapperProps>
   function EChartsWrapper({ echarts: echartsLib, option, style, opts, notMerge, onEvents }, ref) {
     const containerRef = useRef<HTMLDivElement>(null)
     const chartRef = useRef<ECharts | null>(null)
+    const isInitialMount = useRef(true)
 
     // Expose getEchartsInstance for PNG export
     useImperativeHandle(ref, () => ({
@@ -65,8 +66,12 @@ export const EChartsWrapper = forwardRef<EChartsWrapperRef, EChartsWrapperProps>
     // eslint-disable-next-line react-hooks/exhaustive-deps -- option/notMerge/onEvents handled in separate effect
     }, [echartsLib, opts])
 
-    // Update option when it changes
+    // Update option when it changes (skip initial mount - already set in init effect)
     useEffect(() => {
+      if (isInitialMount.current) {
+        isInitialMount.current = false
+        return
+      }
       if (chartRef.current && option) {
         chartRef.current.setOption(option as EChartsOption, notMerge)
       }

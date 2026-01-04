@@ -52,8 +52,8 @@ function TrustInversion() {
   // Fetch both pillars in parallel
   const { data: rawData, loading, error } = useFetchChartData(
     () => Promise.all([
-      api.getMultiCountryTrends(COUNTRIES.map((c) => c.iso3), { pillar: 'interpersonal' }),
-      api.getMultiCountryTrends(COUNTRIES.map((c) => c.iso3), { pillar: 'institutional' }),
+      api.getMultiCountryTrends(COUNTRIES.map((c) => c.iso3), { pillar: 'social' }),
+      api.getMultiCountryTrends(COUNTRIES.map((c) => c.iso3), { pillar: 'institutions' }),
     ])
   )
 
@@ -63,8 +63,8 @@ function TrustInversion() {
     const [interpersonalData, institutionalData] = rawData
 
     const results = COUNTRIES.map((c) => {
-      const interp = interpersonalData.countries[c.iso3]?.interpersonal || []
-      const inst = institutionalData.countries[c.iso3]?.institutional || []
+      const interp = interpersonalData.countries[c.iso3]?.social || []
+      const inst = institutionalData.countries[c.iso3]?.institutions?.institutional || []
 
       const latestInterp = interp.length > 0 ? interp[interp.length - 1] : null
       const latestInst = inst.length > 0 ? inst[inst.length - 1] : null
