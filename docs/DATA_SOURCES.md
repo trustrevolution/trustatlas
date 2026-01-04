@@ -481,6 +481,94 @@ As of methodology v0.7.0:
 
 Primary sources take precedence; supplementary sources fill gaps where primary data doesn't exist.
 
+---
+
+## Supplementary Indicators
+
+Supplementary indicators track important trust dimensions that don't fit core pillars. They're displayed in country detail views but not mapped.
+
+### Financial Trust (Banks)
+
+**Source:** WVS E069_12 (Confidence in Banks)
+
+| Attribute | Value |
+|-----------|-------|
+| **Coverage** | 104 countries |
+| **Years** | 1990-2023 |
+| **Observations** | 280 |
+| **Scale** | 4-point Likert → % confident |
+| **Status** | Supplementary indicator |
+
+**Processing:** Calculated as % expressing "a great deal" or "quite a lot" of confidence in banks. Same methodology as institutional trust variables.
+
+**Known Gaps:**
+
+| Region | Issue |
+|--------|-------|
+| **G7 countries** | Most recent data is 2017-2018 (WVS Wave 7 timing) |
+| **EU coverage** | Eurobarometer QA6 battery excludes banks |
+| **Annual updates** | No annual open source for bank trust |
+
+**Potential Future Sources:**
+
+| Source | Status | Notes |
+|--------|--------|-------|
+| EQLS (Eurofound) | Wait for 2026 | EU27 coverage, includes bank trust |
+| DNB Trust Survey | Netherlands only | Annual, single country |
+
+---
+
+### Central Bank Trust (ECB Consumer Expectations Survey)
+
+> **Status:** Under evaluation. Methodologically distinct from commercial bank trust (WVS E069_12).
+
+**Source:** ECB Consumer Expectations Survey (CES)
+
+| Attribute | Value |
+|-----------|-------|
+| **Organization** | European Central Bank |
+| **Coverage** | 11 Eurozone countries |
+| **Cadence** | Monthly (since April 2020) |
+| **Format** | CSV microdata |
+| **License** | Scientific/non-commercial use only |
+| **URL** | https://www.ecb.europa.eu/stats/ecb_surveys/consumer_exp_survey/ |
+
+**Trust Variables:**
+
+| Variable | Question | Scale |
+|----------|----------|-------|
+| Trust in ECB | "How much do you trust the ECB?" | 0-10 |
+| Trust in national central bank | "How much do you trust [national CB]?" | 0-10 |
+| Trust in European institutions | EU Parliament, Commission, UN | 0-10 |
+
+**Country Coverage:**
+
+| Phase | Countries | Since |
+|-------|-----------|-------|
+| Initial | DEU, FRA, ITA, ESP, NLD, BEL | April 2020 |
+| Expansion | AUT, FIN, PRT, GRC, IRL | 2022 |
+
+**Methodological Notes:**
+- **Scale incompatibility**: 0-10 scale systematically differs from WVS binary approach
+- **Different construct**: Central bank trust ≠ commercial bank trust
+- **Panel structure**: Tracks same respondents over time (unlike Eurobarometer)
+- **Monthly frequency**: Enables granular temporal analysis
+- **Central Banking Module**: Trust questions in August annual module (first released April 2025)
+
+**Integration Assessment:**
+
+| Factor | Assessment |
+|--------|------------|
+| Scale | 0-10 (incompatible with binary methodology) |
+| Coverage | 11 countries (Eurozone only) |
+| Freshness | Monthly updates (excellent) |
+| Access | Free CSV download |
+| Construct | Central bank trust (distinct from commercial bank) |
+
+**Recommendation:** Load as reference data, excluded from financial trust supplementary indicator. Potentially valuable for Eurozone-specific analysis of central bank trust, but methodologically distinct from commercial bank confidence measured by WVS E069_12.
+
+---
+
 ### Edelman Trust Barometer
 
 | Reason | Detail |

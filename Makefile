@@ -1,4 +1,4 @@
-.PHONY: up down migrate seed api web etl-cpi etl-wgi etl-oecd etl-wvs etl-ess etl-reuters etl-eurobarometer etl-media etl-all etl-gov clean logs install test lint sweep etl-prod-evs etl-prod-reuters etl-prod-eurobarometer etl-prod-media aggregate-pillars aggregate-pillars-prod aggregate-media aggregate-interpersonal aggregate-institutional sync-from-prod sync-verify deploy-api deploy-web deploy deploy-api-prod deploy-web-prod deploy-prod
+.PHONY: up down migrate seed api web etl-cpi etl-wgi etl-oecd etl-wvs etl-ess etl-reuters etl-eurobarometer etl-media etl-all etl-gov clean logs install test lint sweep etl-prod-evs etl-prod-reuters etl-prod-eurobarometer etl-prod-media etl-prod-lits aggregate-pillars aggregate-pillars-prod aggregate-media aggregate-interpersonal aggregate-institutional sync-from-prod sync-verify deploy-api deploy-web deploy deploy-api-prod deploy-web-prod deploy-prod
 
 # Default year for ETL jobs
 YEAR ?= 2024
@@ -136,6 +136,11 @@ etl-prod-eurobarometer:
 
 etl-prod-media: etl-prod-reuters etl-prod-eurobarometer
 	@echo "Production media pillar ETL complete."
+
+etl-prod-lits:
+	@echo "Running LiTS ETL against PRODUCTION..."
+	POSTGRES_HOST=$(NEON_HOST) POSTGRES_DB=$(NEON_DB) POSTGRES_USER=$(NEON_USER) POSTGRES_PASSWORD=$(NEON_PASSWORD) \
+		python -m etl.jobs.lits
 
 # Pillar Aggregation (interpersonal, institutional, media)
 aggregate-pillars:
