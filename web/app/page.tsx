@@ -10,14 +10,7 @@ import ExpandableStoryCard from '@/components/ExpandableStoryCard'
 import { api, Stats } from '@/lib/api'
 import type { ChartProvenance } from '@/components/data-provenance'
 
-// Chart loading skeleton
-const ChartSkeleton = () => (
-  <div className="w-full h-[400px] bg-slate-100 rounded-lg animate-pulse flex items-center justify-center">
-    <div className="text-slate-400 text-sm">Loading chart...</div>
-  </div>
-)
-
-// Provenance imports
+// Provenance imports (also trigger prefetch when imported)
 import { usaTrustTimelineProvenance } from '@/components/charts/USATrustTimeline'
 import { ruleLawTrendsProvenance } from '@/components/charts/RuleLawTrends'
 import { covidTrustImpactProvenance } from '@/components/charts/CovidTrustImpact'
@@ -52,7 +45,7 @@ const STORIES: StoryConfig[] = [
         This isn&apos;t a temporary dip. It&apos;s a structural transformation in American political culture.
       </p>
     ),
-    Chart: dynamic(() => import('@/components/charts/USATrustTimeline'), { ssr: false, loading: ChartSkeleton }),
+    Chart: dynamic(() => import('@/components/charts/USATrustTimeline'), { ssr: false }),
   },
   {
     id: 'rule-of-law',
@@ -67,7 +60,7 @@ const STORIES: StoryConfig[] = [
         steady climb to become one of the world&apos;s strongest rule-of-law states.
       </p>
     ),
-    Chart: dynamic(() => import('@/components/charts/RuleLawTrends'), { ssr: false, loading: ChartSkeleton }),
+    Chart: dynamic(() => import('@/components/charts/RuleLawTrends'), { ssr: false }),
   },
   {
     id: 'covid-impact',
@@ -82,7 +75,7 @@ const STORIES: StoryConfig[] = [
         the same period. Why did some governments maintain trust while others lost it?
       </p>
     ),
-    Chart: dynamic(() => import('@/components/charts/CovidTrustImpact'), { ssr: false, loading: ChartSkeleton }),
+    Chart: dynamic(() => import('@/components/charts/CovidTrustImpact'), { ssr: false }),
   },
   {
     id: 'trust-collapse',
@@ -98,7 +91,7 @@ const STORIES: StoryConfig[] = [
         years of conflict. The data ends at 2018 for most—we don&apos;t know the current state.
       </p>
     ),
-    Chart: dynamic(() => import('@/components/charts/TrustCollapse'), { ssr: false, loading: ChartSkeleton }),
+    Chart: dynamic(() => import('@/components/charts/TrustCollapse'), { ssr: false }),
   },
   {
     id: 'trust-inversion',
@@ -113,7 +106,7 @@ const STORIES: StoryConfig[] = [
         strangers distrust each other but still trust institutions?
       </p>
     ),
-    Chart: dynamic(() => import('@/components/charts/TrustInversion'), { ssr: false, loading: ChartSkeleton }),
+    Chart: dynamic(() => import('@/components/charts/TrustInversion'), { ssr: false }),
   },
   {
     id: 'financial-paradox',
@@ -129,7 +122,7 @@ const STORIES: StoryConfig[] = [
         post-crisis skepticism in democracies.
       </p>
     ),
-    Chart: dynamic(() => import('@/components/charts/FinancialTrustParadox'), { ssr: false, loading: ChartSkeleton }),
+    Chart: dynamic(() => import('@/components/charts/FinancialTrustParadox'), { ssr: false }),
   },
 ]
 
