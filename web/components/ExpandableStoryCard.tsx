@@ -26,11 +26,21 @@ export default function ExpandableStoryCard({
   defaultExpanded = false,
 }: ExpandableStoryCardProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
+  // Track if card has ever been expanded (to avoid re-mounting chart on collapse)
+  const [hasBeenExpanded, setHasBeenExpanded] = useState(defaultExpanded)
+
+  // Update hasBeenExpanded when card is first opened
+  useEffect(() => {
+    if (isExpanded && !hasBeenExpanded) {
+      setHasBeenExpanded(true)
+    }
+  }, [isExpanded, hasBeenExpanded])
 
   // Sync with defaultExpanded prop (for URL hash navigation)
   useEffect(() => {
     if (defaultExpanded) {
       setIsExpanded(true)
+      setHasBeenExpanded(true)
       // Scroll to put chart in view after expansion animation
       setTimeout(() => {
         document.getElementById(provenance.id)?.scrollIntoView({
@@ -72,7 +82,7 @@ export default function ExpandableStoryCard({
       >
         <div className="px-4 sm:px-6 pb-8">
           <div className="story-chart">
-            {children}
+            {hasBeenExpanded && children}
           </div>
           <div className={`${insightBoxClass} mt-6`}>
             <h4 className="font-semibold text-slate-900 mb-2 text-sm sm:text-base">{insightTitle}</h4>

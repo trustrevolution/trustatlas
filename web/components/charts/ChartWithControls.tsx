@@ -96,7 +96,7 @@ export interface ChartWithControlsProps {
   showFullscreen?: boolean
 
   // --- Lazy Loading ---
-  /** Defer rendering until scrolled into view (default: true) */
+  /** Defer rendering until scrolled into view (default: false - use with static charts only) */
   lazyLoad?: boolean
   /** Custom skeleton to show while lazy loading */
   loadingSkeleton?: React.ReactNode
