@@ -270,6 +270,7 @@
     margin-bottom: 1rem;  /* 16px mobile - tight connection to insight */
     margin-left: -1rem;   /* Pull to edge on mobile */
     margin-right: -1rem;
+    min-height: var(--chart-height-mobile, 320px);  /* Reserve space to prevent layout shift */
   }
 
   @media (min-width: 640px) {
@@ -277,6 +278,7 @@
       margin-bottom: 3rem; /* 48px desktop */
       margin-left: 0;
       margin-right: 0;
+      min-height: var(--chart-height-desktop, 400px);  /* Reserve space to prevent layout shift */
     }
   }
 

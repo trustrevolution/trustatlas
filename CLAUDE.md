@@ -163,12 +163,18 @@ Quick reference:
 
 Base URL: `https://api.trustatlas.org`
 
-- `GET /trends/global?pillar=interpersonal|institutional|governance` - Latest scores by pillar
+- `GET /trends/global?pillar=social|institutions|media` - Latest scores by pillar
+- `GET /trends/countries?iso3=...[&pillar=social|institutions|media|financial]` - Multi-country trends (max 20)
 - `GET /country/{iso3}` - Time series + pillar breakdown for a country
 - `GET /trends/regions` - Regional averages and breakdowns
 - `GET /methodology` - Current normalization/weights (versioned JSON/YAML)
 
-All responses use Redis caching with `s-maxage=86400`.
+**Pillars:** social, institutions, media
+**Supplementary indicators:** financial (bank trust from WVS, not a pillar)
+
+Legacy pillar names (interpersonal, institutional, governance) still work.
+
+All responses use CDN caching with `s-maxage=86400`.
 
 ## Testing
 

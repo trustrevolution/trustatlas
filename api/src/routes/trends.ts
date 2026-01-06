@@ -503,18 +503,26 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
         'governance': 'institutions',
       }
 
+      // Supplementary indicators (not pillars)
+      const supplementaryTypes = ['financial']
+
       const normalizedPillar = pillar ? pillarMap[pillar] : undefined
-      if (pillar && !normalizedPillar) {
+      const isSupplementary = pillar && supplementaryTypes.includes(pillar)
+
+      if (pillar && !normalizedPillar && !isSupplementary) {
         return reply.status(400).send({
-          error: `Invalid pillar. Must be one of: social, institutions, media`
+          error: `Invalid pillar. Must be one of: social, institutions, media (or supplementary: financial)`
         })
       }
 
-      // Build WHERE clauses based on normalized pillar
+      // Build WHERE clauses based on normalized pillar or supplementary type
       const conditions = ['o.iso3 = ANY($1)']
       const params: (string | string[])[] = [countries]
 
-      if (normalizedPillar === 'social') {
+      if (isSupplementary) {
+        // Supplementary indicator - use trust_type directly
+        conditions.push(`o.trust_type = '${pillar}'`)
+      } else if (normalizedPillar === 'social') {
         conditions.push("o.trust_type = 'interpersonal'")
         conditions.push("o.methodology = 'binary'")
       } else if (normalizedPillar === 'institutions') {
@@ -555,6 +563,8 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
           governance?: Array<{ year: number; score: number; source: string }>
         }
         media?: Array<{ year: number; score: number; source: string }>
+        // Supplementary indicators
+        financial?: Array<{ year: number; score: number; source: string }>
       }> = {}
 
       for (const row of result.rows) {
@@ -585,6 +595,9 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
         } else if (row.trust_type === 'media') {
           if (!data[row.iso3].media) data[row.iso3].media = []
           data[row.iso3].media!.push(dataPoint)
+        } else if (row.trust_type === 'financial') {
+          if (!data[row.iso3].financial) data[row.iso3].financial = []
+          data[row.iso3].financial!.push(dataPoint)
         }
       }
 

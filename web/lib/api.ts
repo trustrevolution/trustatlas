@@ -143,9 +143,10 @@ export const api = {
   },
 
   // Generic multi-country trends - works for any data story
+  // pillar: core pillars (social, institutions, media) or supplementary indicators (financial)
   async getMultiCountryTrends(
     iso3Codes: string[],
-    options?: { pillar?: 'social' | 'institutions' | 'media'; source?: string }
+    options?: { pillar?: 'social' | 'institutions' | 'media' | 'financial'; source?: string }
   ): Promise<MultiCountryData> {
     const params = new URLSearchParams()
     params.set('iso3', iso3Codes.join(','))
@@ -156,7 +157,7 @@ export const api = {
 }
 
 // Generic multi-country response type
-// Matches new 3-pillar structure from API
+// Matches 3-pillar structure from API + supplementary indicators
 export interface MultiCountryData {
   countries: Record<string, {
     name: string
@@ -167,6 +168,8 @@ export interface MultiCountryData {
       governance?: TrendPoint[]
     }
     media?: TrendPoint[]
+    // Supplementary indicators
+    financial?: TrendPoint[]
   }>
 }
 
