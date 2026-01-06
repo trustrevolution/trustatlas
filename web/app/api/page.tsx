@@ -112,6 +112,31 @@ const endpoints: Endpoint[] = [
   ...
 ]`,
   },
+  {
+    method: 'GET',
+    path: '/trends/countries',
+    description: 'Batch fetch trend data for multiple countries. Supports pillars (social, institutions, media) and supplementary indicators (financial).',
+    example: `${API_BASE_URL}/trends/countries?iso3=VNM,CHN,USA&pillar=financial`,
+    response: `{
+  "countries": {
+    "VNM": {
+      "name": "Vietnam",
+      "region": "Asia",
+      "financial": [
+        {"year": 2020, "score": 94.2, "source": "WVS"}
+      ]
+    },
+    "CHN": {
+      "name": "China",
+      "financial": [{"year": 2018, "score": 91.0, ...}]
+    },
+    "USA": {
+      "name": "United States",
+      "financial": [{"year": 2017, "score": 10.3, ...}]
+    }
+  }
+}`,
+  },
 ]
 
 function CopyButton({ text }: { text: string }) {

@@ -461,12 +461,17 @@ export default function MethodologyPage() {
             <div>GET /countries — List all countries</div>
             <div>GET /country/:iso3 — Time series for a country</div>
             <div>GET /trends/global?pillar= — Latest scores by pillar (for map)</div>
+            <div>GET /trends/countries?iso3=&amp;pillar= — Multi-country trends (max 20)</div>
             <div>GET /trends/regions?pillar= — Regional averages</div>
             <div>GET /trends/country/:iso3 — Country trends</div>
             <div>GET /stats — Database statistics</div>
             <div>GET /methodology — Methodology as JSON</div>
             <div>GET /sources — Source metadata including licenses</div>
           </div>
+          <p className="text-sm text-slate-500 mt-4">
+            <strong>Pillars:</strong> social, institutions, media<br />
+            <strong>Supplementary:</strong> financial (bank trust)
+          </p>
           <p className="text-sm text-slate-500 mt-4">
             Source code available on{' '}
             <a

@@ -507,6 +507,112 @@ GET /trends/country/{iso3}
 
 ---
 
+### Multi-Country Trends
+
+Batch fetch trend data for multiple countries. Used for data story charts.
+
+```
+GET /trends/countries?iso3=MDA,EST,UZB
+GET /trends/countries?iso3=VNM,CHN,USA&pillar=social
+GET /trends/countries?iso3=MDA,EST&pillar=institutions&source=WJP
+GET /trends/countries?iso3=VNM,CHN,USA&pillar=financial
+```
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `iso3` | string | Yes | Comma-separated ISO3 country codes (max 20) |
+| `pillar` | string | No | Filter to specific pillar or supplementary indicator |
+| `source` | string | No | Filter to specific source (e.g., WJP, WVS) |
+
+**Pillar Values:**
+
+| Value | Returns |
+|-------|---------|
+| `social` | Interpersonal trust (WVS-family binary methodology) |
+| `institutions` | Institutional trust + governance quality |
+| `media` | Media trust (Reuters DNR) |
+
+**Supplementary Indicators:**
+
+| Value | Returns |
+|-------|---------|
+| `financial` | Financial (bank) trust from WVS |
+
+**Legacy Pillar Mappings:**
+- `interpersonal` → `social`
+- `institutional` → `institutions`
+- `governance` → `institutions`
+
+**Response:**
+```json
+{
+  "countries": {
+    "VNM": {
+      "name": "Vietnam",
+      "region": "Asia",
+      "financial": [
+        {"year": 2020, "score": 94.2, "source": "WVS"}
+      ]
+    },
+    "CHN": {
+      "name": "China",
+      "region": "Asia",
+      "financial": [
+        {"year": 2018, "score": 91.0, "source": "WVS"}
+      ]
+    },
+    "USA": {
+      "name": "United States",
+      "region": "North America",
+      "financial": [
+        {"year": 2017, "score": 10.3, "source": "WVS"}
+      ]
+    }
+  }
+}
+```
+
+**Response Structure by Pillar:**
+
+When `pillar=social`:
+```json
+{
+  "countries": {
+    "DEU": {
+      "name": "Germany",
+      "region": "Europe",
+      "social": [{"year": 2022, "score": 47.0, "source": "WVS"}]
+    }
+  }
+}
+```
+
+When `pillar=institutions`:
+```json
+{
+  "countries": {
+    "DEU": {
+      "name": "Germany",
+      "region": "Europe",
+      "institutions": {
+        "institutional": [{"year": 2022, "score": 55.0, "source": "WVS"}],
+        "governance": [{"year": 2023, "score": 80.6, "source": "WJP"}]
+      }
+    }
+  }
+}
+```
+
+**Notes:**
+- Maximum 20 countries per request
+- Returns empty object for countries with no matching data
+- Supplementary indicators (e.g., `financial`) are tracked separately from pillars
+- Each pillar is independent; no composite score is computed
+
+---
+
 ## Caching
 
 The API uses HTTP caching headers for CDN and browser caching:
@@ -619,6 +725,24 @@ const usaTrends = await api.getUSATrends();
 const globalData = await api.getGlobalTrust();
 const regions = await api.getRegionStats();
 const countryTrends = await api.getCountryTrends('DEU');
+
+// Multi-country trends (for data story charts)
+const socialTrends = await api.getMultiCountryTrends(
+  ['MDA', 'EST', 'UZB'],
+  { pillar: 'social' }
+);
+
+// With source filter
+const wjpTrends = await api.getMultiCountryTrends(
+  ['MDA', 'EST'],
+  { pillar: 'institutions', source: 'WJP' }
+);
+
+// Supplementary indicators (financial trust)
+const financialTrends = await api.getMultiCountryTrends(
+  ['VNM', 'CHN', 'USA'],
+  { pillar: 'financial' }
+);
 ```
 
 ---
