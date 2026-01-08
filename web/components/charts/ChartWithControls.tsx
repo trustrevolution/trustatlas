@@ -131,7 +131,7 @@ export function ChartWithControls({
   // Footer
   showFullscreen = true,
   // Lazy loading
-  lazyLoad = true,
+  lazyLoad = false,
   loadingSkeleton,
 }: ChartWithControlsProps) {
   const containerRef = useRef<HTMLDivElement>(null)
