@@ -21,7 +21,7 @@ import {
   CHART_GRID,
 } from '@/lib/charts'
 import { shortName } from '@/lib/countries'
-import { COVID_DECLINERS, COVID_STABLE, COVID_COUNTRIES, COVID_ISO3 } from '@/lib/chart-countries'
+import { COVID_COUNTRIES, COVID_ISO3 } from '@/lib/chart-countries'
 
 interface CovidTrustImpactProps {
   /** Pre-fetched data from server - skips client fetch if provided */
@@ -29,9 +29,8 @@ interface CovidTrustImpactProps {
 }
 
 // Re-export for local use
-const DECLINERS = COVID_DECLINERS
-const STABLE = COVID_STABLE
 const COUNTRIES = COVID_COUNTRIES
+// DECLINERS and STABLE available from COVID_DECLINERS, COVID_STABLE if needed
 
 interface DataPoint {
   year: number
