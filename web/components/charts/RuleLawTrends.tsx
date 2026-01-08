@@ -1,30 +1,23 @@
 'use client'
 
 import { useMemo } from 'react'
-import { api } from '@/lib/api'
+import { api, MultiCountryData } from '@/lib/api'
 import { useFetchChartData } from '@/lib/hooks/useFetchChartData'
 import { ChartLoading, ChartError } from './ChartState'
 import { escapeHtml } from '@/lib/utils'
 import { ChartWithControls } from './ChartWithControls'
 import type { ChartProvenance, DataTableRow } from '@/components/data-provenance'
 import { CHART_GRID, gridRight } from '@/lib/charts'
+import { RULE_LAW_IMPROVERS, RULE_LAW_DECLINERS, RULE_LAW_ISO3 } from '@/lib/chart-countries'
 
-// Countries that improved against the global trend
-const IMPROVERS = [
-  { iso3: 'MDA', name: 'Moldova', color: '#059669' },     // emerald-600
-  { iso3: 'EST', name: 'Estonia', color: '#0284c7' },     // sky-600
-  { iso3: 'UZB', name: 'Uzbekistan', color: '#d97706' },  // amber-600
-] as const
+// Re-export for local use with correct types
+const IMPROVERS = RULE_LAW_IMPROVERS
+const DECLINERS = RULE_LAW_DECLINERS
 
-// Countries that declined - the "tide"
-const DECLINERS = [
-  { iso3: 'HUN', name: 'Hungary' },
-  { iso3: 'TUR', name: 'Turkey' },
-  { iso3: 'BRA', name: 'Brazil' },
-  { iso3: 'VEN', name: 'Venezuela' },
-  { iso3: 'EGY', name: 'Egypt' },
-  { iso3: 'NIC', name: 'Nicaragua' },
-] as const
+interface RuleLawTrendsProps {
+  /** Pre-fetched data from server - skips client fetch if provided */
+  initialData?: MultiCountryData | null
+}
 
 interface DataPoint {
   year: number
@@ -57,13 +50,11 @@ const provenance: ChartProvenance = {
   narrative: 'This chart shows the three countries that most improved their rule of law scores between 2015 and 2024, contrasted against the declining trend seen across most of the world.',
 }
 
-function RuleLawTrends() {
+function RuleLawTrends({ initialData }: RuleLawTrendsProps = {}) {
   // Fetch all countries in a single batch request
   const { data: rawData, loading, error } = useFetchChartData(
-    () => {
-      const allCountries = [...IMPROVERS.map(c => c.iso3), ...DECLINERS.map(c => c.iso3)]
-      return api.getMultiCountryTrends(allCountries, { pillar: 'institutions', source: 'WJP' })
-    }
+    () => api.getMultiCountryTrends(RULE_LAW_ISO3, { pillar: 'institutions', source: 'WJP' }),
+    { initialData }
   )
 
   // Transform API response to chart data format

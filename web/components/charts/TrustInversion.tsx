@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { api } from '@/lib/api'
+import { api, MultiCountryData } from '@/lib/api'
 import { useFetchChartData } from '@/lib/hooks/useFetchChartData'
 import { ChartLoading, ChartError } from './ChartState'
 import { ChartWithControls } from './ChartWithControls'
@@ -10,14 +10,21 @@ import {
   type DataTableRow,
 } from '@/components/data-provenance'
 import { TOOLTIP_STYLES, CHART_GRID } from '@/lib/charts'
+import { INVERSION_COUNTRIES, INVERSION_ISO3 } from '@/lib/chart-countries'
 
-// Countries where institutional > interpersonal (inverted trust)
-const COUNTRIES = [
-  { iso3: 'BRA', name: 'Brazil' },
-  { iso3: 'GRC', name: 'Greece' },
-  { iso3: 'TUR', name: 'Turkey' },
-  { iso3: 'CYP', name: 'Cyprus' },
-] as const
+/** Pre-fetched data for TrustInversion - requires both pillars */
+export interface TrustInversionInitialData {
+  social: MultiCountryData | null
+  institutions: MultiCountryData | null
+}
+
+interface TrustInversionProps {
+  /** Pre-fetched data from server - skips client fetch if provided */
+  initialData?: TrustInversionInitialData | null
+}
+
+// Re-export for local use
+const COUNTRIES = INVERSION_COUNTRIES
 
 interface TrustData {
   name: string
@@ -48,13 +55,19 @@ const provenance: ChartProvenance = {
     'Brazil: only 4% say most people can be trusted, yet 28% trust government. Greece, Turkey, and Cyprus show similar inversions. What creates societies where strangers distrust each other but still trust institutions?',
 }
 
-function TrustInversion() {
+function TrustInversion({ initialData }: TrustInversionProps = {}) {
+  // If initialData provided, convert to the [social, institutions] tuple format
+  const prefetchedData = initialData?.social && initialData?.institutions
+    ? [initialData.social, initialData.institutions] as [MultiCountryData, MultiCountryData]
+    : undefined
+
   // Fetch both pillars in parallel
   const { data: rawData, loading, error } = useFetchChartData(
     () => Promise.all([
-      api.getMultiCountryTrends(COUNTRIES.map((c) => c.iso3), { pillar: 'social' }),
-      api.getMultiCountryTrends(COUNTRIES.map((c) => c.iso3), { pillar: 'institutions' }),
-    ])
+      api.getMultiCountryTrends(INVERSION_ISO3, { pillar: 'social' }),
+      api.getMultiCountryTrends(INVERSION_ISO3, { pillar: 'institutions' }),
+    ]),
+    { initialData: prefetchedData }
   )
 
   // Transform API response to chart data format

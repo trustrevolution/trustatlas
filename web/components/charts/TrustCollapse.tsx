@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { api } from '@/lib/api'
+import { api, MultiCountryData } from '@/lib/api'
 import { useFetchChartData } from '@/lib/hooks/useFetchChartData'
 import { ChartLoading, ChartError } from './ChartState'
 import { ChartWithControls } from './ChartWithControls'
@@ -19,14 +19,15 @@ import {
   TOOLTIP_STYLES,
   CHART_GRID,
 } from '@/lib/charts'
+import { COLLAPSE_COUNTRIES, COLLAPSE_ISO3 } from '@/lib/chart-countries'
 
-// Countries with dramatic trust collapses - ordered by magnitude
-const COUNTRIES = [
-  { iso3: 'IRN', name: 'Iran', color: '#dc2626', drop: '−55pp' },        // Deepest red
-  { iso3: 'IDN', name: 'Indonesia', color: '#ea580c', drop: '−46pp' },  // Orange-red
-  { iso3: 'IRQ', name: 'Iraq', color: '#d97706', drop: '−36pp' },       // Amber
-  { iso3: 'EGY', name: 'Egypt', color: '#ca8a04', drop: '−31pp' },      // Yellow-amber
-] as const
+interface TrustCollapseProps {
+  /** Pre-fetched data from server - skips client fetch if provided */
+  initialData?: MultiCountryData | null
+}
+
+// Re-export for local use
+const COUNTRIES = COLLAPSE_COUNTRIES
 
 interface DataPoint {
   year: number
@@ -62,12 +63,10 @@ const provenance: ChartProvenance = {
     'Iran dropped 50 points between 2000 and 2007, with a small recovery since. Indonesia fell steadily from 52% to 5%. Iraq and Egypt show similar declines through years of conflict and instability.',
 }
 
-function TrustCollapse() {
+function TrustCollapse({ initialData }: TrustCollapseProps = {}) {
   const { data: rawData, loading, error } = useFetchChartData(
-    () => api.getMultiCountryTrends(
-      COUNTRIES.map((c) => c.iso3),
-      { pillar: 'social' }
-    )
+    () => api.getMultiCountryTrends(COLLAPSE_ISO3, { pillar: 'social' }),
+    { initialData }
   )
 
   // Transform API response to chart data format

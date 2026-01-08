@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo } from 'react'
-import { api } from '@/lib/api'
+import { api, MultiCountryData } from '@/lib/api'
 import { useFetchChartData } from '@/lib/hooks/useFetchChartData'
 import { ChartLoading, ChartError } from './ChartState'
 import { ChartWithControls } from './ChartWithControls'
@@ -21,27 +21,17 @@ import {
   CHART_GRID,
 } from '@/lib/charts'
 import { shortName } from '@/lib/countries'
+import { COVID_DECLINERS, COVID_STABLE, COVID_COUNTRIES, COVID_ISO3 } from '@/lib/chart-countries'
 
-// Countries with COVID-era institutional trust data
-// Dropped significantly
-const DECLINERS = [
-  { iso3: 'NLD', name: 'Netherlands', color: '#ef4444' },
-  { iso3: 'AUT', name: 'Austria', color: '#f97316' },
-  { iso3: 'SWE', name: 'Sweden', color: '#eab308' },
-  { iso3: 'FRA', name: 'France', color: '#ec4899' },
-  { iso3: 'GBR', name: 'United Kingdom', color: '#f43f5e' },
-  { iso3: 'BEL', name: 'Belgium', color: '#fb7185' },
-  { iso3: 'DNK', name: 'Denmark', color: '#fda4af' },
-] as const
+interface CovidTrustImpactProps {
+  /** Pre-fetched data from server - skips client fetch if provided */
+  initialData?: MultiCountryData | null
+}
 
-// Stayed stable (consistent ESS data throughout)
-const STABLE = [
-  { iso3: 'CHE', name: 'Switzerland', color: '#10b981' },
-  { iso3: 'IRL', name: 'Ireland', color: '#34d399' },
-  { iso3: 'FIN', name: 'Finland', color: '#06b6d4' },
-] as const
-
-const COUNTRIES = [...DECLINERS, ...STABLE]
+// Re-export for local use
+const DECLINERS = COVID_DECLINERS
+const STABLE = COVID_STABLE
+const COUNTRIES = COVID_COUNTRIES
 
 interface DataPoint {
   year: number
@@ -73,12 +63,10 @@ const provenance: ChartProvenance = {
   narrative: 'Seven European democracies experienced significant declines in institutional trust during COVID-19, while Switzerland, Ireland, and Finland maintained relative stability.',
 }
 
-function CovidTrustImpact() {
+function CovidTrustImpact({ initialData }: CovidTrustImpactProps = {}) {
   const { data: rawData, loading, error } = useFetchChartData(
-    () => api.getMultiCountryTrends(
-      COUNTRIES.map(c => c.iso3),
-      { pillar: 'institutions' }
-    )
+    () => api.getMultiCountryTrends(COVID_ISO3, { pillar: 'institutions' }),
+    { initialData }
   )
 
   // Transform API response to chart data format
