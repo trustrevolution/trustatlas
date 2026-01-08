@@ -122,7 +122,7 @@ export default function TrustMap({ onCountrySelect, selectedCountry, pillar }: T
 
   // Fetch trust data based on selected pillar
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/trends/global?pillar=${pillar}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://trustatlas-api.vercel.app'}/trends/global?pillar=${pillar}`)
       .then(res => res.json())
       .then(result => {
         setData(result.countries || [])
