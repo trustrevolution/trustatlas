@@ -110,14 +110,6 @@ export default function FinancialTrustParadox({ initialData }: FinancialTrustPar
     ])
   }, [chartData])
 
-  if (loading) {
-    return <ChartLoading />
-  }
-
-  if (error || chartData.length === 0) {
-    return <ChartError error={error} />
-  }
-
   const option = useMemo(() => ({
     backgroundColor: 'transparent',
     grid: {
@@ -200,6 +192,14 @@ export default function FinancialTrustParadox({ initialData }: FinancialTrustPar
       textStyle: { color: '#64748b', fontSize: 11 },
     },
   }), [chartData])
+
+  if (loading) {
+    return <ChartLoading />
+  }
+
+  if (error || chartData.length === 0) {
+    return <ChartError error={error} />
+  }
 
   return (
     <ChartWithControls
