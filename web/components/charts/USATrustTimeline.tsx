@@ -49,9 +49,15 @@ const provenance: ChartProvenance = {
   narrative: 'Trust in American government peaked in 1964. After Watergate, it never fully recovered. Partisan trust has collapsed from 53% in 1978 to 19% in 2024.',
 }
 
-function USATrustTimeline() {
+interface USATrustTimelineProps {
+  /** Pre-fetched data from server - skips client fetch if provided */
+  initialData?: USATrends | null
+}
+
+function USATrustTimeline({ initialData }: USATrustTimelineProps = {}) {
   const { data, loading, error } = useFetchChartData<USATrends>(
-    () => api.getUSATrends()
+    () => api.getUSATrends(),
+    { initialData }
   )
 
   // Generate table data for accessibility
