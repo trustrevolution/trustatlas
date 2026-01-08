@@ -11,26 +11,19 @@
 'use client'
 
 import { useMemo } from 'react'
+import { api, MultiCountryData } from '@/lib/api'
+import { useFetchChartData } from '@/lib/hooks/useFetchChartData'
+import { ChartLoading, ChartError } from './ChartState'
 import { ChartWithControls } from './ChartWithControls'
 import {
   type ChartProvenance,
   type DataTableRow,
 } from '@/components/data-provenance'
 import { TOOLTIP_STYLES } from '@/lib/charts'
+import { FINANCIAL_COUNTRIES, FINANCIAL_ISO3 } from '@/lib/chart-countries'
 
-// Sorted by bank trust descending - authoritarian at top, democracies at bottom
-const DATA = [
-  { name: 'Vietnam', financial: 94.1, governance: 38.0 },
-  { name: 'China', financial: 91.2, governance: 32.9 },
-  { name: 'Tajikistan', financial: 85.9, governance: 17.6 },
-  { name: 'Uzbekistan', financial: 79.3, governance: 35.3 },
-  { name: 'Germany', financial: 49.8, governance: 82.1 },
-  { name: 'Canada', financial: 24.3, governance: 81.9 },
-  { name: 'Netherlands', financial: 15.5, governance: 84.7 },
-  { name: 'UK', financial: 13.7, governance: 79.6 },
-  { name: 'Australia', financial: 11.6, governance: 83.3 },
-  { name: 'USA', financial: 10.3, governance: 77.4 },
-]
+// Re-export for local use
+const COUNTRIES = FINANCIAL_COUNTRIES
 
 const COLORS = {
   financial: '#10b981',
@@ -44,21 +37,86 @@ export const financialTrustParadoxProvenance: ChartProvenance = {
     'Wealthy democracies have the least trust in banks despite the best-regulated financial systems',
   sources: [
     { source: 'WVS', seriesNames: ['Financial Trust'], confidence: 'B' },
+    { source: 'WGI', seriesNames: ['Governance Quality'], confidence: 'A' },
   ],
-  years: '2017-2023',
+  years: '2017-2024',
   confidence: 'B',
   methodologyAnchor: '#supplementary-indicators',
   narrative:
     'Countries like Australia (12%), USA (10%), and UK (14%) have high governance quality but very low bank trust—a post-2008 hangover. Meanwhile, China (91%) and Vietnam (94%) lead the world in bank trust despite weaker governance. State-controlled banking systems with implicit guarantees vs. informed skepticism in democracies.',
 }
 
-export default function FinancialTrustParadox() {
+/** Pre-fetched data for FinancialTrustParadox */
+export interface FinancialParadoxInitialData {
+  financial: MultiCountryData | null
+  governance: MultiCountryData | null
+}
+
+interface FinancialTrustParadoxProps {
+  /** Pre-fetched data from server - skips client fetch if provided */
+  initialData?: FinancialParadoxInitialData | null
+}
+
+interface ChartDataPoint {
+  name: string
+  financial: number
+  governance: number
+}
+
+export default function FinancialTrustParadox({ initialData }: FinancialTrustParadoxProps = {}) {
+  // If initialData provided, convert to tuple format
+  const prefetchedData = initialData?.financial && initialData?.governance
+    ? [initialData.financial, initialData.governance] as [MultiCountryData, MultiCountryData]
+    : undefined
+
+  // Fetch both financial trust and governance data
+  const { data: rawData, loading, error } = useFetchChartData(
+    () => Promise.all([
+      api.getMultiCountryTrends(FINANCIAL_ISO3, { pillar: 'financial' }),
+      api.getMultiCountryTrends(FINANCIAL_ISO3, { pillar: 'institutions', source: 'WGI' }),
+    ]),
+    { initialData: prefetchedData }
+  )
+
+  // Transform API response to chart data format
+  const chartData = useMemo((): ChartDataPoint[] => {
+    if (!rawData) return []
+    const [financialData, governanceData] = rawData
+
+    const results = COUNTRIES.map((c) => {
+      // Get latest financial trust score
+      const financial = financialData.countries[c.iso3]?.financial || []
+      const latestFinancial = financial.length > 0 ? financial[financial.length - 1].score : 0
+
+      // Get latest governance score (from WGI)
+      const governance = governanceData.countries[c.iso3]?.institutions?.governance || []
+      const latestGovernance = governance.length > 0 ? governance[governance.length - 1].score : 0
+
+      return {
+        name: c.name,
+        financial: Math.round(latestFinancial * 10) / 10,
+        governance: Math.round(latestGovernance * 10) / 10,
+      }
+    })
+
+    // Sort by financial trust descending (authoritarian at top)
+    return results.sort((a, b) => b.financial - a.financial)
+  }, [rawData])
+
   const tableData: DataTableRow[] = useMemo(() => {
-    return DATA.flatMap((d) => [
+    return chartData.flatMap((d) => [
       { label: `${d.name} (Bank Trust)`, year: 2023, value: d.financial, source: 'WVS', confidence: 'B' as const },
       { label: `${d.name} (Governance)`, year: 2023, value: d.governance, source: 'WGI', confidence: 'A' as const },
     ])
-  }, [])
+  }, [chartData])
+
+  if (loading) {
+    return <ChartLoading />
+  }
+
+  if (error || chartData.length === 0) {
+    return <ChartError error={error} />
+  }
 
   const option = useMemo(() => ({
     backgroundColor: 'transparent',
@@ -76,7 +134,7 @@ export default function FinancialTrustParadox() {
         const p = params as Array<{ name: string; seriesName: string; value: number }>
         if (!p || p.length === 0) return ''
         const country = p[0].name
-        const d = DATA.find(x => x.name === country)
+        const d = chartData.find(x => x.name === country)
         if (!d) return ''
         return `<div style="font-size:12px"><strong>${country}</strong><br/><span style="color:${COLORS.financial}">◀</span> Bank Trust: ${d.financial}%<br/><span style="color:${COLORS.governance}">▶</span> Governance: ${d.governance}%</div>`
       },
@@ -95,7 +153,7 @@ export default function FinancialTrustParadox() {
     },
     yAxis: {
       type: 'category' as const,
-      data: DATA.map((d) => d.name),
+      data: chartData.map((d) => d.name),
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: { color: '#334155', fontSize: 12, fontWeight: 500 },
@@ -105,7 +163,7 @@ export default function FinancialTrustParadox() {
         name: 'Bank Trust',
         type: 'bar' as const,
         stack: 'total',
-        data: DATA.map((d) => -d.financial),
+        data: chartData.map((d) => -d.financial),
         itemStyle: { color: COLORS.financial },
         barWidth: 16,
         label: {
@@ -120,7 +178,7 @@ export default function FinancialTrustParadox() {
         name: 'Governance',
         type: 'bar' as const,
         stack: 'total',
-        data: DATA.map((d) => d.governance),
+        data: chartData.map((d) => d.governance),
         itemStyle: { color: COLORS.governance },
         barWidth: 16,
         label: {
@@ -141,7 +199,7 @@ export default function FinancialTrustParadox() {
       ],
       textStyle: { color: '#64748b', fontSize: 11 },
     },
-  }), [])
+  }), [chartData])
 
   return (
     <ChartWithControls

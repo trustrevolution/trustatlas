@@ -3,7 +3,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 
 const nextConfig = {
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'https://trustatlas-api.vercel.app',
   },
   async headers() {
     // In development, don't set restrictive CSP
