@@ -14,7 +14,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import List
 from dataclasses import dataclass
 
 import click
@@ -229,7 +229,7 @@ def main(csv_path: Path, dry_run: bool):
     logger.info(f"Parsed {len(rows)} valid observations")
 
     # Show summary by year
-    by_year = {}
+    by_year: dict[int, int] = {}
     for r in rows:
         by_year[r.year] = by_year.get(r.year, 0) + 1
     for year in sorted(by_year.keys()):

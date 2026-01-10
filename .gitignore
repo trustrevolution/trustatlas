@@ -22,6 +22,10 @@ data/staging/
 dist/
 build/
 
-web/.env.local
 .vercel
+.env.vercel
+.env.local
 .env*.local
+api/.env
+api/.env.*
+web/.env.local

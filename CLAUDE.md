@@ -231,3 +231,29 @@ Flags are persisted to `data_quality_flags` table with severity (`warning`/`erro
 - Use least-privilege credentials stored in secrets manager
 - Respect robots.txt and terms-of-use for all sources
 - Provide data removal path for sources changing licenses
+
+### Credentials Policy
+
+**Production Secrets:**
+- NEVER store in local files
+- ONLY in Vercel dashboard: https://vercel.com/shawnyeager/trustatlas-api/settings/environment-variables
+- NEVER run `vercel env pull` for production environments
+
+**Local Development:**
+- Use Docker Compose (`make up`) - no cloud credentials needed
+- Credentials in `.env` are localhost-only, safe to keep
+- For prod DB access, use one-time env var export, then unset
+
+**Forbidden Commands:**
+- `git add -A` or `git add .` - always stage specific files
+- `vercel env pull --environment production`
+
+**Before Pushing:**
+- Run `ruff check etl/` and `black --check etl/` - fix any errors before push
+
+**Pre-commit Hook:**
+A pre-commit hook in `.git/hooks/pre-commit` blocks commits containing:
+- Neon passwords (`npg_*`)
+- Upstash tokens (`ARu*`)
+- JWT tokens (`eyJ*`)
+- Unexpected `.env*` files
