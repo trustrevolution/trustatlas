@@ -12,6 +12,7 @@ import countryRoute from './routes/country'
 import methodologyRoute from './routes/methodology'
 import trendsRoute from './routes/trends'
 import statsRoute from './routes/stats'
+import indicatorsRoute from './routes/indicators'
 
 const app = Fastify({ logger: false })
 
@@ -63,6 +64,7 @@ app.register(countryRoute)
 app.register(methodologyRoute)
 app.register(trendsRoute)
 app.register(statsRoute)
+app.register(indicatorsRoute)
 
 // Error handler
 app.setErrorHandler((error, _request, reply) => {

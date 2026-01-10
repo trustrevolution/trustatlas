@@ -613,6 +613,56 @@ When `pillar=institutions`:
 
 ---
 
+### GET /indicators/digital
+
+Retrieve digital penetration indicators (contextual data, not trust measures).
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `iso3` | string | Yes | Comma-separated ISO3 codes (max 20) |
+| `year` | number | No | Filter to specific year |
+| `indicator` | string | No | Indicator name (default: `social_media_penetration`) |
+
+**Example Requests:**
+
+```
+GET /indicators/digital?iso3=FIN,USA,KOR&year=2024
+GET /indicators/digital?iso3=FIN,NOR,SWE,DNK
+```
+
+**Response:**
+
+```json
+{
+  "indicator": "social_media_penetration",
+  "source": "DataReportal",
+  "countries": {
+    "FIN": {
+      "name": "Finland",
+      "data": [{"year": 2024, "value": 79.33}]
+    },
+    "USA": {
+      "name": "United States",
+      "data": [{"year": 2024, "value": 68.47}]
+    },
+    "KOR": {
+      "name": "South Korea",
+      "data": [{"year": 2024, "value": 94.12}]
+    }
+  }
+}
+```
+
+**Notes:**
+- This is **contextual data** for correlation analysis, not a trust measure
+- Values are percentages (0-100) of population with social media accounts
+- Data based on platform-reported advertising reach, not surveys
+- See [DATA_SOURCES.md](./DATA_SOURCES.md#datareportal-digital-penetration) for limitations
+
+---
+
 ## Caching
 
 The API uses HTTP caching headers for CDN and browser caching:

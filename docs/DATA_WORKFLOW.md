@@ -46,10 +46,14 @@ POSTGRES_PASSWORD=trust
 
 ```bash
 # Connection details (from Vercel env vars)
-NEON_HOST=ep-dark-truth-a56ypybx.us-east-2.aws.neon.tech
+NEON_HOST=ep-dark-truth-adjuoybx.c-2.us-east-1.aws.neon.tech
 NEON_DB=trustatlas
 NEON_USER=neondb_owner
 NEON_PASSWORD=<from Vercel dashboard>
+
+# Full connection strings (Vercel trustatlas-api project):
+DATABASE_URL=postgresql://neondb_owner:<pw>@ep-dark-truth-adjuoybx-pooler.c-2.us-east-1.aws.neon.tech/trustatlas?sslmode=require
+DATABASE_URL_UNPOOLED=postgresql://neondb_owner:<pw>@ep-dark-truth-adjuoybx.c-2.us-east-1.aws.neon.tech/trustatlas?sslmode=require
 ```
 
 Production uses Neon PostgreSQL with:
