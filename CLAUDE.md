@@ -63,8 +63,25 @@ The project uses Postgres with these key tables:
 ### Environment Setup
 Copy `.env.example` to `.env` for local development. Uses Docker Compose for services:
 - Postgres (port 5432)
-- Redis (port 6379) 
+- Redis (port 6379)
 - MinIO (ports 9000/9001)
+
+### Production Database (Neon)
+
+```
+Host: ep-dark-truth-adjuoybx.c-2.us-east-1.aws.neon.tech
+Database: trustatlas
+```
+
+Vercel env vars for `trustatlas-api` project:
+- `DATABASE_URL`: postgresql://...@ep-dark-truth-adjuoybx-pooler.../trustatlas
+- `DATABASE_URL_UNPOOLED`: postgresql://...@ep-dark-truth-adjuoybx.../trustatlas
+
+To verify production DB connection:
+```bash
+curl -s https://api.trustatlas.org/stats
+# Should return: {"countries":210,"observations":...,"sources":...}
+```
 
 ## Data Sources & Methodology
 
@@ -82,6 +99,9 @@ Copy `.env.example` to `.env` for local development. Uses Docker Compose for ser
 - World Bank WGI - API + bulk CSV
 - World Justice Project - annual CSV
 - World Values Survey (WVS) - bulk CSV/SPSS
+
+### Contextual Data Sources (Not Trust Measures)
+- DataReportal (We Are Social + Meltwater) - social media penetration (contextual only, not a trust measure)
 
 ### Prohibited Sources
 - Gallup World Poll (proprietary)

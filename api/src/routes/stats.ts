@@ -14,9 +14,12 @@ export default async function statsRoute(fastify: FastifyInstance) {
         (SELECT COUNT(*) FROM observations
          WHERE trust_type IN ('interpersonal', 'institutional', 'governance', 'media')
         ) as observation_count,
-        (SELECT COUNT(DISTINCT source) FROM observations
-         WHERE trust_type IN ('interpersonal', 'institutional', 'governance', 'media')
-        ) as source_count
+        (SELECT COUNT(DISTINCT source) FROM (
+           SELECT source FROM observations
+           WHERE trust_type IN ('interpersonal', 'institutional', 'governance', 'media')
+           UNION
+           SELECT source FROM digital_indicators
+         ) all_sources) as source_count
     `)
 
     const stats = result.rows[0]

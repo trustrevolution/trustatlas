@@ -11,6 +11,7 @@ import methodologyRoute from './routes/methodology'
 import trendsRoute from './routes/trends'
 import statsRoute from './routes/stats'
 import sourcesRoute from './routes/sources'
+import indicatorsRoute from './routes/indicators'
 
 const server = Fastify({
   logger: {
@@ -73,6 +74,7 @@ server.register(methodologyRoute)
 server.register(trendsRoute)
 server.register(statsRoute)
 server.register(sourcesRoute)
+server.register(indicatorsRoute)
 
 // Error handler - sanitize error responses in production
 server.setErrorHandler((error, request, reply) => {

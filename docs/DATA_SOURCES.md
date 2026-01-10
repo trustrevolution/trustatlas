@@ -701,6 +701,45 @@ See [ETL_PIPELINE.md](./ETL_PIPELINE.md) for implementation details.
 
 ---
 
+## Contextual Data Sources
+
+These are **not trust measures**—they provide environmental context for correlation analysis.
+
+### DataReportal (Digital Penetration)
+
+**Overview:**
+Social media penetration data from We Are Social + Meltwater partnership. Used for correlation analysis with trust pillars, not as a trust measure.
+
+| Attribute | Value |
+|-----------|-------|
+| **Organization** | We Are Social + Meltwater |
+| **Coverage** | Global (~170 countries) |
+| **Cadence** | Annual |
+| **Format** | CSV (via World Population Review) |
+| **License** | Public Statistics |
+| **URL** | https://datareportal.com/ |
+
+**Indicator:**
+- `social_media_penetration` - Platform-reported user identities as % of population
+
+**Known Limitations:**
+- Based on advertising reach, not surveys
+- May include duplicate/bot accounts
+- Figures not directly comparable across years (methodology changes)
+- Can exceed 100% for small territories (excluded)
+
+**Data Access:**
+1. Download from World Population Review
+2. Place CSV in `data/raw/datareportal/`
+3. Run `python -m etl.jobs.wpr_social_media --csv <path>`
+
+**API Endpoint:**
+```
+GET /indicators/digital?iso3=FIN,USA&year=2024
+```
+
+---
+
 ## Related Documentation
 
 - [METHODOLOGY.md](./METHODOLOGY.md) - How sources are weighted
