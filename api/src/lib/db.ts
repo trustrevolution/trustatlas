@@ -1,4 +1,4 @@
-import { Pool } from '@neondatabase/serverless'
+import { Pool, QueryResultRow } from '@neondatabase/serverless'
 
 let pool: Pool | null = null
 
@@ -14,5 +14,6 @@ function getPool(): Pool {
 }
 
 export default {
-  query: (text: string, params?: unknown[]) => getPool().query(text, params),
+  query: <T extends QueryResultRow>(text: string, params?: unknown[]) =>
+    getPool().query<T>(text, params),
 }
