@@ -19,8 +19,10 @@ data/staging/
 .env
 .idea/
 .vscode/
+.claude/
 dist/
 build/
+*.tsbuildinfo
 
 .vercel
 .env.vercel
