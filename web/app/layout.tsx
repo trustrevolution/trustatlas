@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 import { Playfair_Display, Source_Sans_3 } from 'next/font/google'
 
@@ -80,6 +81,7 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
+        <SpeedInsights />
       </body>
     </html>
   )
