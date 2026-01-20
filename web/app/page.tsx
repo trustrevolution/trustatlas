@@ -10,6 +10,9 @@
 import { fetchAllHomePageData } from '@/lib/server-api'
 import HomePageClient from '@/components/HomePageClient'
 
+// Revalidate daily to pick up weekly hero rotation changes
+export const revalidate = 86400
+
 // Number of stories (for hero rotation)
 const STORY_COUNT = 6
 
