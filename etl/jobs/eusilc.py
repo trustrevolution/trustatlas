@@ -14,7 +14,7 @@ Years: 2013, 2018, 2021-2024
 
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Any, Dict
 import requests
 
 import click
@@ -23,7 +23,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 # Eurostat country codes to ISO alpha-3
@@ -76,7 +76,7 @@ class EUSILCProcessor(BaseProcessor):
         "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/ilc_pw03"
     )
 
-    def download(self, year: int) -> dict:
+    def download(self, year: int) -> Dict[str, Any]:  # type: ignore[override]
         """Fetch EU-SILC trust data from Eurostat API."""
         params = {
             "format": "JSON",
@@ -88,9 +88,10 @@ class EUSILCProcessor(BaseProcessor):
 
         response = requests.get(self.API_URL, params=params, timeout=30)
         response.raise_for_status()
-        return response.json()
+        result: Dict[str, Any] = response.json()
+        return result
 
-    def process(self, data: dict, year: int) -> List[Observation]:
+    def process(self, data: Dict[str, Any], year: int) -> List[Observation]:  # type: ignore[override]
         """Process Eurostat JSON response to observations."""
         observations = []
 

@@ -1,5 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import db from '../lib/db'
+import { digitalIndicatorsQuerySchema } from '../lib/schemas'
 
 interface DigitalQuerystring {
   iso3?: string
@@ -14,7 +15,7 @@ export default async function indicatorsRoute(fastify: FastifyInstance) {
     '/indicators/digital',
     async (request, reply) => {
       try {
-      const { iso3, year, indicator = 'social_media_penetration' } = request.query
+      const { iso3, year, indicator } = digitalIndicatorsQuerySchema.parse(request.query)
 
       let query = `
         SELECT
@@ -73,7 +74,6 @@ export default async function indicatorsRoute(fastify: FastifyInstance) {
       }
       } catch (error) {
         request.log.error(error)
-        console.error('Indicators error:', error)
         reply.status(500).send({ error: 'Internal server error' })
       }
     }

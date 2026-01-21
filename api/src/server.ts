@@ -25,8 +25,8 @@ server.register(cors, {
     ? [
         'https://trustatlas.org',
         'https://www.trustatlas.org',
-        // Vercel preview URLs - only allow trustatlas project deployments
-        /^https:\/\/trustatlas(-[a-z0-9]+)?-trustrevolution\.vercel\.app$/,
+        // Vercel preview URLs - allow trustatlas project deployments from either org
+        /^https:\/\/trustatlas(-[a-z0-9]+)?-(trustrevolution|shawnyeager)\.vercel\.app$/,
       ]
     : true,  // Allow all origins in development
   credentials: true,

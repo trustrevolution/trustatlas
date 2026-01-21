@@ -4,10 +4,12 @@ import db from '../lib/db'
 const countriesRoute: FastifyPluginAsync = async (fastify) => {
   fastify.get('/countries', async (request, reply) => {
     try {
+      // LIMIT 500 as safety bound - currently ~200 countries exist
       const result = await db.query(`
         SELECT iso3, name, region
         FROM countries
         ORDER BY name
+        LIMIT 500
       `)
 
       const countries = result.rows.map(row => ({

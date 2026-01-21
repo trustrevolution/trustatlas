@@ -26,7 +26,7 @@ from dotenv import load_dotenv
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.countries import CountryMapper
+from common.countries import CountryMapper
 
 logger = logging.getLogger(__name__)
 
@@ -161,7 +161,7 @@ def insert_indicators(rows: List[DigitalIndicator], conn) -> int:
         [r.to_tuple() for r in rows],
     )
 
-    rows_affected = cur.rowcount
+    rows_affected: int = cur.rowcount
     conn.commit()
 
     return rows_affected

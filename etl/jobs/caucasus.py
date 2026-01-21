@@ -25,7 +25,7 @@ import numpy as np
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 # Country mapping
 CB_COUNTRY_MAP = {
@@ -71,7 +71,8 @@ class CaucasusBarometerProcessor(BaseProcessor):
             )
 
         # Return most recent file
-        return sorted(dta_files, key=lambda p: p.stat().st_mtime)[-1]
+        sorted_files = sorted(dta_files, key=lambda p: p.stat().st_mtime)
+        return Path(sorted_files[-1])
 
     def process(self, data_path: Path, year: int) -> List[Observation]:
         """Process Caucasus Barometer Stata data to observations."""

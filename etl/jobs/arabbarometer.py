@@ -27,7 +27,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 # Arab Barometer country codes to ISO3
@@ -196,7 +196,7 @@ class ArabBarometerProcessor(BaseProcessor):
         arab_dir = self.raw_data_dir / "arabbarometer"
         data_files = list(arab_dir.glob("**/*.sav")) + list(arab_dir.glob("**/*.dta"))
         if data_files:
-            return data_files[0]
+            return Path(data_files[0])
         raise FileNotFoundError(
             f"No Arab Barometer data found in {arab_dir}. "
             "Please download from https://www.arabbarometer.org/"

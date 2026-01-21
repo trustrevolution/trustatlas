@@ -20,7 +20,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 class OECDProcessor(BaseProcessor):
@@ -51,9 +51,9 @@ class OECDProcessor(BaseProcessor):
         Returns:
             Path to downloaded CSV file
         """
-        year_dir = self.raw_data_dir / "oecd" / str(year)
+        year_dir: Path = self.raw_data_dir / "oecd" / str(year)
         year_dir.mkdir(parents=True, exist_ok=True)
-        output_path = year_dir / "trust_gov.csv"
+        output_path: Path = year_dir / "trust_gov.csv"
 
         if output_path.exists():
             print(f"OECD data already exists at {output_path}")

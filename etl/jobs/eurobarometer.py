@@ -28,7 +28,7 @@ import numpy as np
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 # Eurobarometer ISO2 to ISO3 mapping
 EB_COUNTRY_MAP = {
@@ -103,7 +103,7 @@ class EurobarometerProcessor(BaseProcessor):
                 "Download from https://search.gesis.org/"
             )
 
-        return dta_files[0]
+        return Path(dta_files[0])
 
     def process(self, data_path: Path, year: int) -> List[Observation]:
         """Process Eurobarometer Stata data to observations."""

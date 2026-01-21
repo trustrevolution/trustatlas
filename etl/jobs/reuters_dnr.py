@@ -34,7 +34,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 # Reuters DNR country names to ISO3 mapping
@@ -122,13 +122,17 @@ class ReutersDNRProcessor(BaseProcessor):
             Path to data file
         """
         # Check for multi-year compiled file first
-        compiled_path = self.raw_data_dir / "reuters_dnr" / "reuters_dnr_trust.csv"
+        compiled_path: Path = (
+            self.raw_data_dir / "reuters_dnr" / "reuters_dnr_trust.csv"
+        )
         if compiled_path.exists():
             print(f"Using compiled Reuters DNR data at {compiled_path}")
             return compiled_path
 
         # Check for year-specific file
-        year_path = self.raw_data_dir / "reuters_dnr" / str(year) / "reuters_dnr.csv"
+        year_path: Path = (
+            self.raw_data_dir / "reuters_dnr" / str(year) / "reuters_dnr.csv"
+        )
         if year_path.exists():
             print(f"Using Reuters DNR {year} data at {year_path}")
             return year_path
@@ -196,7 +200,7 @@ class ReutersDNRProcessor(BaseProcessor):
     def _get_iso3(self, country_name: str) -> Optional[str]:
         """Get ISO3 code from country name, using local mapping first."""
         # Try local mapping first (handles Reuters-specific names)
-        iso3 = REUTERS_COUNTRY_CODES.get(country_name)
+        iso3: str | None = REUTERS_COUNTRY_CODES.get(country_name)
         if iso3:
             return iso3
 

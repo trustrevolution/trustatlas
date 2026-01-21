@@ -115,7 +115,8 @@ class ResilientHTTPClient:
             Parsed JSON response
         """
         response = self._make_request("GET", url, params=params)
-        return response.json()
+        result: dict[Any, Any] | list[Any] = response.json()
+        return result
 
     def get_csv(
         self, url: str, params: Optional[Dict[str, Any]] = None, **read_csv_kwargs

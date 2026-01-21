@@ -32,7 +32,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 # EVS uses ISO 3166-1 numeric codes (same as WVS for overlap)
@@ -129,7 +129,7 @@ class EVSProcessor(BaseProcessor):
             if files:
                 print(f"Found EVS trend data at {files[0]}")
                 self._is_trend_file = True
-                return files[0]
+                return Path(files[0])
 
         # Priority 2: SPSS/Stata files we can convert
         for ext in ["*.sav", "*.dta"]:

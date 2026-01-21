@@ -1,5 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import db from '../lib/db'
+import { sourceParamSchema } from '../lib/schemas'
 
 interface SourceMetadata {
   source: string
@@ -41,6 +42,7 @@ const sourcesRoute: FastifyPluginAsync = async (fastify) => {
           COALESCE(data_type, 'aggregated') as data_type
         FROM source_metadata
         ORDER BY source
+        LIMIT 100
       `)
 
       const sources = result.rows.map(row => ({
@@ -81,7 +83,7 @@ const sourcesRoute: FastifyPluginAsync = async (fastify) => {
    */
   fastify.get('/sources/:source', async (request, reply) => {
     try {
-      const { source } = request.params as { source: string }
+      const { source } = sourceParamSchema.parse(request.params)
 
       const result = await db.query<SourceMetadata>(`
         SELECT

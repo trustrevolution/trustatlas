@@ -27,7 +27,7 @@ import pandas as pd
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 # Freedom House country names to ISO3 mapping (for non-standard names)
 FH_COUNTRY_MAP = {
@@ -57,7 +57,7 @@ class FreedomHouseProcessor(BaseProcessor):
 
     def download(self, year: int) -> Path:
         """Check for Freedom House data file."""
-        data_path = self.raw_data_dir / "freedomhouse.xlsx"
+        data_path: Path = self.raw_data_dir / "freedomhouse.xlsx"
         if not data_path.exists():
             raise FileNotFoundError(
                 f"No Freedom House data found at {data_path}. "
@@ -78,12 +78,14 @@ class FreedomHouseProcessor(BaseProcessor):
             # Try exact match
             country = pycountry.countries.get(name=country_name)
             if country:
-                return country.alpha_3
+                result: str = country.alpha_3
+                return result
 
             # Try fuzzy search
             results = pycountry.countries.search_fuzzy(country_name)
             if results:
-                return results[0].alpha_3  # type: ignore[attr-defined]
+                fuzzy_result: str = results[0].alpha_3  # type: ignore[attr-defined]
+                return fuzzy_result
         except Exception:
             pass
 

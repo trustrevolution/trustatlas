@@ -23,8 +23,8 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
-from etl.common.scaling import scale_wgi
+from common.base import BaseProcessor, Observation
+from common.scaling import scale_wgi
 
 
 class WGIProcessor(BaseProcessor):
@@ -54,7 +54,7 @@ class WGIProcessor(BaseProcessor):
         Returns:
             Path to downloaded JSON file
         """
-        year_dir = self.raw_data_dir / "wgi" / str(year)
+        year_dir: Path = self.raw_data_dir / "wgi" / str(year)
         year_dir.mkdir(parents=True, exist_ok=True)
 
         # Download each indicator
@@ -190,7 +190,8 @@ class WGIProcessor(BaseProcessor):
 
     def _get_expected_raw_path(self, year: int) -> Path:
         """Get expected path for raw WGI data directory."""
-        return self.raw_data_dir / "wgi" / str(year)
+        result: Path = self.raw_data_dir / "wgi" / str(year)
+        return result
 
 
 @click.command()

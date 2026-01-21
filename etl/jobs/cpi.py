@@ -17,7 +17,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 class CPIProcessor(BaseProcessor):
@@ -48,9 +48,9 @@ class CPIProcessor(BaseProcessor):
         Returns:
             Path to downloaded CSV file
         """
-        year_dir = self.raw_data_dir / "cpi" / str(year)
+        year_dir: Path = self.raw_data_dir / "cpi" / str(year)
         year_dir.mkdir(parents=True, exist_ok=True)
-        output_path = year_dir / "cpi.csv"
+        output_path: Path = year_dir / "cpi.csv"
 
         if output_path.exists():
             print(f"CPI data already exists at {output_path}")

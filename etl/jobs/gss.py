@@ -23,7 +23,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 class GSSProcessor(BaseProcessor):
@@ -40,7 +40,7 @@ class GSSProcessor(BaseProcessor):
             for ext in ["*.dta", "*.csv"]:
                 files = list(gss_dir.glob(ext))
                 if files:
-                    return files[0]
+                    return Path(files[0])
 
         raise FileNotFoundError(
             f"\nGSS data not found.\n"

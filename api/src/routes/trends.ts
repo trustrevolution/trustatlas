@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify'
 import db from '../lib/db'
-import { iso3ParamSchema } from '../lib/schemas'
+import { iso3ParamSchema, trendsGlobalQuerySchema, trendsCountriesQuerySchema } from '../lib/schemas'
 
 const trendsRoute: FastifyPluginAsync = async (fastify) => {
   // USA trust timeline - all trust types over time
@@ -57,7 +57,7 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
   // Legacy support: interpersonal|institutional|governance still work
   fastify.get('/trends/global', async (request, reply) => {
     try {
-      const { pillar = 'social' } = request.query as { pillar?: string }
+      const { pillar } = trendsGlobalQuerySchema.parse(request.query)
 
       // Map new pillar names to internal handling, with legacy support
       const pillarMap: Record<string, string> = {
@@ -71,6 +71,7 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
       }
 
       const normalizedPillar = pillarMap[pillar]
+      // Schema already validates pillar, but keep for type narrowing
       if (!normalizedPillar) {
         return reply.status(400).send({
           error: `Invalid pillar. Must be one of: social, institutions, media`
@@ -230,7 +231,7 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
   // Legacy support: interpersonal|institutional|governance still work
   fastify.get('/trends/regions', async (request, reply) => {
     try {
-      const { pillar = 'social' } = request.query as { pillar?: string }
+      const { pillar } = trendsGlobalQuerySchema.parse(request.query)
 
       // Map new pillar names to internal handling, with legacy support
       const pillarMap: Record<string, string> = {
@@ -244,6 +245,7 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
       }
 
       const normalizedPillar = pillarMap[pillar]
+      // Schema already validates pillar, but keep for type narrowing
       if (!normalizedPillar) {
         return reply.status(400).send({
           error: `Invalid pillar. Must be one of: social, institutions, media`
@@ -470,19 +472,10 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
   // &source=WJP|CPI|WGI|WVS (optional, filter to specific source)
   fastify.get('/trends/countries', async (request, reply) => {
     try {
-      const { iso3, pillar, source } = request.query as {
-        iso3?: string
-        pillar?: string
-        source?: string
-      }
+      const { iso3, pillar, source } = trendsCountriesQuerySchema.parse(request.query)
 
-      if (!iso3) {
-        return reply.status(400).send({
-          error: 'Missing required parameter: iso3 (comma-separated ISO3 codes)'
-        })
-      }
-
-      const countries = iso3.split(',').map(c => c.trim().toUpperCase()).filter(c => c.length === 3)
+      // Parse and validate ISO3 codes
+      const countries = iso3.split(',').map(c => c.trim().toUpperCase()).filter(c => /^[A-Z]{3}$/.test(c))
 
       if (countries.length === 0) {
         return reply.status(400).send({ error: 'No valid ISO3 codes provided' })
@@ -520,8 +513,9 @@ const trendsRoute: FastifyPluginAsync = async (fastify) => {
       const params: (string | string[])[] = [countries]
 
       if (isSupplementary) {
-        // Supplementary indicator - use trust_type directly
-        conditions.push(`o.trust_type = '${pillar}'`)
+        // Supplementary indicator - use trust_type directly (parameterized for safety)
+        conditions.push(`o.trust_type = $${params.length + 1}`)
+        params.push(pillar)
       } else if (normalizedPillar === 'social') {
         conditions.push("o.trust_type = 'interpersonal'")
         conditions.push("o.methodology = 'binary'")

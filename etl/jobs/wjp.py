@@ -32,7 +32,7 @@ import pandas as pd
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 class WJPProcessor(BaseProcessor):
@@ -51,7 +51,7 @@ class WJPProcessor(BaseProcessor):
                 "Download from https://worldjusticeproject.org/rule-of-law-index/"
             )
 
-        return data_files[0]
+        return Path(data_files[0])
 
     def process(self, data_path: Path, year: int) -> List[Observation]:
         """Process WJP Excel data to observations."""

@@ -17,9 +17,14 @@ export const ratelimit = redis
     })
   : null
 
+// Log once at startup if rate limiting is disabled
+if (!ratelimit) {
+  console.warn('[security] Rate limiting disabled: UPSTASH_REDIS_REST_URL not configured')
+}
+
 export async function checkRateLimit(ip: string): Promise<{ success: boolean; remaining: number }> {
   if (!ratelimit) {
-    return { success: true, remaining: 100 } // No-op in dev without Upstash
+    return { success: true, remaining: 100 }
   }
   const result = await ratelimit.limit(ip)
   return { success: result.success, remaining: result.remaining }

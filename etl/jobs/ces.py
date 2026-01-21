@@ -30,7 +30,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 class CESProcessor(BaseProcessor):
@@ -116,10 +116,10 @@ class CESProcessor(BaseProcessor):
             # Look for the specific file
             matches = list(ces_dir.rglob(f"*{target_file}"))
             if matches:
-                return matches[0]
+                return Path(matches[0])
 
             # Also try exact match
-            direct = ces_dir / target_file
+            direct: Path = ces_dir / target_file
             if direct.exists():
                 return direct
 

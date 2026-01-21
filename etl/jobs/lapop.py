@@ -35,7 +35,7 @@ import pandas as pd
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 # LAPOP country codes to ISO alpha-3
@@ -118,7 +118,7 @@ class LAPOPProcessor(BaseProcessor):
         for pattern in patterns:
             data_files = list(lapop_dir.glob(f"**/{pattern}"))
             if data_files:
-                return data_files[0]
+                return Path(data_files[0])
 
         raise FileNotFoundError(
             f"No LAPOP data found in {lapop_dir}. "
@@ -127,7 +127,7 @@ class LAPOPProcessor(BaseProcessor):
 
     def _find_column(self, df: pd.DataFrame, patterns: List[str]) -> Optional[str]:
         """Find a column from a list of patterns (case-insensitive)."""
-        df_cols_lower = {c.lower(): c for c in df.columns}
+        df_cols_lower: dict[str, str] = {c.lower(): c for c in df.columns}
         for pattern in patterns:
             if pattern.lower() in df_cols_lower:
                 return df_cols_lower[pattern.lower()]

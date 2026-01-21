@@ -8,7 +8,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.countries import CountryMapper, COUNTRY_ALIASES
+from common.countries import CountryMapper, COUNTRY_ALIASES
 
 
 class TestCountryAliases:

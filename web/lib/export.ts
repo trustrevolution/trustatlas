@@ -1,5 +1,23 @@
 import type { Pillar } from './grapher-state'
 
+/**
+ * Sanitize a CSV field to prevent formula injection in spreadsheet applications.
+ * Fields starting with =, @, +, - could be interpreted as formulas in Excel/Google Sheets.
+ */
+function sanitizeCSVField(value: string): string {
+  // First handle standard CSV escaping (quotes, commas, newlines)
+  const needsQuotes = value.includes(',') || value.includes('"') || value.includes('\n')
+  let escaped = needsQuotes ? `"${value.replace(/"/g, '""')}"` : value
+
+  // Prevent formula injection by prefixing with single quote
+  // This is the recommended approach per OWASP
+  if (/^[=@+\-\t\r]/.test(escaped)) {
+    escaped = `'${escaped}`
+  }
+
+  return escaped
+}
+
 export interface ExportDataPoint {
   country: string
   iso3: string
@@ -50,9 +68,10 @@ export function toCSV(data: ExportDataPoint[], metadata: ExportMetadata): string
 
   // Data rows
   data.forEach((row) => {
-    const escapedCountry = row.country.includes(',') ? `"${row.country}"` : row.country
+    const escapedCountry = sanitizeCSVField(row.country)
+    const escapedSource = sanitizeCSVField(row.source)
     lines.push(
-      `${escapedCountry},${row.iso3},${row.year},${row.pillar},${row.score.toFixed(1)},${row.source}`
+      `${escapedCountry},${row.iso3},${row.year},${row.pillar},${row.score.toFixed(1)},${escapedSource}`
     )
   })
 
@@ -139,9 +158,11 @@ export function tableToCSV(
 
   // Data rows
   data.forEach((row) => {
-    const escapedLabel = row.label.includes(',') ? `"${row.label}"` : row.label
+    const escapedLabel = sanitizeCSVField(row.label)
+    const escapedSource = sanitizeCSVField(row.source)
+    const escapedConfidence = row.confidence ? sanitizeCSVField(row.confidence) : ''
     lines.push(
-      `${escapedLabel},${row.year},${row.value.toFixed(1)},${row.source},${row.confidence || ''}`
+      `${escapedLabel},${row.year},${row.value.toFixed(1)},${escapedSource},${escapedConfidence}`
     )
   })
 

@@ -16,6 +16,32 @@ export const countryQuerySchema = z.object({
   to: z.string().regex(/^\d{4}$/).transform(Number).optional()
 })
 
+// Source parameter schema - alphanumeric with underscores/hyphens, reasonable length
+export const sourceParamSchema = z.object({
+  source: z.string().min(1).max(50).regex(/^[A-Za-z0-9_-]+$/, 'Invalid source identifier')
+})
+
+// Digital indicators query schema
+export const digitalIndicatorsQuerySchema = z.object({
+  iso3: z.string().max(200).optional(), // comma-separated ISO3 codes
+  year: z.string().regex(/^\d{4}$/, 'Year must be 4 digits').optional(),
+  indicator: z.string().min(1).max(100).regex(/^[a-z0-9_]+$/, 'Invalid indicator name').default('social_media_penetration')
+})
+
+// Valid pillars for trends endpoints (includes legacy names)
+const validPillars = ['social', 'institutions', 'media', 'interpersonal', 'institutional', 'governance'] as const
+
+// Trends query schemas
+export const trendsGlobalQuerySchema = z.object({
+  pillar: z.enum(validPillars).default('social')
+})
+
+export const trendsCountriesQuerySchema = z.object({
+  iso3: z.string().min(3).max(200), // required, comma-separated ISO3 codes
+  pillar: z.enum([...validPillars, 'financial']).optional(),
+  source: z.string().max(20).regex(/^[A-Z_]+$/, 'Invalid source').optional()
+})
+
 // Response schemas
 export const countrySchema = z.object({
   iso3: z.string(),

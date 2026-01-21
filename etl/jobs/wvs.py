@@ -29,8 +29,8 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
-from etl.common.scaling import scale_likert_4_to_percent
+from common.base import BaseProcessor, Observation
+from common.scaling import scale_likert_4_to_percent
 
 
 # WVS country codes to ISO3 mapping
@@ -182,7 +182,7 @@ class WVSProcessor(BaseProcessor):
             if files:
                 print(f"Found WVS time series data at {files[0]}")
                 self._is_time_series = True
-                return files[0]
+                return Path(files[0])
 
         # Priority 2: Wave 7 file
         wave7_dir = wvs_dir / "wave7"
@@ -191,7 +191,7 @@ class WVSProcessor(BaseProcessor):
             if csvs:
                 print(f"Found WVS Wave 7 data at {csvs[0]}")
                 self._is_time_series = False
-                return csvs[0]
+                return Path(csvs[0])
 
         raise FileNotFoundError(
             f"\nWVS data not found. Manual download required:\n"
@@ -508,7 +508,8 @@ class WVSProcessor(BaseProcessor):
         """Convert WVS country code to ISO3."""
         # Try numeric lookup
         if isinstance(country_code, (int, float)):
-            return WVS_COUNTRY_CODES.get(int(country_code))
+            result: str | None = WVS_COUNTRY_CODES.get(int(country_code))
+            return result
 
         # Try string lookup
         return self.country_mapper.get_or_map(str(country_code))

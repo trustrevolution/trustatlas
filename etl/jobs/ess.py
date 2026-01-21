@@ -27,8 +27,8 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
-from etl.common.scaling import scale_0_10_to_percent
+from common.base import BaseProcessor, Observation
+from common.scaling import scale_0_10_to_percent
 
 
 class ESSProcessor(BaseProcessor):
@@ -75,7 +75,7 @@ class ESSProcessor(BaseProcessor):
             csvs = list(round_dir.glob("*.csv"))
             if csvs:
                 print(f"Found ESS data at {csvs[0]}")
-                return csvs[0]
+                return Path(csvs[0])
 
             # Also check for SPSS/Stata files we could convert
             for ext in ["*.sav", "*.dta"]:

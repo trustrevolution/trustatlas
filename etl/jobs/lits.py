@@ -25,7 +25,7 @@ import numpy as np
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 # LiTS country name to ISO3 mapping
 LITS_COUNTRY_MAP = {
@@ -93,7 +93,7 @@ class LiTSProcessor(BaseProcessor):
     def download(self, year: int) -> Path:
         """Check for LiTS data file."""
         lits_dir = self.raw_data_dir / "lits"
-        csv_path = lits_dir / "lits_iv.csv"
+        csv_path: Path = lits_dir / "lits_iv.csv"
 
         if not csv_path.exists():
             raise FileNotFoundError(

@@ -17,8 +17,8 @@ import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 
-from etl.common.countries import CountryMapper
-from etl.common.http import ResilientHTTPClient
+from common.countries import CountryMapper
+from common.http import ResilientHTTPClient
 
 logger = logging.getLogger(__name__)
 
@@ -80,8 +80,8 @@ class BaseProcessor(ABC):
             load_dotenv(env_path)
 
         # Initialize utilities
-        self.country_mapper = CountryMapper()
-        self.http_client = ResilientHTTPClient()
+        self.country_mapper: CountryMapper = CountryMapper()
+        self.http_client: ResilientHTTPClient = ResilientHTTPClient()
 
         # Statistics
         self.stats: Dict[str, Any] = {
@@ -190,7 +190,7 @@ class BaseProcessor(ABC):
         Returns:
             Path to staging CSV file
         """
-        staging_path = self.staging_dir / f"{self.SOURCE_NAME.lower()}_{year}.csv"
+        staging_path: Path = self.staging_dir / f"{self.SOURCE_NAME.lower()}_{year}.csv"
 
         df = pd.DataFrame(
             [obs.to_tuple() for obs in observations],
@@ -237,7 +237,7 @@ class BaseProcessor(ABC):
         logger.info(f"Deduplicated to {len(observations)} unique observations")
 
         conn = self.get_db_connection()
-        rows_affected = 0
+        rows_affected: int = 0
 
         try:
             with conn.cursor() as cur:
@@ -390,9 +390,10 @@ class BaseProcessor(ABC):
         Returns:
             Expected path to raw data file
         """
-        return (
+        result: Path = (
             self.raw_data_dir
             / self.SOURCE_NAME.lower()
             / str(year)
             / f"{self.SOURCE_NAME.lower()}.csv"
         )
+        return result

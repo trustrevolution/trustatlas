@@ -26,7 +26,7 @@ import pandas as pd
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 # ISO numeric codes to ISO alpha-3 for Latin American countries
@@ -107,7 +107,7 @@ class LatinobarometroProcessor(BaseProcessor):
             data_files = list(latino_dir.glob(f"**/{pattern}"))
             if data_files:
                 eng_files = [f for f in data_files if "eng" in f.name.lower()]
-                return eng_files[0] if eng_files else data_files[0]
+                return Path(eng_files[0]) if eng_files else data_files[0]
         raise FileNotFoundError(
             f"No Latinobarómetro data found for {year} in {latino_dir}. "
             "Please download from https://www.latinobarometro.org/"
@@ -115,7 +115,7 @@ class LatinobarometroProcessor(BaseProcessor):
 
     def _find_column(self, df: pd.DataFrame, patterns: List[str]) -> Optional[str]:
         """Find a column from a list of patterns (case-insensitive)."""
-        df_cols_lower = {c.lower(): c for c in df.columns}
+        df_cols_lower: dict[str, str] = {c.lower(): c for c in df.columns}
         for pattern in patterns:
             if pattern.lower() in df_cols_lower:
                 return df_cols_lower[pattern.lower()]

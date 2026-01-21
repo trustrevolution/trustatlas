@@ -21,7 +21,8 @@ app.register(cors, {
   origin: [
     'https://trustatlas.org',
     'https://www.trustatlas.org',
-    /^https:\/\/trustatlas(-[a-z0-9]+)?(-shawnyeager)?\.vercel\.app$/,
+    // Vercel preview URLs - allow trustatlas project deployments from either org
+    /^https:\/\/trustatlas(-[a-z0-9]+)?-(trustrevolution|shawnyeager)\.vercel\.app$/,
   ],
   credentials: true,
 })
@@ -47,6 +48,8 @@ app.addHook('onSend', async (_request, reply) => {
   reply.header('X-Frame-Options', 'DENY')
   reply.header('Referrer-Policy', 'strict-origin-when-cross-origin')
   reply.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+  reply.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
+  reply.header('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'")
   // Ensure CORS headers aren't cached incorrectly
   reply.header('Vary', 'Origin')
   reply.header('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300')
@@ -54,7 +57,7 @@ app.addHook('onSend', async (_request, reply) => {
 
 // Health check endpoint
 app.get('/health', async () => {
-  return { status: 'ok', version: '0.1.0', env: process.env.NODE_ENV || 'unknown' }
+  return { status: 'ok', version: '0.1.0' }
 })
 
 // Register API routes (no prefix - subdomain is api.trustatlas.org)
@@ -91,6 +94,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.send(response.body)
   } catch (err) {
     console.error('Handler error:', err)
-    res.status(500).json({ error: 'Internal server error', message: String(err) })
+    res.status(500).json({ error: 'Internal server error' })
   }
 }

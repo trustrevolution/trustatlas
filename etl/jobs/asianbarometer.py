@@ -29,7 +29,7 @@ import click
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 # Asian Barometer country codes to ISO3 (verified from Wave 5 data)
@@ -163,7 +163,7 @@ class AsianBarometerProcessor(BaseProcessor):
         asian_dir = self.raw_data_dir / "asianbarometer"
         data_files = list(asian_dir.glob("**/*.sav")) + list(asian_dir.glob("**/*.dta"))
         if data_files:
-            return data_files[0]
+            return Path(data_files[0])
         raise FileNotFoundError(
             f"No Asian Barometer data found in {asian_dir}. "
             "Please download from https://www.asianbarometer.org/"

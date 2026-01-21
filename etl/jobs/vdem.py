@@ -27,7 +27,7 @@ import pandas as pd
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from etl.common.base import BaseProcessor, Observation
+from common.base import BaseProcessor, Observation
 
 
 class VDemProcessor(BaseProcessor):
@@ -46,7 +46,7 @@ class VDemProcessor(BaseProcessor):
                 "Download from https://v-dem.net/data/the-v-dem-dataset/"
             )
 
-        return csv_files[0]
+        return Path(csv_files[0])
 
     def process(self, data_path: Path, year: int) -> List[Observation]:
         """Process V-Dem CSV data to observations."""
