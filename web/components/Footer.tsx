@@ -54,6 +54,13 @@ export default function Footer({ compact = false }: { compact?: boolean }) {
           </a>
           <span className="text-slate-700 hidden sm:inline">·</span>
           <a
+            href="mailto:hello@trustatlas.org"
+            className="text-slate-400 hover:text-white transition-colors text-sm"
+          >
+            Contact
+          </a>
+          <span className="text-slate-700 hidden sm:inline">·</span>
+          <a
             href="https://creativecommons.org/licenses/by-sa/4.0/"
             target="_blank"
             rel="noopener noreferrer"
