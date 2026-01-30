@@ -2,6 +2,28 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Skills
+Read and follow these skills before writing any code:
+- .claude/skills/base/SKILL.md - Universal patterns, TDD workflow, atomic todos
+- .claude/skills/security/SKILL.md - OWASP patterns, secrets management
+- .claude/skills/session-management/SKILL.md - Context preservation, checkpoints
+- .claude/skills/typescript/SKILL.md - TypeScript strict mode, eslint, testing
+- .claude/skills/python/SKILL.md - Python with ruff, mypy, pytest
+- .claude/skills/nodejs-backend/SKILL.md - Node.js backend patterns
+- .claude/skills/react-web/SKILL.md - React web with hooks, Zustand
+- .claude/skills/supabase/SKILL.md - Postgres patterns, migrations, RLS
+
+## Session Management
+Track work state in `_project_specs/session/`:
+- `current-state.md` - Live session state (update every 15-20 tool calls)
+- `decisions.md` - Key decisions (append-only)
+- `code-landmarks.md` - Important code locations
+
+Track todos in `_project_specs/todos/`:
+- `active.md` - Current work
+- `backlog.md` - Future work
+- `completed.md` - Done items
+
 ## Project Overview
 
 **Trust Atlas** is an open data initiative that measures trust across three pillars using only programmatically accessible data sources. An open-source project from [Trust Revolution](https://trustrevolution.co).
