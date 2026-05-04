@@ -1,4 +1,4 @@
-import Fastify from 'fastify'
+import Fastify, { type FastifyError } from 'fastify'
 import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
 import 'dotenv/config'
@@ -77,7 +77,7 @@ server.register(sourcesRoute)
 server.register(indicatorsRoute)
 
 // Error handler - sanitize error responses in production
-server.setErrorHandler((error, request, reply) => {
+server.setErrorHandler<FastifyError>((error, request, reply) => {
   request.log.error(error)
 
   const isProduction = process.env.NODE_ENV === 'production'

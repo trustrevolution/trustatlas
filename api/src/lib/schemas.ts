@@ -77,7 +77,7 @@ export const countryDetailSchema = z.object({
     governance: z.number().nullable(),
     confidence_tier: z.enum(['A', 'B', 'C']).nullable()
   })),
-  sources_used: z.record(z.array(z.string())).optional()
+  sources_used: z.record(z.string(), z.array(z.string())).optional()
 })
 
 export type Country = z.infer<typeof countrySchema>
