@@ -104,7 +104,7 @@ export function createSourceAwareTooltip(options: {
 
       html += `
         <div style="display: flex; align-items: flex-start; gap: 8px; margin: 6px 0; padding: 4px 0;">
-          <span style="width: 10px; height: 10px; border-radius: 50%; background: ${escapeHtml(p.color)}; flex-shrink: 0; margin-top: 3px;"></span>
+          <span style="width: 10px; height: 10px; border-radius: 50%; background: ${escapeHtml(p.color)}; shrink: 0; margin-top: 3px;"></span>
           <div style="flex: 1; min-width: 0;">
             <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px;">
               <span style="color: #cbd5e1; font-size: 12px;">${escapeHtml(p.seriesName)}</span>

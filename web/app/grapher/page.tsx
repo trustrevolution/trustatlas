@@ -17,9 +17,9 @@ function GrapherLoading() {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
       <div className="animate-pulse">
-        <div className="h-8 bg-slate-200 rounded w-64 mb-6" />
-        <div className="h-10 bg-slate-200 rounded w-48 mb-4" />
-        <div className="h-12 bg-slate-200 rounded w-full mb-6" />
+        <div className="h-8 bg-slate-200 rounded-sm w-64 mb-6" />
+        <div className="h-10 bg-slate-200 rounded-sm w-48 mb-4" />
+        <div className="h-12 bg-slate-200 rounded-sm w-full mb-6" />
         <div className="h-96 bg-slate-100 rounded-xl" />
       </div>
     </div>

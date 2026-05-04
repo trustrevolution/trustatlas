@@ -37,7 +37,7 @@ export function PillarToggle({ value, onChange, className }: PillarToggleProps) 
             className={cn(
               'px-3 py-1.5 text-sm font-medium rounded-md transition-all',
               isSelected
-                ? 'bg-white text-slate-900 shadow-sm'
+                ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             )}
             style={

@@ -100,7 +100,7 @@ function ControlButton({
         className={cn(
           'inline-flex items-center gap-1.5 px-2 py-1.5 rounded-md',
           'text-[11px] font-medium transition-all duration-150',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/50',
+          'focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-400/50',
           active
             ? 'bg-slate-800 text-white'
             : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100',
@@ -209,8 +209,8 @@ export function ChartControls({
     <div
       className={cn(
         'inline-flex items-center gap-0.5 p-1 rounded-lg',
-        'bg-white/80 backdrop-blur-sm border border-slate-200/60',
-        'shadow-sm',
+        'bg-white/80 backdrop-blur-xs border border-slate-200/60',
+        'shadow-xs',
         position === 'top-right' && 'absolute top-3 right-3 z-10',
         position === 'bottom-right' && '',
         className
@@ -265,7 +265,7 @@ export function ChartControls({
               'inline-flex items-center justify-center w-7 h-7 rounded-md',
               'text-slate-400 hover:text-slate-600 hover:bg-slate-100',
               'transition-colors duration-150',
-              'focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400/50'
+              'focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-400/50'
             )}
             aria-label="View methodology"
           >

@@ -310,7 +310,7 @@ export default function MethodologyPage() {
           <ul className="list-disc list-inside text-slate-600 space-y-2">
             <li>Survey percentages (WVS, GSS, etc.) — used directly (already 0-100)</li>
             <li>CPI scores — used directly (already 0-100)</li>
-            <li>WGI scores (-2.5 to +2.5) — rescaled: <code className="bg-slate-100 px-1 rounded">((x + 2.5) / 5) × 100</code></li>
+            <li>WGI scores (-2.5 to +2.5) — rescaled: <code className="bg-slate-100 px-1 rounded-sm">((x + 2.5) / 5) × 100</code></li>
             <li>WJP Rule of Law Index — used directly (already 0-100)</li>
           </ul>
         </section>

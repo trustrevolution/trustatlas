@@ -319,7 +319,7 @@ export default function AttributionPage() {
                       <span className="italic">{source.citation}</span>
                     </div>
                     {source.notes && (
-                      <div className="text-xs text-slate-500 bg-slate-50 rounded p-2 mt-2">
+                      <div className="text-xs text-slate-500 bg-slate-50 rounded-sm p-2 mt-2">
                         {source.notes}
                       </div>
                     )}

@@ -14,12 +14,12 @@ export default function Header({ fixed = false, wide = false, activePage }: Head
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navClass = fixed
-    ? 'fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-sm border-b border-slate-800'
+    ? 'fixed top-0 left-0 right-0 z-50 bg-slate-950/95 backdrop-blur-xs border-b border-slate-800'
     : 'flex-shrink-0 bg-slate-950 border-b border-slate-800'
 
   const containerClass = wide
-    ? 'px-4 sm:px-6 h-[var(--header-height)] flex items-center justify-between'
-    : 'max-w-6xl mx-auto px-4 sm:px-6 h-[var(--header-height)] flex items-center justify-between'
+    ? 'px-4 sm:px-6 h-(--header-height) flex items-center justify-between'
+    : 'max-w-6xl mx-auto px-4 sm:px-6 h-(--header-height) flex items-center justify-between'
 
   const linkClass = (page: string) =>
     activePage === page

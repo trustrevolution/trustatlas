@@ -160,7 +160,7 @@ export function TimeSlider({
         className={cn(
           'flex items-center justify-center w-10 h-10 sm:w-8 sm:h-8 rounded-full touch-target-sm',
           'bg-slate-100 hover:bg-slate-200 text-slate-600',
-          'transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400'
+          'transition-colors focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-400'
         )}
       >
         {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
@@ -194,10 +194,10 @@ export function TimeSlider({
         <div
           className={cn(
             'absolute top-1/2 -translate-y-1/2 -translate-x-1/2',
-            'w-4 h-4 bg-slate-800 border-2 border-white rounded-full shadow-sm',
+            'w-4 h-4 bg-slate-800 border-2 border-white rounded-full shadow-xs',
             'before:absolute before:inset-[-12px] before:content-[""]',
             isDragging ? 'cursor-grabbing scale-110' : 'cursor-grab',
-            'transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400'
+            'transition-transform focus:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-400'
           )}
           style={{ left: `${thumbPosition}%` }}
           onMouseDown={handleMouseDown}

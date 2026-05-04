@@ -72,7 +72,7 @@ export function SourceBadge({
     return (
       <span
         className={cn(
-          'inline-flex items-center rounded font-medium',
+          'inline-flex items-center rounded-sm font-medium',
           sizeStyles[size],
           variantStyles[variant],
           className
@@ -94,7 +94,7 @@ export function SourceBadge({
   )
 
   const baseClasses = cn(
-    'inline-flex items-center rounded font-medium transition-colors',
+    'inline-flex items-center rounded-sm font-medium transition-colors',
     sizeStyles[size],
     variantStyles[variant],
     className
@@ -163,7 +163,7 @@ export function LicenseBadge({
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded border font-medium',
+        'inline-flex items-center rounded-sm border font-medium',
         sizeStyles[size],
         colorClass,
         className

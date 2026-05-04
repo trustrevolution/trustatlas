@@ -66,7 +66,7 @@ export default function Footer({ compact = false }: { compact?: boolean }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-300 transition-colors"
           >
-            <span className="px-1.5 py-0.5 bg-slate-800 rounded text-[10px] font-medium text-slate-400">
+            <span className="px-1.5 py-0.5 bg-slate-800 rounded-sm text-[10px] font-medium text-slate-400">
               CC BY-SA 4.0
             </span>
           </a>

@@ -177,7 +177,7 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
               {/* Mini bar */}
               <div className="progress-bar mt-2">
                 <div
-                  className={`progress-bar-fill bg-gradient-to-r ${pillarConfig.tailwindBg}`}
+                  className={`progress-bar-fill bg-linear-to-r ${pillarConfig.tailwindBg}`}
                   style={{ width: `${region.avgScore}%` }}
                 />
               </div>
@@ -364,7 +364,7 @@ export default function ExplorePanel({ selectedCountry, onClose, selectedPillar,
   const pillarsWithData = pillarSummary.filter(p => p.hasData).map(p => p.pillarId)
 
   return (
-    <div className="panel-container !p-0">
+    <div className="panel-container p-0!">
       {/* Header */}
       <div className="sticky top-0 bg-slate-900 border-b border-slate-700 p-4 flex items-center justify-between z-10">
         <div>

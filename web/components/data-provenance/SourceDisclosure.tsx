@@ -198,7 +198,7 @@ function SourceCard({
               {source.frequency && (
                 <span
                   className={cn(
-                    'text-[10px] px-1.5 py-0.5 rounded',
+                    'text-[10px] px-1.5 py-0.5 rounded-sm',
                     dark ? 'bg-slate-700 text-slate-400' : 'bg-slate-200 text-slate-600'
                   )}
                 >
@@ -216,7 +216,7 @@ function SourceCard({
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              'p-1.5 rounded transition-colors flex-shrink-0',
+              'p-1.5 rounded-sm transition-colors flex-shrink-0',
               dark
                 ? 'text-slate-400 hover:text-white hover:bg-slate-700'
                 : 'text-slate-400 hover:text-slate-600 hover:bg-slate-200'
@@ -249,7 +249,7 @@ function SourceCard({
           <span
             key={pillar}
             className={cn(
-              'text-[10px] px-1.5 py-0.5 rounded capitalize',
+              'text-[10px] px-1.5 py-0.5 rounded-sm capitalize',
               dark ? 'bg-slate-700 text-slate-300' : 'bg-slate-200 text-slate-600'
             )}
           >

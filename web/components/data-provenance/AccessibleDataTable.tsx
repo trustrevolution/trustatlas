@@ -230,7 +230,7 @@ export function ChartDataTableToggle({
       type="button"
       onClick={onToggle}
       className={cn(
-        'text-xs px-2 py-1 rounded transition-colors',
+        'text-xs px-2 py-1 rounded-sm transition-colors',
         dark
           ? 'text-slate-400 hover:text-white hover:bg-slate-700'
           : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100',

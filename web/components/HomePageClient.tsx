@@ -190,7 +190,7 @@ export default function HomePageClient({ stats, chartData, heroIndices }: HomePa
       <main>
         {/* Hero Section */}
         <section className="hero-section">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900" />
+          <div className="absolute inset-0 bg-linear-to-br from-slate-900 via-slate-950 to-slate-900" />
           <div className="noise-texture" />
           <div className="hero-content">
             <h1 className="hero-title hero-headline">
@@ -254,7 +254,7 @@ export default function HomePageClient({ stats, chartData, heroIndices }: HomePa
               <p className="text-slate-600 mt-2">Click to expand</p>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
               {cardStories.map((story) => (
                 <ExpandableStoryCard
                   key={story.id}
@@ -287,7 +287,7 @@ export default function HomePageClient({ stats, chartData, heroIndices }: HomePa
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
-              <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm text-center sm:text-left">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-xs text-center sm:text-left">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-sky-100 rounded-full flex items-center justify-center mb-4 mx-auto sm:mx-0">
                   <span className="text-2xl sm:text-3xl">🤝</span>
                 </div>
@@ -298,8 +298,8 @@ export default function HomePageClient({ stats, chartData, heroIndices }: HomePa
                 <p className="text-slate-400 text-xs sm:text-sm">WVS, EVS, GSS + regional barometers</p>
               </div>
 
-              <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm relative overflow-hidden text-center sm:text-left">
-                <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-amber-50 to-transparent opacity-50" />
+              <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-xs relative overflow-hidden text-center sm:text-left">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-linear-to-bl from-amber-50 to-transparent opacity-50" />
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-amber-100 rounded-full flex items-center justify-center mb-4 mx-auto sm:mx-0">
                   <span className="text-2xl sm:text-3xl">🏛️</span>
                 </div>
@@ -310,7 +310,7 @@ export default function HomePageClient({ stats, chartData, heroIndices }: HomePa
                 <p className="text-slate-400 text-xs sm:text-sm">WVS + CPI, WGI, WJP, V-Dem</p>
               </div>
 
-              <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-sm text-center sm:text-left">
+              <div className="bg-white rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-slate-200 shadow-xs text-center sm:text-left">
                 <div className="w-12 h-12 sm:w-16 sm:h-16 bg-indigo-100 rounded-full flex items-center justify-center mb-4 mx-auto sm:mx-0">
                   <span className="text-2xl sm:text-3xl">📰</span>
                 </div>

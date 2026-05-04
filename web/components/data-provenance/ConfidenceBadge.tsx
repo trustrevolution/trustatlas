@@ -88,7 +88,7 @@ export function ConfidenceBadge({
         <span className="relative">
           <button
             type="button"
-            className="text-slate-500 hover:text-slate-400 cursor-help focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded"
+            className="text-slate-500 hover:text-slate-400 cursor-help focus:outline-hidden focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-900 rounded-sm"
             onMouseEnter={() => setTooltipOpen(true)}
             onMouseLeave={() => setTooltipOpen(false)}
             onFocus={() => setTooltipOpen(true)}
