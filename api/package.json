@@ -39,10 +39,14 @@
     "vitest": "^4.1.5"
   },
   "overrides": {
-    "ajv": "^8.18.0",
-    "minimatch": "^10.2.3",
     "path-to-regexp": "^6.3.0",
-    "smol-toml": "^1.6.1",
-    "undici": "^6.24.0"
+    "undici": "^6.24.0",
+    "@vercel/static-config": {
+      "ajv": "^6.14.0"
+    },
+    "@vercel/python-analysis": {
+      "minimatch": "^9.0.7",
+      "smol-toml": "^1.6.1"
+    }
   }
 }

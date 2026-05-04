@@ -13,8 +13,7 @@ export default async function indicatorsRoute(fastify: FastifyInstance) {
   // Query params: iso3 (comma-separated), year, indicator
   fastify.get<{ Querystring: DigitalQuerystring }>(
     '/indicators/digital',
-    async (request, reply) => {
-      try {
+    async (request) => {
       const { iso3, year, indicator } = digitalIndicatorsQuerySchema.parse(request.query)
 
       let query = `
@@ -71,10 +70,6 @@ export default async function indicatorsRoute(fastify: FastifyInstance) {
         indicator,
         source: 'DataReportal',
         countries: byCountry,
-      }
-      } catch (error) {
-        request.log.error(error)
-        reply.status(500).send({ error: 'Internal server error' })
       }
     }
   )

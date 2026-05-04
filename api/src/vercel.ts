@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import Fastify from 'fastify'
+import Fastify, { type FastifyError } from 'fastify'
 import cors from '@fastify/cors'
+import { ZodError } from 'zod'
 import 'dotenv/config'
 
 import { checkRateLimit } from './lib/ratelimit'
@@ -69,9 +70,29 @@ app.register(trendsRoute)
 app.register(statsRoute)
 app.register(indicatorsRoute)
 
-// Error handler
-app.setErrorHandler((error, _request, reply) => {
-  console.error('Fastify error:', error)
+// Error handler - sanitize error responses in production
+app.setErrorHandler((error, request, reply) => {
+  request.log.error(error)
+
+  const isProduction = process.env.NODE_ENV === 'production'
+
+  if (error instanceof ZodError) {
+    reply.status(400).send({
+      error: 'Validation failed',
+      ...(isProduction ? {} : { details: error.issues })
+    })
+    return
+  }
+
+  const fastifyErr = error as FastifyError
+  if (fastifyErr.validation) {
+    reply.status(400).send({
+      error: 'Validation failed',
+      ...(isProduction ? {} : { details: fastifyErr.validation })
+    })
+    return
+  }
+
   reply.status(500).send({ error: 'Internal server error' })
 })
 

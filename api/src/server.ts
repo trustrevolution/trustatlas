@@ -1,6 +1,7 @@
 import Fastify, { type FastifyError } from 'fastify'
 import cors from '@fastify/cors'
 import rateLimit from '@fastify/rate-limit'
+import { ZodError } from 'zod'
 import 'dotenv/config'
 
 // Import routes
@@ -77,22 +78,31 @@ server.register(sourcesRoute)
 server.register(indicatorsRoute)
 
 // Error handler - sanitize error responses in production
-server.setErrorHandler<FastifyError>((error, request, reply) => {
+server.setErrorHandler((error, request, reply) => {
   request.log.error(error)
 
   const isProduction = process.env.NODE_ENV === 'production'
 
-  if (error.validation) {
+  // Route-level zod .parse() failures
+  if (error instanceof ZodError) {
     reply.status(400).send({
       error: 'Validation failed',
-      // Only expose validation details in development
-      ...(isProduction ? {} : { details: error.validation })
+      ...(isProduction ? {} : { details: error.issues })
     })
-  } else {
-    reply.status(500).send({
-      error: 'Internal server error'
-    })
+    return
   }
+
+  // Fastify's built-in (Ajv) schema validation
+  const fastifyErr = error as FastifyError
+  if (fastifyErr.validation) {
+    reply.status(400).send({
+      error: 'Validation failed',
+      ...(isProduction ? {} : { details: fastifyErr.validation })
+    })
+    return
+  }
+
+  reply.status(500).send({ error: 'Internal server error' })
 })
 
 const start = async () => {
