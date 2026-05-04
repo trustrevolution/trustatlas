@@ -21,19 +21,18 @@ Iceland, Malta, Northern Ireland, etc.
 """
 
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
-from collections import defaultdict
 
-import pandas as pd
 import click
+import pandas as pd
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
-
 
 # EVS uses ISO 3166-1 numeric codes (same as WVS for overlap)
 # This mapping covers European countries in EVS

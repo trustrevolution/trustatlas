@@ -96,7 +96,7 @@ install:
 	@echo "Installing dependencies..."
 	@cd api && npm install
 	@cd web && npm install
-	@cd etl && pip install -r requirements.txt
+	@cd etl && pip install -e ".[dev]"
 
 test:
 	@echo "Running tests..."

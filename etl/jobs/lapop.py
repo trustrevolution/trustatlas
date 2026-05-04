@@ -22,11 +22,11 @@ Coverage: 28+ countries including Caribbean nations
 Years: 2004-2023
 """
 
+import re
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
-from collections import defaultdict
-import re
 
 import click
 import pandas as pd
@@ -36,7 +36,6 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
-
 
 # LAPOP country codes to ISO alpha-3
 # Source: LAPOP codebooks - pais variable

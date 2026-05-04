@@ -27,15 +27,14 @@ import sys
 from pathlib import Path
 from typing import List, Optional
 
-import pandas as pd
 import click
+import pandas as pd
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
-
 
 # Reuters DNR country names to ISO3 mapping
 # Based on 2024 report coverage (47 countries)

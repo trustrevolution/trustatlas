@@ -5,17 +5,17 @@ Provides common functionality for downloading, processing, validating,
 and loading trust data from external sources.
 """
 
-import os
 import logging
+import os
 from abc import ABC, abstractmethod
-from pathlib import Path
-from typing import List, Tuple, Optional, Dict, Any
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
 import psycopg2
-from psycopg2.extras import execute_values
 from dotenv import load_dotenv
+from psycopg2.extras import execute_values
 
 from common.countries import CountryMapper
 from common.http import ResilientHTTPClient

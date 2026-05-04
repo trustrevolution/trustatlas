@@ -18,12 +18,12 @@ Download from: https://www.worldvaluessurvey.org
 """
 
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
-from collections import defaultdict
 
-import pandas as pd
 import click
+import pandas as pd
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -31,7 +31,6 @@ sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
 from common.scaling import scale_likert_4_to_percent
-
 
 # WVS country codes to ISO3 mapping
 # From WVS documentation

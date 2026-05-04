@@ -1,5 +1,0 @@
-common
-data_quality
-jobs
-pipelines
-validation

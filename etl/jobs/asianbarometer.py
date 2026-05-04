@@ -19,9 +19,9 @@ Institutional scale: 1-4 (1=A great deal of trust, 4=None at all)
 """
 
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import List
-from collections import defaultdict
 
 import click
 
@@ -30,7 +30,6 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
-
 
 # Asian Barometer country codes to ISO3 (verified from Wave 5 data)
 ASIAN_COUNTRY_CODES = {

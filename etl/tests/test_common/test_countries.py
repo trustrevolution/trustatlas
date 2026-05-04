@@ -1,14 +1,15 @@
 """Tests for country mapping utilities."""
 
-import pytest
 import sys
 from pathlib import Path
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from common.countries import CountryMapper, COUNTRY_ALIASES
+from common.countries import COUNTRY_ALIASES, CountryMapper
 
 
 class TestCountryAliases:

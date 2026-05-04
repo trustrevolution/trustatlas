@@ -1,18 +1,19 @@
 """Tests for scaling functions."""
 
-import pytest
 import sys
 from pathlib import Path
+
+import pytest
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.scaling import (
-    scale_0_10_to_percent,
-    scale_wgi,
-    scale_likert_4_to_percent,
     clamp_score,
+    scale_0_10_to_percent,
+    scale_likert_4_to_percent,
+    scale_wgi,
     validate_score,
 )
 

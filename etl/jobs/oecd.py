@@ -9,12 +9,12 @@ Covers ~38 OECD member countries with trust in government survey data.
 """
 
 import sys
+from io import StringIO
 from pathlib import Path
 from typing import List
-from io import StringIO
 
-import pandas as pd
 import click
+import pandas as pd
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent

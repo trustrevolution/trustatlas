@@ -25,12 +25,12 @@ Data source: https://electionstudies.org/data-center/anes-time-series-cumulative
 """
 
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional
-from collections import defaultdict
 
-import pandas as pd
 import click
+import pandas as pd
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent

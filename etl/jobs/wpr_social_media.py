@@ -13,14 +13,14 @@ import csv
 import logging
 import os
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 from typing import List
-from dataclasses import dataclass
 
 import click
 import psycopg2
-from psycopg2.extras import execute_values
 from dotenv import load_dotenv
+from psycopg2.extras import execute_values
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent

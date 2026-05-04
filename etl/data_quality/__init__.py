@@ -6,12 +6,12 @@ Usage:
 """
 
 from .checks import (
-    detect_statistical_outliers,
-    detect_yoy_anomalies,
+    detect_coverage_gaps,
     detect_cross_source_inconsistencies,
     detect_methodology_mismatches,
     detect_sample_size_issues,
-    detect_coverage_gaps,
+    detect_statistical_outliers,
+    detect_yoy_anomalies,
 )
 
 __all__ = [

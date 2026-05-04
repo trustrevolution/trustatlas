@@ -21,9 +21,9 @@ Scale: 0=Not at all, 1=Just a little, 2=Somewhat, 3=A lot
 """
 
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import List
-from collections import defaultdict
 
 import click
 
@@ -32,7 +32,6 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
-
 
 # Afrobarometer country codes to ISO3
 AFRO_COUNTRY_CODES = {

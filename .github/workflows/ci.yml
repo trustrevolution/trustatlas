@@ -130,12 +130,12 @@ jobs:
       with:
         python-version: '3.11'
         cache: 'pip'
-        cache-dependency-path: 'etl/requirements.txt'
-    
+        cache-dependency-path: 'etl/pyproject.toml'
+
     - name: Install ETL dependencies
       run: |
         cd etl
-        pip install -r requirements.txt
+        pip install -e ".[dev]"
     
     - name: Run database migrations
       run: |

@@ -19,12 +19,12 @@ Data sources:
 """
 
 import sys
-from pathlib import Path
-from typing import List, Optional, Dict, Any
 from collections import defaultdict
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-import pandas as pd
 import click
+import pandas as pd
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent

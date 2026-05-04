@@ -12,10 +12,10 @@ we use the average of:
 - RL.EST: Rule of Law
 """
 
+import json
 import sys
 from pathlib import Path
-from typing import List, Dict
-import json
+from typing import Dict, List
 
 import click
 

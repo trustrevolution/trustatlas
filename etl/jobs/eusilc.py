@@ -14,17 +14,16 @@ Years: 2013, 2018, 2021-2024
 
 import sys
 from pathlib import Path
-from typing import List, Any, Dict
-import requests
+from typing import Any, Dict, List
 
 import click
+import requests
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
-
 
 # Eurostat country codes to ISO alpha-3
 EUROSTAT_TO_ISO3 = {

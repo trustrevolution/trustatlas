@@ -8,14 +8,14 @@ Shared modules for all ETL jobs:
 - http: Resilient HTTP client for API calls
 """
 
-from common.scaling import (
-    scale_0_10_to_percent,
-    scale_wgi,
-    scale_likert_4_to_percent,
-)
+from common.base import BaseProcessor
 from common.countries import CountryMapper
 from common.http import ResilientHTTPClient
-from common.base import BaseProcessor
+from common.scaling import (
+    scale_0_10_to_percent,
+    scale_likert_4_to_percent,
+    scale_wgi,
+)
 
 __all__ = [
     "scale_0_10_to_percent",

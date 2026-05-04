@@ -15,9 +15,9 @@ Country identification: idenpa or pais (ISO numeric codes)
 """
 
 import sys
+from collections import defaultdict
 from pathlib import Path
 from typing import List, Optional, Tuple
-from collections import defaultdict
 
 import click
 import pandas as pd
@@ -27,7 +27,6 @@ project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from common.base import BaseProcessor, Observation
-
 
 # ISO numeric codes to ISO alpha-3 for Latin American countries
 LATINO_COUNTRY_CODES = {

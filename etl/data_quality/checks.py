@@ -9,7 +9,7 @@ Each function returns a list of Flag dictionaries with:
 """
 
 from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 @dataclass

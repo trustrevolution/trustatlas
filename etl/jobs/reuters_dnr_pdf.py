@@ -8,8 +8,8 @@ The data is found in the Executive Summary on the chart showing
 License: CC BY - Attribution required to Reuters Institute for the Study of Journalism
 """
 
-import re
 import csv
+import re
 from pathlib import Path
 
 # Countries and their ISO3 codes (47 markets as of 2024)
