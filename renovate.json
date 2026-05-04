@@ -1,0 +1,85 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard",
+    "schedule:weekly"
+  ],
+  "timezone": "America/New_York",
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "rebaseWhen": "conflicted",
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "labels": ["security", "dependencies"],
+    "schedule": ["at any time"],
+    "minimumReleaseAge": "0 days"
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 4am on Monday"]
+  },
+  "packageRules": [
+    {
+      "description": "Auto-merge non-major updates of stable (>=1.0) packages once CI passes",
+      "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
+      "matchCurrentVersion": ">=1.0.0",
+      "automerge": true,
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Major updates: manual review, no auto-merge",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major"]
+    },
+    {
+      "description": "Group all Fastify plugins together",
+      "matchPackageNames": ["/^@fastify\\//"],
+      "groupName": "fastify plugins"
+    },
+    {
+      "description": "Group Radix UI primitives",
+      "matchPackageNames": ["/^@radix-ui\\//"],
+      "groupName": "radix-ui"
+    },
+    {
+      "description": "Group @types/* packages",
+      "matchPackageNames": ["/^@types\\//"],
+      "groupName": "type definitions"
+    },
+    {
+      "description": "Hold Python at 3.11 (pyproject requires-python and CI both target 3.11)",
+      "matchPackageNames": ["python", "actions/setup-python"],
+      "matchUpdateTypes": ["major", "minor"],
+      "enabled": false
+    },
+    {
+      "description": "Hold @types/node within current major (Vercel runtime constraint)",
+      "matchPackageNames": ["@types/node", "node"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "description": "Pin GitHub Actions to commit SHAs for supply-chain safety",
+      "matchManagers": ["github-actions"],
+      "pinDigests": true
+    },
+    {
+      "description": "Hold Postgres at 16 (matches local docker-compose and Neon prod)",
+      "matchManagers": ["docker-compose"],
+      "matchPackageNames": ["postgres"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ],
+  "ignorePaths": [
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/dist/**",
+    "**/build/**",
+    "etl/trustatlas_etl.egg-info/**"
+  ]
+}
