@@ -261,15 +261,13 @@ def aggregate_media_pillar(conn, dry_run: bool = False) -> Dict:
     source_counts: Dict[str, int] = defaultdict(int)
 
     with conn.cursor() as cur:
-        cur.execute(
-            """
+        cur.execute("""
             SELECT iso3, year, source, score_0_100
             FROM observations
             WHERE trust_type = 'media'
               AND score_0_100 IS NOT NULL
             ORDER BY iso3, year, source
-        """
-        )
+        """)
 
         # Group by country-year
         country_years: Dict[Tuple[str, int], Dict[str, List[float]]] = defaultdict(

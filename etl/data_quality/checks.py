@@ -35,16 +35,14 @@ def detect_statistical_outliers(conn) -> List[Flag]:
 
     with conn.cursor() as cur:
         # Binary interpersonal outliers
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, score_0_100, methodology
             FROM observations
             WHERE trust_type = 'interpersonal'
               AND methodology = 'binary'
               AND (score_0_100 > 60 OR score_0_100 < 10)
             ORDER BY score_0_100 DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, score, methodology = row
             flags.append(
@@ -66,16 +64,14 @@ def detect_statistical_outliers(conn) -> List[Flag]:
             )
 
         # 4-point scale interpersonal outliers
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, score_0_100, methodology
             FROM observations
             WHERE trust_type = 'interpersonal'
               AND methodology = '4point'
               AND score_0_100 > 80
             ORDER BY score_0_100 DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, score, methodology = row
             flags.append(
@@ -97,15 +93,13 @@ def detect_statistical_outliers(conn) -> List[Flag]:
             )
 
         # Institutional outliers
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, score_0_100
             FROM observations
             WHERE trust_type = 'institutional'
               AND (score_0_100 > 95 OR score_0_100 < 5)
             ORDER BY score_0_100 DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, score = row
             flags.append(
@@ -126,15 +120,13 @@ def detect_statistical_outliers(conn) -> List[Flag]:
             )
 
         # Governance outliers (very high is suspicious)
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, score_0_100
             FROM observations
             WHERE trust_type = 'governance'
               AND score_0_100 > 95
             ORDER BY score_0_100 DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, score = row
             flags.append(
@@ -156,15 +148,13 @@ def detect_statistical_outliers(conn) -> List[Flag]:
 
         # Media trust outliers
         # Typical range: 15-75% based on Reuters DNR distribution (global average ~40%)
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, score_0_100
             FROM observations
             WHERE trust_type = 'media'
               AND (score_0_100 > 75 OR score_0_100 < 15)
             ORDER BY score_0_100 DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, score = row
             flags.append(
@@ -196,8 +186,7 @@ def detect_yoy_anomalies(conn) -> List[Flag]:
     flags = []
 
     with conn.cursor() as cur:
-        cur.execute(
-            """
+        cur.execute("""
             WITH changes AS (
                 SELECT
                     id,
@@ -229,8 +218,7 @@ def detect_yoy_anomalies(conn) -> List[Flag]:
               AND ABS(score_0_100 - prev_score) > 25
               AND year - prev_year <= 5
             ORDER BY ABS(score_0_100 - prev_score) DESC
-        """
-        )
+        """)
 
         for row in cur.fetchall():
             (
@@ -288,8 +276,7 @@ def detect_cross_source_inconsistencies(conn) -> List[Flag]:
     seen_pairs = set()  # Track which pairs we've flagged
 
     with conn.cursor() as cur:
-        cur.execute(
-            """
+        cur.execute("""
             WITH pairs AS (
                 SELECT
                     a.id as id_a,
@@ -315,8 +302,7 @@ def detect_cross_source_inconsistencies(conn) -> List[Flag]:
             WHERE (trust_type != 'media' AND diff > 30)
                OR (trust_type = 'media' AND diff > 35)
             ORDER BY diff DESC
-        """
-        )
+        """)
 
         for row in cur.fetchall():
             (
@@ -379,16 +365,14 @@ def detect_methodology_mismatches(conn) -> List[Flag]:
 
     with conn.cursor() as cur:
         # Binary scores that are too high (should be 15-55%)
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, score_0_100
             FROM observations
             WHERE trust_type = 'interpersonal'
               AND methodology = 'binary'
               AND score_0_100 > 55
             ORDER BY score_0_100 DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, score = row
             flags.append(
@@ -409,16 +393,14 @@ def detect_methodology_mismatches(conn) -> List[Flag]:
             )
 
         # 0-10 scale scores that might indicate wrong methodology tag
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, score_0_100
             FROM observations
             WHERE trust_type = 'interpersonal'
               AND methodology = '0-10scale'
               AND score_0_100 > 70
             ORDER BY score_0_100 DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, score = row
             flags.append(
@@ -454,16 +436,14 @@ def detect_sample_size_issues(conn) -> List[Flag]:
 
     with conn.cursor() as cur:
         # Low sample size
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, trust_type, sample_n, score_0_100
             FROM observations
             WHERE sample_n IS NOT NULL
               AND sample_n < 100
               AND trust_type IN ('interpersonal', 'institutional', 'media')
             ORDER BY sample_n
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, trust_type, sample_n, score = row
             flags.append(
@@ -484,14 +464,12 @@ def detect_sample_size_issues(conn) -> List[Flag]:
             )
 
         # Suspiciously large sample size
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, trust_type, sample_n, score_0_100
             FROM observations
             WHERE sample_n > 100000
             ORDER BY sample_n DESC
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, trust_type, sample_n, score = row
             flags.append(
@@ -512,8 +490,7 @@ def detect_sample_size_issues(conn) -> List[Flag]:
             )
 
         # Missing sample size for survey data (excluding governance)
-        cur.execute(
-            """
+        cur.execute("""
             SELECT id, iso3, year, source, trust_type, score_0_100
             FROM observations
             WHERE sample_n IS NULL
@@ -521,8 +498,7 @@ def detect_sample_size_issues(conn) -> List[Flag]:
               AND source NOT IN ('OECD', 'Eurobarometer')
             ORDER BY source, year
             LIMIT 100
-        """
-        )
+        """)
         for row in cur.fetchall():
             obs_id, iso3, year, source, trust_type, score = row
             flags.append(
@@ -558,8 +534,7 @@ def detect_coverage_gaps(conn) -> List[Flag]:
 
     with conn.cursor() as cur:
         # Sources with suspiciously few countries (may indicate ETL bug)
-        cur.execute(
-            """
+        cur.execute("""
             SELECT source, COUNT(DISTINCT iso3) as country_count,
                    MIN(year) as min_year, MAX(year) as max_year
             FROM observations
@@ -567,8 +542,7 @@ def detect_coverage_gaps(conn) -> List[Flag]:
             GROUP BY source
             HAVING COUNT(DISTINCT iso3) < 5
             ORDER BY country_count
-        """
-        )
+        """)
         for row in cur.fetchall():
             source, country_count, min_year, max_year = row
             # Create a pseudo-flag without observation_id
@@ -587,8 +561,7 @@ def detect_coverage_gaps(conn) -> List[Flag]:
             )
 
         # Countries with only 1 observation ever (excluding small territories)
-        cur.execute(
-            """
+        cur.execute("""
             SELECT o.iso3, c.name, COUNT(*) as obs_count,
                    STRING_AGG(DISTINCT o.source, ', ') as sources
             FROM observations o
@@ -597,8 +570,7 @@ def detect_coverage_gaps(conn) -> List[Flag]:
             HAVING COUNT(*) = 1
             ORDER BY c.name
             LIMIT 50
-        """
-        )
+        """)
         for row in cur.fetchall():
             iso3, name, obs_count, sources = row
             flags.append(
