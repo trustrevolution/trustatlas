@@ -15,7 +15,8 @@
   "vulnerabilityAlerts": {
     "labels": ["security", "dependencies"],
     "schedule": ["at any time"],
-    "minimumReleaseAge": "0 days"
+    "minimumReleaseAge": "0 days",
+    "groupName": null
   },
   "lockFileMaintenance": {
     "enabled": true,
@@ -73,6 +74,11 @@
       "matchPackageNames": ["postgres"],
       "matchUpdateTypes": ["major"],
       "enabled": false
+    },
+    {
+      "description": "Batch all non-major updates into one weekly PR so a merge triggers a single Vercel build (majors and security fixes stay separate)",
+      "matchUpdateTypes": ["patch", "minor", "pin", "digest", "bump"],
+      "groupName": "all non-major dependencies"
     }
   ],
   "ignorePaths": [
