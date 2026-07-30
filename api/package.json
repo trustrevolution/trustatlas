@@ -45,7 +45,7 @@
       "ajv": "^6.14.0"
     },
     "@vercel/python-analysis": {
-      "minimatch": "^9.0.7",
+      "minimatch": "^10.2.5",
       "smol-toml": "^1.6.1"
     }
   }
