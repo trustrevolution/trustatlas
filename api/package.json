@@ -42,7 +42,7 @@
     "path-to-regexp": "^6.3.0",
     "undici": "^6.24.0",
     "@vercel/static-config": {
-      "ajv": "^6.14.0"
+      "ajv": "^8.0.0"
     },
     "@vercel/python-analysis": {
       "minimatch": "^10.2.5",
