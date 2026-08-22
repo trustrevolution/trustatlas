@@ -42,13 +42,16 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.1.1",
     "postcss": "^8.5.13",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.1"
   },
   "overrides": {
     "flatted": "^3.4.2",
     "picomatch": "^4.0.4",
     "yaml": "^2.8.3",
-    "postcss": "^8.5.13"
+    "postcss": "^8.5.13",
+    "eslint-plugin-react": {
+      "eslint": "$eslint"
+    }
   }
 }
