@@ -59,16 +59,12 @@ export function Grapher({ className }: GrapherProps) {
           const countryInfo = allCountries.find((c) => c.iso3 === iso3)
           const countryData = data.countries[iso3]
 
-          // Handle different data structures for each pillar
-          let pillarData: Array<{ year: number; score: number; source?: string }> = []
-          if (state.pillar === 'social') {
-            pillarData = countryData?.social || []
-          } else if (state.pillar === 'institutions') {
-            // For institutions, use the institutional trust data
-            pillarData = countryData?.institutions?.institutional || []
-          } else {
-            pillarData = countryData?.media || []
-          }
+          const pillarData: Array<{ year: number; score: number; source?: string }> =
+            state.pillar === 'social'
+              ? countryData?.social || []
+              : state.pillar === 'institutions'
+                ? countryData?.institutions?.institutional || []
+                : countryData?.media || []
 
           return {
             iso3,

@@ -76,6 +76,11 @@
       "enabled": false
     },
     {
+      "description": "Hold TypeScript on 6.x. TypeScript 7 (native Go compiler) has no stable programmatic API until 7.1, so typescript-eslint still requires >=4.8.4 <6.1.0. Revisit when typescript-eslint declares TS 7 support.",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    },
+    {
       "description": "Batch all non-major updates into one weekly PR so a merge triggers a single Vercel build (majors and security fixes stay separate)",
       "matchUpdateTypes": ["patch", "minor", "pin", "digest", "bump"],
       "groupName": "all non-major dependencies"

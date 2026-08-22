@@ -43,7 +43,6 @@ export default async function indicatorsRoute(fastify: FastifyInstance) {
       if (year) {
         query += ` AND d.year = $${paramIndex}`
         params.push(parseInt(year))
-        paramIndex++
       }
 
       query += ' ORDER BY d.iso3, d.year'
