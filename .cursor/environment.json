@@ -1,0 +1,16 @@
+{
+  "name": "Trust Atlas",
+  "install": "bash scripts/cloud-agent/install.sh",
+  "start": "bash scripts/cloud-agent/start.sh",
+  "terminals": [
+    {
+      "name": "api",
+      "command": "cd api && set -a && . ../.env && set +a && export NODE_EXTRA_CA_CERTS=/etc/trustatlas/certs/localhost.pem && npm run dev"
+    },
+    {
+      "name": "web",
+      "command": "cd web && export NEXT_PUBLIC_API_URL=http://localhost:3001 && npm run dev"
+    }
+  ],
+  "ports": [3001, 3002]
+}
