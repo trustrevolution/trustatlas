@@ -34,7 +34,8 @@
       "description": "Major updates: manual review, no auto-merge",
       "matchUpdateTypes": ["major"],
       "automerge": false,
-      "labels": ["dependencies", "major"]
+      "labels": ["dependencies", "major"],
+      "reviewers": ["shawnyeager"]
     },
     {
       "description": "Group all Fastify plugins together",
